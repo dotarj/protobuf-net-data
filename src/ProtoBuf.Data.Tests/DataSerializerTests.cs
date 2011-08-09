@@ -63,5 +63,31 @@ namespace ProtoBuf.Data.Tests
                 }
             }
         }
+
+        [TestFixture]
+        public class When_serializing_an_unsupported_type
+        {
+            DataTable originalTable;
+
+            class Foo {}
+
+            [TestFixtureSetUp]
+            public void TestFixtureSetUp()
+            {
+
+                originalTable = new DataTable();
+                originalTable.Columns.Add("Foo", typeof(Foo));
+                originalTable.Rows.Add(new Foo());
+            }
+
+            [Test, ExpectedException(typeof(UnsupportedColumnTypeException))]
+            public void Should_throw_an_exception()
+            {
+                using (var originalReader = originalTable.CreateDataReader())
+                {
+                    DataSerializer.Serialize(Stream.Null, originalReader);
+                }
+            }
+        }
     }
 }

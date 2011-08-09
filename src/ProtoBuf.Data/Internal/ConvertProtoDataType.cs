@@ -25,7 +25,11 @@ namespace ProtoBuf.Data.Internal
 
         public static ProtoDataType FromClrType(Type type)
         {
-            return mapping[type];
+            ProtoDataType value;
+            if (mapping.TryGetValue(type, out value))
+                return value;
+
+            throw new UnsupportedColumnTypeException(type);
         }
 
         public static Type ToClrType(ProtoDataType type)
