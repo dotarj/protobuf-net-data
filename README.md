@@ -49,3 +49,5 @@ Serializing an IDataReader into a buffer... and back again:
 * Doesn't support nested data readers.
 * Doesn't support BLOB types (char[], byte[]).
 * Doesn't support multiple DataTables in single DataReader - aka IDataReader.NextResult().
+
+Check the [GitHub issues](http://github.com/rdingwall/protobuf-net-data/issues) for todo list and roadmap.
