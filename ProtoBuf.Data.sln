@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data", "src\ProtoBuf.Data\ProtoBuf.Data.csproj", "{424CA2AE-6A6C-4CE1-85FE-3D1059F90DC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Tests", "src\ProtoBuf.Data.Tests\ProtoBuf.Data.Tests.csproj", "{CDDFE764-6BF8-432A-BC60-D2829E8934CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{424CA2AE-6A6C-4CE1-85FE-3D1059F90DC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{424CA2AE-6A6C-4CE1-85FE-3D1059F90DC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{424CA2AE-6A6C-4CE1-85FE-3D1059F90DC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{424CA2AE-6A6C-4CE1-85FE-3D1059F90DC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDDFE764-6BF8-432A-BC60-D2829E8934CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDDFE764-6BF8-432A-BC60-D2829E8934CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDDFE764-6BF8-432A-BC60-D2829E8934CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDDFE764-6BF8-432A-BC60-D2829E8934CB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
