@@ -1,12 +1,13 @@
-Protocol Buffers IDataReader Extensions for .NET
+Protocol Buffers DataReader Extensions for .NET
 ================================================
 
-A library for serializing ADO.NET DataTables and IDataReaders into a portable binary format using Marc Gravell's Google Protocol Buffers library, [.protobuf-net](http://code.google.com/p/protobuf-net/)
+A library for serializing ADO.NET DataTables and IDataReaders into a portable binary format.
 
-Examples
---------
+Uses Marc Gravell's Google Protocol Buffers library, [protobuf-net](http://code.google.com/p/protobuf-net/).
 
-### Write a DataTable to a file
+### Examples
+
+Write a DataTable to a file:
 
     DataTable dt = ...;
     
@@ -16,7 +17,7 @@ Examples
         DataSerializer.Serialize(stream, reader);
     }
     
-### Load DataTable from a file
+Load DataTable from a file:
 
     DataTable dt = new DataTable();
     
@@ -26,7 +27,7 @@ Examples
         dt.Load(reader);
     }
     
-### Serialize an IDataReader into a buffer... and back again
+Serialize an IDataReader into a buffer... and back again:
 
     Stream buffer = new MemoryStream();
     
@@ -45,8 +46,7 @@ Examples
         }
     }
 
-Known limitations/bugs
-----------------------
+### Known limitations/bugs
 
 * Doesn't support nested data readers
 * Doesn't support BLOB types (char[], byte[])
