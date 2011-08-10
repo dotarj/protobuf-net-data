@@ -49,6 +49,7 @@
     <Compile Include="Internal\ProtoDataRow.cs" />
     <Compile Include="Internal\ProtoDataRowFactory.cs" />
     <Compile Include="Internal\ProtoDataType.cs" />
+    <Compile Include="Internal\ProtoDataTypes.cs" />
     <Compile Include="IProtoDataWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtoDataReader.cs" />

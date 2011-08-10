@@ -108,14 +108,15 @@ namespace ProtoBuf.Data
                                          ColumnName = r.Field<string>("ColumnName"),
                                          ProtoDataType = ConvertProtoDataType.FromClrType(r.Field<Type>("DataType")),
                                          Ordinal = r.Field<int>("ColumnOrdinal")
-                                     });
+                                     })
+                                     .ToList();
 
-                foreach (var column in columns)
+                foreach (var dataType in ProtoDataTypes.AllTypes)
                 {
-                    column.OrdinalWithinType = columns
-                        .Where(c => c.ProtoDataType.Equals(column.ProtoDataType))
-                        .Where(c => !c.Equals(column))
-                        .Max(c => c.OrdinalWithinType) + 1;
+                    var cols = columns.Where(c => dataType.Equals(c.ProtoDataType)).ToList();
+
+                    for (int i = 0; i < cols.Count; i++)
+                        cols[i].OrdinalWithinType = i;
                 }
 
                 return new ProtoDataHeader

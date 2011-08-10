@@ -20,10 +20,8 @@ namespace ProtoBuf.Data.Internal
 
         static IDictionary<Type, int> GetNumberOfColumnsPerClrType(ProtoDataHeader header)
         {
-            var allTypes = Enum.GetValues(typeof(ProtoDataType)).OfType<ProtoDataType>();
-
             var numberOfColumnsPerType =
-                from protoType in allTypes
+                from protoType in ProtoDataTypes.AllTypes
                 let columns = header.Columns.Where(c => c.ProtoDataType == protoType)
                 let clrType = ConvertProtoDataType.ToClrType(protoType)
                 select new {Type = clrType, Count = columns.Count()};
