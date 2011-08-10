@@ -3,6 +3,7 @@ using System.Data;
 using System.IO;
 using NUnit.Framework;
 using SharpTestsEx;
+using System.Collections.Generic;
 
 namespace ProtoBuf.Data.Tests
 {
@@ -23,8 +24,9 @@ namespace ProtoBuf.Data.Tests
                 originalTable.Columns.Add("Age", typeof(int));
                 originalTable.Columns.Add("Name", typeof(string));
                 originalTable.Columns.Add("ID", typeof(Guid));
-                originalTable.Rows.Add(DateTime.Today.Date, 42, "Foo", Guid.NewGuid());
-                originalTable.Rows.Add(DateTime.Today.AddDays(-8).Date, null, "Bar", Guid.NewGuid());
+                originalTable.Columns.Add("LastName", typeof(string));
+                originalTable.Rows.Add(DateTime.Today.Date, 42, "Foo", Guid.NewGuid(), "sdfsdf");
+                originalTable.Rows.Add(DateTime.Today.AddDays(-8).Date, null, "Bar", Guid.NewGuid(), "o2389uf");
 
                 deserializedTable = new DataTable();
 
