@@ -12,6 +12,25 @@ namespace ProtoBuf.Data.Internal
         //
         // * actually it can, but .NET type names use too much space)
 
+        public ProtoDataRow()
+        {
+            // Ensure collections aren't null (protocol buffers serializes
+            // empty collections as null)
+            StringValues = new List<string>();
+            DateTimeValues = new List<DateTime>();
+            Int32Values = new List<int>();
+            Int64Values = new List<long>();
+            Int16Values = new List<short>();
+            BoolValues = new List<bool>();
+            ByteValues = new List<byte>();
+            FloatValues = new List<float>();
+            DoubleValues = new List<double>();
+            GuidValues = new List<Guid>();
+            CharValues = new List<char>();
+            DecimalValues = new List<decimal>();
+            NullColumns = new List<bool>();
+        }
+
         [ProtoMember(1)]
         public List<string> StringValues;
 
