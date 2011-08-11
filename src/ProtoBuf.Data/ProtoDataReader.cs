@@ -47,7 +47,7 @@ namespace ProtoBuf.Data
             if (currentRow == null)
                 return null;
 
-            if (currentRow.NullColumns[i])
+            if (IsDBNull(i))
                 return null;
 
             var column = ColumnAtIndex(i);
@@ -183,6 +183,9 @@ namespace ProtoBuf.Data
 
         public bool IsDBNull(int i)
         {
+            if (!currentRow.NullColumns.Any())
+                return false; // no null values at all in this row
+
             return currentRow.NullColumns[i];
         }
 
@@ -193,12 +196,12 @@ namespace ProtoBuf.Data
 
         object IDataRecord.this[int i]
         {
-            get { throw NestingNotSupported(); }
+            get { return GetValue(i); }
         }
 
         object IDataRecord.this[string name]
         {
-            get { throw NestingNotSupported(); }
+            get { return GetValue(GetOrdinal(name)); }
         }
 
         public void Close()
