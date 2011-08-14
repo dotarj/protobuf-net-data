@@ -33,33 +33,33 @@ namespace ProtoBuf.Data.Internal
         {
             return new ProtoDataRow
             {
-                NullColumns = Enumerable.Repeat(default(bool), totalNumberOfColumns).ToList(),
-                BoolValues = CreateNumberOfFields<bool>(numberOfColumnsPerType),
-                ByteValues = CreateNumberOfFields<byte>(numberOfColumnsPerType),
-                DateTimeValues = CreateNumberOfFields<DateTime>(numberOfColumnsPerType),
-                FloatValues = CreateNumberOfFields<float>(numberOfColumnsPerType),
-                GuidValues = CreateNumberOfFields<Guid>(numberOfColumnsPerType),
-                Int16Values = CreateNumberOfFields<Int16>(numberOfColumnsPerType),
-                Int32Values = CreateNumberOfFields<Int32>(numberOfColumnsPerType),
-                Int64Values = CreateNumberOfFields<Int64>(numberOfColumnsPerType),
-                CharValues = CreateNumberOfFields<char>(numberOfColumnsPerType),
-                StringValues = CreateNumberOfStringFields(numberOfColumnsPerType),
-                DecimalValues = CreateNumberOfFields<decimal>(numberOfColumnsPerType),
-                DoubleValues = CreateNumberOfFields<double>(numberOfColumnsPerType)
+                NullColumns = new bool[totalNumberOfColumns].ToList(),
+                BoolValues = CreateNumberOfFields<bool>(),
+                ByteValues = CreateNumberOfFields<byte>(),
+                DateTimeValues = CreateNumberOfFields<DateTime>(),
+                FloatValues = CreateNumberOfFields<float>(),
+                GuidValues = CreateNumberOfFields<Guid>(),
+                Int16Values = CreateNumberOfFields<Int16>(),
+                Int32Values = CreateNumberOfFields<Int32>(),
+                Int64Values = CreateNumberOfFields<Int64>(),
+                CharValues = CreateNumberOfFields<char>(),
+                StringValues = CreateNumberOfStringFields(),
+                DecimalValues = CreateNumberOfFields<decimal>(),
+                DoubleValues = CreateNumberOfFields<double>()
             };
         }
 
-        static List<string> CreateNumberOfStringFields(IDictionary<Type, int> numberOfColumnsPerType)
+        List<string> CreateNumberOfStringFields()
         {
             var count = numberOfColumnsPerType[typeof(string)];
             return Enumerable.Repeat("", count).ToList();
         }
 
-        static List<T> CreateNumberOfFields<T>(IDictionary<Type, int> numberOfColumnsPerType) where T : struct
+        List<T> CreateNumberOfFields<T>() where T : struct
         {
             var count = numberOfColumnsPerType[typeof(T)];
 
-            return Enumerable.Repeat(default(T), count).ToList();
+            return new T[count].ToList();
         }
     }
 }
