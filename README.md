@@ -48,7 +48,7 @@ Serializing an IDataReader into a buffer... and back again:
 
 DataSerializer has comparable performance to DataTable.Save/Write XML but packs data much tighter. 
 
-![DataSerializer vs DataTable benchmarks](http://julana.richarddingwall.name/protobuf-net-data-benchmark.png "Benchmarks serializing and deserializing the DimCustomer table (18,000 rows x 29 cols) from the AdventureWorksDW2008R2 database on an i7 620 MacBook Pro running Windows 7.")
+![DataSerializer vs DataTable benchmarks](http://julana.richarddingwall.name/protobuf-net-data-benchmark.png "Benchmarks serializing and deserializing the DimCustomer table from the AdventureWorksDW2008R2 database on an i7 620 MacBook Pro running Windows 7.")
 
 ### Known limitations/bugs
 
