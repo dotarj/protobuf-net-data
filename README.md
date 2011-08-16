@@ -44,6 +44,12 @@ Serializing an IDataReader into a buffer... and back again:
         }
     }
 
+### Benchmarks
+
+DataSerializer has comparable performance to DataTable.Save/Write XML but packs data much tighter.
+
+![DataSerializer benchmarks](http://julana.richarddingwall.name/protobuf-net-data-benchmark.png)
+
 ### Known limitations/bugs
 
 * Doesn't support nested data readers.
