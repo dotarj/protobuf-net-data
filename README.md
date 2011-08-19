@@ -58,6 +58,10 @@ DataSerializer has comparable performance to DataTable.Save/Write XML but packs 
 
 Check the [GitHub issues](http://github.com/rdingwall/protobuf-net-data/issues) for todo list and roadmap.
 
+### Library status
+
+This is a beta library and is currently under active development towards a first formal release. That means the binary packing format may change (i.e., future versions may not be compatible with previous versions) and the API method signatures will almost certainly change.
+
 ### License
 
 Protocol Buffers DataReader Extensions for .NET is available under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
