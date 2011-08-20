@@ -15,6 +15,7 @@
 using System;
 using System.Data;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using SharpTestsEx;
 using System.Collections.Generic;
@@ -60,6 +61,32 @@ namespace ProtoBuf.Data.Tests
             public void Should_produce_the_same_number_of_columns()
             {
                 deserializedTable.Columns.Count.Should().Be(originalTable.Columns.Count);
+            }
+
+            [Test]
+            public void The_columns_should_all_have_the_same_names()
+            {
+                var originalNames = originalTable.Columns
+                    .OfType<DataColumn>().Select(c => c.ColumnName).ToArray();
+
+                var deserializedNames = deserializedTable.Columns
+                    .OfType<DataColumn>().Select(c => c.ColumnName).ToArray();
+
+                for (var i = 0; i < originalNames.Length; i++)
+                    deserializedNames[i].Should().Be.EqualTo(originalNames[i]);
+            }
+
+            [Test]
+            public void The_columns_should_all_have_the_same_types()
+            {
+                var originalTypes = originalTable.Columns
+                    .OfType<DataColumn>().Select(c => c.DataType).ToArray();
+
+                var deserializedTypes = deserializedTable.Columns
+                    .OfType<DataColumn>().Select(c => c.DataType).ToArray();
+
+                for (var i = 0; i < originalTypes.Length; i++)
+                    deserializedTypes[i].Should().Be.EqualTo(originalTypes[i]);
             }
 
             [Test]

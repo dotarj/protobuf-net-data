@@ -25,7 +25,6 @@ namespace ProtoBuf.Data
     {
         Stream stream;
         object[] currentRow;
-        readonly object syncRoot = new object();
 
         public ProtoDataReader(Stream stream)
         {

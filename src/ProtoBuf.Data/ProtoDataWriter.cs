@@ -109,42 +109,42 @@ namespace ProtoBuf.Data
                         case ProtoDataType.Bool:
                             colWriter = value =>
                                             {
-                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                ProtoWriter.WriteFieldHeader(field, WireType.Variant, writer);
                                                 ProtoWriter.WriteBoolean((bool) value, writer);
                                             };
                             break;
                         case ProtoDataType.Byte:
                             colWriter = value =>
                                             {
-                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                ProtoWriter.WriteFieldHeader(field, WireType.Variant, writer);
                                                 ProtoWriter.WriteByte((byte) value, writer);
                                             };
                             break;
                         case ProtoDataType.Char:
                             colWriter = value =>
                                             {
-                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                ProtoWriter.WriteFieldHeader(field, WireType.Variant, writer);
                                                 ProtoWriter.WriteInt16((Int16) value, writer);
                                             };
                             break;
                         case ProtoDataType.Double:
                             colWriter = value =>
                                             {
-                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                ProtoWriter.WriteFieldHeader(field, WireType.Variant, writer);
                                                 ProtoWriter.WriteDouble((double) value, writer);
                                             };
                             break;
                         case ProtoDataType.Float:
                             colWriter = value =>
                                             {
-                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                ProtoWriter.WriteFieldHeader(field, WireType.Variant, writer);
                                                 ProtoWriter.WriteSingle((float) value, writer);
                                             };
                             break;
                         case ProtoDataType.Long:
                             colWriter = value =>
                                             {
-                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                ProtoWriter.WriteFieldHeader(field, WireType.Variant, writer);
                                                 ProtoWriter.WriteInt64((long) value, writer);
                                             };
                             break;
