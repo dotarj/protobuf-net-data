@@ -45,9 +45,6 @@
     <Compile Include="DataSerializer.cs" />
     <Compile Include="Internal\ConvertProtoDataType.cs" />
     <Compile Include="Internal\ProtoDataColumn.cs" />
-    <Compile Include="Internal\ProtoDataHeader.cs" />
-    <Compile Include="Internal\ProtoDataRow.cs" />
-    <Compile Include="Internal\ProtoDataRowFactory.cs" />
     <Compile Include="Internal\ProtoDataType.cs" />
     <Compile Include="Internal\ProtoDataTypes.cs" />
     <Compile Include="IProtoDataWriter.cs" />
