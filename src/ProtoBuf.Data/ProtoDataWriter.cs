@@ -66,7 +66,7 @@ namespace ProtoBuf.Data
                     foreach (var col in cols)
                     {
                         var value = reader[fieldIndex - 1];
-                        if (value == null || value is DBNull)
+                        if (value == null || value is DBNull || IsZeroLengthArray(value))
                         {
                             // don't write anything
                         }
@@ -134,6 +134,10 @@ namespace ProtoBuf.Data
                                     ProtoWriter.WriteInt64((long)value, writer);
                                     break;
 
+                                case ProtoDataType.ByteArray:
+                                    ProtoWriter.WriteFieldHeader(fieldIndex, WireType.String, writer);
+                                    ProtoWriter.WriteBytes((byte[])value, 0, ((byte[])value).Length, writer);
+                                    break;
                                 default:
                                     throw new UnsupportedColumnTypeException(ConvertProtoDataType.ToClrType(col.ProtoDataType));
                             }
@@ -145,6 +149,16 @@ namespace ProtoBuf.Data
                     rowIndex++;
                 }
             }
+        }
+
+        private static bool IsZeroLengthArray(object value)
+        {
+            var array = value as Array;
+
+            if (array == null)
+                return false;
+
+            return array.Length == 0;
         }
     }
 }

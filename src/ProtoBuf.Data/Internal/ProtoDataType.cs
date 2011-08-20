@@ -1,4 +1,5 @@
-﻿// Copyright 2011 Richard Dingwall - http://richarddingwall.name
+﻿
+// Copyright 2011 Richard Dingwall - http://richarddingwall.name
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +28,7 @@ namespace ProtoBuf.Data.Internal
         Double = 9,
         Guid = 10,
         Char = 11,
-        Decimal = 12
+        Decimal = 12,
+        ByteArray = 13
     }
 }

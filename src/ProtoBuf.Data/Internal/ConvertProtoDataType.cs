@@ -34,7 +34,9 @@ namespace ProtoBuf.Data.Internal
                       { typeof(short), ProtoDataType.Short },
                       { typeof(string), ProtoDataType.String },
                       { typeof(char), ProtoDataType.Char },
-                      { typeof(decimal), ProtoDataType.Decimal }
+                      { typeof(decimal), ProtoDataType.Decimal },
+                      { typeof(byte[]), ProtoDataType.ByteArray },
+                      //{ typeof(char[]), ProtoDataType.CharArray }
                   };
 
         public static ProtoDataType FromClrType(Type type)

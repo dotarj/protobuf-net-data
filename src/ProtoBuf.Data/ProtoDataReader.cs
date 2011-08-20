@@ -26,6 +26,9 @@ namespace ProtoBuf.Data
         Stream stream;
         object[] currentRow;
 
+        public static long ByteReadBufferSize { get; set; }
+
+
         public ProtoDataReader(Stream stream)
         {
             if (stream == null) throw new ArgumentNullException("stream");
@@ -123,6 +126,12 @@ namespace ProtoBuf.Data
                     colReaders.Add(() => reader.ReadInt64());
                     break;
 
+                case ProtoDataType.ByteArray:
+                    colReaders.Add(() => { var results = ProtoReader.AppendBytes(null, reader);
+                                             return results;
+                    });
+                    break;
+
                 default:
                     throw new NotSupportedException(protoDataType.ToString());
             }
@@ -202,7 +211,10 @@ namespace ProtoBuf.Data
 
         public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
         {
-            throw new NotImplementedException();
+            var sourceBuffer = (byte[]) currentRow[i];
+            length = Math.Min(length, currentRow.Length - (int)fieldOffset);
+            Array.Copy(sourceBuffer, fieldOffset, buffer, bufferoffset, length);
+            return length;
         }
 
         public char GetChar(int i)
