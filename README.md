@@ -72,9 +72,9 @@ Note that no distinction is made between null and zero-length arrays; both will 
 
 ### Benchmarks
 
-DataSerializer packs data faster and smaller than DataTable.Save/Write XML. 
+DataSerializer packs data faster and smaller than the equivalent DataTable.Save/Write XML:
 
-![DataSerializer vs DataTable benchmarks](http://julana.richarddingwall.name/protobuf-net-data-benchmark.png "Benchmarks serializing and deserializing the DimCustomer table from the AdventureWorksDW2008R2 database on an i7 620 MacBook Pro running Windows 7.")
+![DataSerializer vs DataTable benchmarks](http://julana.richarddingwall.name/protobuf-net-data-benchmark-1.png "Benchmarks serializing and deserializing the DimCustomer table from the AdventureWorksDW2008R2 database on an i7 620 MacBook Pro running Windows 7.")
 
 ### Roadmap
 
