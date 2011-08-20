@@ -44,23 +44,41 @@ Serializing an IDataReader into a buffer... and back again:
         }
     }
 
+### Supported Data Types
+
+DataSerializer supports all the primitive types exposed by [IDataReader](http://msdn.microsoft.com/en-us/library/system.data.idatareader.aspx):
+
+* Boolean
+* Byte
+* Byte[]
+* Char
+* Char[]
+* DateTime
+* Decimal
+* Double
+* Float
+* Guid
+* Int16
+* Int32
+* Int64
+* String
+
+Note that no distinction is made between null and zero-length arrays; both will be deserialized as null.
+
+#### Limitations
+
+* Doesn't (yet) support nested data readers - aka [IDataReader.GetData()](http://msdn.microsoft.com/en-us/library/system.data.idatarecord.getdata.aspx)
+* Doesn't (yet) support multiple DataTables in single DataReader - aka [IDataReader.NextResult()](http://msdn.microsoft.com/en-us/library/system.data.idatareader.nextresult.aspx).
+
 ### Benchmarks
 
 DataSerializer has comparable performance to DataTable.Save/Write XML but packs data much tighter. 
 
 ![DataSerializer vs DataTable benchmarks](http://julana.richarddingwall.name/protobuf-net-data-benchmark.png "Benchmarks serializing and deserializing the DimCustomer table from the AdventureWorksDW2008R2 database on an i7 620 MacBook Pro running Windows 7.")
 
-### Known limitations/bugs
+### Roadmap
 
-* Doesn't (yet) support nested data readers.
-* Doesn't (yet) support BLOB types (char[], byte[]).
-* Doesn't (yet) support multiple DataTables in single DataReader - aka IDataReader.NextResult().
-
-Check the [GitHub issues](http://github.com/rdingwall/protobuf-net-data/issues) for todo list and roadmap.
-
-### Library status
-
-This is a beta library and is currently under active development towards a first formal release. That means the binary packing format may change (i.e., future versions may not be compatible with previous versions) and the API method signatures will almost certainly change.
+There is still some work to do before a 1.0 release, check out the [GitHub issues](http://github.com/rdingwall/protobuf-net-data/issues) for todo list and roadmap.
 
 ### License
 
