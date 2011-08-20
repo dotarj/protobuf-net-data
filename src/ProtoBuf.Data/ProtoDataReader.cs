@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -23,111 +24,181 @@ namespace ProtoBuf.Data
     public class ProtoDataReader : IDataReader
     {
         Stream stream;
-        ProtoDataRow currentRow;
-        ProtoDataHeader header;
+        object[] currentRow;
         readonly object syncRoot = new object();
 
         public ProtoDataReader(Stream stream)
         {
             if (stream == null) throw new ArgumentNullException("stream");
             this.stream = stream;
-            InitializeHeader();
+            reader = new ProtoReader(stream, null, null);
+            colReaders = new List<Func<object>>();
+            dataTable = new DataTable();
+
+            AdvanceToNextField();
+            if (currentField != 2)
+                throw new InvalidOperationException("No header found! Invalid/corrupt stream.");
+
+            ReadHeader();
         }
-        
-        DataTable headerAsDataTable;
+
+        void AdvanceToNextField()
+        {
+            currentField = reader.ReadFieldHeader();
+        }
+
+
+
+        private void ReadHeader()
+        {
+            do
+            {
+                ReadColumn();
+                AdvanceToNextField();
+            } while (currentField == 2);
+        }
+
+        void ReadColumn()
+        {
+            var token = ProtoReader.StartSubItem(reader);
+            int field;
+            string name = null;
+            var protoDataType = (ProtoDataType) (-1);
+            while ((field = reader.ReadFieldHeader()) != 0)
+            {
+                switch (field)
+                {
+                    case 1:
+                        name = reader.ReadString();
+                        break;
+                    case 2:
+                        protoDataType = (ProtoDataType) reader.ReadInt32();
+                        break;
+                    default:
+                        reader.SkipField();
+                        break;
+                }
+            }
+
+            switch (protoDataType)
+            {
+                case ProtoDataType.Int:
+                    colReaders.Add(() => reader.ReadInt32());
+                    break;
+                case ProtoDataType.Short:
+                    colReaders.Add(() => reader.ReadInt16());
+                    break;
+                case ProtoDataType.Decimal:
+                    colReaders.Add(() => BclHelpers.ReadDecimal(reader));
+                    break;
+                case ProtoDataType.String:
+                    colReaders.Add(() => reader.ReadString());
+                    break;
+                case ProtoDataType.Guid:
+                    colReaders.Add(() => BclHelpers.ReadGuid(reader));
+                    break;
+                case ProtoDataType.DateTime:
+                    colReaders.Add(() => BclHelpers.ReadDateTime(reader));
+                    break;
+                case ProtoDataType.Bool:
+                    colReaders.Add(() => reader.ReadBoolean());
+                    break;
+
+                case ProtoDataType.Byte:
+                    colReaders.Add(() => reader.ReadByte());
+                    break;
+
+                case ProtoDataType.Char:
+                    colReaders.Add(() => (char)reader.ReadInt16());
+                    break;
+
+                case ProtoDataType.Double:
+                    colReaders.Add(() => reader.ReadDouble());
+                    break;
+
+                case ProtoDataType.Float:
+                    colReaders.Add(() => reader.ReadSingle());
+                    break;
+
+                case ProtoDataType.Long:
+                    colReaders.Add(() => reader.ReadInt64());
+                    break;
+
+                default:
+                    throw new NotSupportedException(protoDataType.ToString());
+            }
+
+            ProtoReader.EndSubItem(token, reader);
+            dataTable.Columns.Add(name, ConvertProtoDataType.ToClrType(protoDataType));
+        }
+
+        private void ReadCurrentRow()
+        {
+            int field;
+
+            if (currentRow == null)
+                currentRow = new object[colReaders.Count];
+            else
+                Array.Clear(currentRow, 0, currentRow.Length);
+
+            var token = ProtoReader.StartSubItem(reader);
+            while ((field = reader.ReadFieldHeader()) != 0)
+            {
+                if (field > currentRow.Length) reader.SkipField();
+                else
+                {
+                    int i = field - 1;
+                    currentRow[i] = colReaders[i]();
+                }
+            }
+            ProtoReader.EndSubItem(token, reader);
+        }
+
+
+        DataTable dataTable;
 
         public string GetName(int i)
         {
-            return ColumnAtIndex(i).ColumnName;
-        }
-
-        ProtoDataColumn ColumnAtIndex(int index)
-        {
-            return header.Columns.Single(c => c.Ordinal == index);
+            return dataTable.Columns[i].ColumnName;
         }
 
         public string GetDataTypeName(int i)
         {
-            return ColumnAtIndex(i).ProtoDataType.ToString();
+            return dataTable.Columns[i].DataType.Name;
         }
 
         public Type GetFieldType(int i)
         {
-            return ConvertProtoDataType.ToClrType(ColumnAtIndex(i).ProtoDataType);
+            return dataTable.Columns[i].DataType;
         }
 
         public object GetValue(int i)
         {
-            if (currentRow == null)
-                return null;
-
-            if (IsDBNull(i))
-                return null;
-
-            var column = ColumnAtIndex(i);
-            switch (column.ProtoDataType)
-            {
-                case ProtoDataType.Bool:
-                    return currentRow.BoolValues[column.OrdinalWithinType];
-
-                case ProtoDataType.Byte:
-                    return currentRow.ByteValues[column.OrdinalWithinType];
-                case ProtoDataType.Char:
-                    return currentRow.CharValues[column.OrdinalWithinType];
-                case ProtoDataType.DateTime:
-                    return currentRow.DateTimeValues[column.OrdinalWithinType];
-                case ProtoDataType.Decimal:
-                    return currentRow.DecimalValues[column.OrdinalWithinType];
-                case ProtoDataType.Double:
-                    return currentRow.DoubleValues[column.OrdinalWithinType];
-                case ProtoDataType.Float:
-                    return currentRow.FloatValues[column.OrdinalWithinType];
-                case ProtoDataType.Guid:
-                    return currentRow.GuidValues[column.OrdinalWithinType];
-                case ProtoDataType.Int:
-                    return currentRow.Int32Values[column.OrdinalWithinType];
-                case ProtoDataType.Long:
-                    return currentRow.Int64Values[column.OrdinalWithinType];
-                case ProtoDataType.Short:
-                    return currentRow.Int16Values[column.OrdinalWithinType];
-                case ProtoDataType.String:
-                    return currentRow.StringValues[column.OrdinalWithinType];
-            }
-
-            throw new InvalidOperationException("Unknown data type.");
+            return currentRow[i];
         }
 
         public int GetValues(object[] values)
         {
-            var count = Math.Min(values.Length, header.Columns.Count);
+            var length = Math.Min(values.Length, dataTable.Columns.Count);
 
-            foreach (var column in header.Columns)
-                values[column.Ordinal] = GetValue(column.Ordinal);
+            Array.Copy(currentRow, values, length);
 
-            return count;
+            return length;
         }
 
         public int GetOrdinal(string name)
         {
-            if (header.Columns == null)
-                throw new InvalidOperationException();
-
-            return header.Columns.Single(c => c.ColumnName.Equals(name)).Ordinal;
-        }
-
-        int GetOrdinalWithinType(int i)
-        {
-            return header.Columns.Single(c => c.Ordinal == i).OrdinalWithinType;
+            return dataTable.Columns[name].Ordinal;
         }
 
         public bool GetBoolean(int i)
         {
-            return currentRow.BoolValues[GetOrdinalWithinType(i)];
+            return (bool)currentRow[i];
         }
 
         public byte GetByte(int i)
         {
-            return currentRow.ByteValues[GetOrdinalWithinType(i)];
+            return (byte)currentRow[i];
         }
 
         public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
@@ -137,7 +208,7 @@ namespace ProtoBuf.Data
 
         public char GetChar(int i)
         {
-            return currentRow.CharValues[GetOrdinalWithinType(i)];
+            return (char)currentRow[i];
         }
 
         public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
@@ -147,47 +218,47 @@ namespace ProtoBuf.Data
 
         public Guid GetGuid(int i)
         {
-            return currentRow.GuidValues[GetOrdinalWithinType(i)];
+            return (Guid)currentRow[i];
         }
 
         public short GetInt16(int i)
         {
-            return currentRow.Int16Values[GetOrdinalWithinType(i)];
+            return (short)currentRow[i];
         }
 
         public int GetInt32(int i)
         {
-            return currentRow.Int32Values[GetOrdinalWithinType(i)];
+            return (int)currentRow[i];
         }
 
         public long GetInt64(int i)
         {
-            return currentRow.Int64Values[GetOrdinalWithinType(i)];
+            return (long)currentRow[i];
         }
 
         public float GetFloat(int i)
         {
-            return currentRow.FloatValues[GetOrdinalWithinType(i)];
+            return (float)currentRow[i];
         }
 
         public double GetDouble(int i)
         {
-            return currentRow.DoubleValues[GetOrdinalWithinType(i)];
+            return (double)currentRow[i];
         }
 
         public string GetString(int i)
         {
-            return currentRow.StringValues[i];
+            return (string)currentRow[i];
         }
 
         public decimal GetDecimal(int i)
         {
-            return currentRow.DecimalValues[GetOrdinalWithinType(i)];
+            return (decimal)currentRow[i];
         }
 
         public DateTime GetDateTime(int i)
         {
-            return currentRow.DateTimeValues[GetOrdinalWithinType(i)];
+            return (DateTime) currentRow[i];
         }
 
         public IDataReader GetData(int i)
@@ -197,15 +268,12 @@ namespace ProtoBuf.Data
 
         public bool IsDBNull(int i)
         {
-            if (!currentRow.NullColumns.Any())
-                return false; // no null values at all in this row
-
-            return currentRow.NullColumns[i];
+            return currentRow[i] == null || currentRow[i] is DBNull;
         }
 
         public int FieldCount
         {
-            get { return header.Columns.Count; }
+            get { return dataTable.Columns.Count; }
         }
 
         object IDataRecord.this[int i]
@@ -230,35 +298,10 @@ namespace ProtoBuf.Data
 
         public DataTable GetSchemaTable()
         {
-            InitializeHeader();
-
-            using (var reader = headerAsDataTable.CreateDataReader())
+            using (var reader = dataTable.CreateDataReader())
                 return reader.GetSchemaTable();
         }
 
-        void InitializeHeader()
-        {
-            if (header == null)
-            {
-                lock (syncRoot)
-                {
-                    if (header != null)
-                        return;
-
-                    // How to make a DataTable correctly populated with all
-                    // the columns required by a schema table? The easiest way
-                    // is to create a dummy DataTable with the same columns as
-                    // the protocol buffers stream, and use it's schema table.
-                    header = Serializer.DeserializeWithLengthPrefix<ProtoDataHeader>(stream, PrefixStyle.Fixed32);
-                    if (header == null)
-                        throw new InvalidOperationException("Corrupt stream; could not parse ProtoDataHeader from Protocol Buffers stream.");
-
-                    headerAsDataTable = new DataTable();
-                    foreach (var column in header.Columns)
-                        headerAsDataTable.Columns.Add(column.ColumnName, ConvertProtoDataType.ToClrType(column.ProtoDataType));
-                }
-            }
-        }
 
         public bool NextResult()
         {
@@ -267,12 +310,16 @@ namespace ProtoBuf.Data
 
         public bool Read()
         {
-            InitializeHeader();
-            currentRow = Serializer.DeserializeWithLengthPrefix<ProtoDataRow>(stream, PrefixStyle.Fixed32);
-            if (currentRow == null)
+            if (IsClosed)
+                return false;
+
+            ReadCurrentRow();
+            AdvanceToNextField();
+
+            if (currentField == 0)
                 IsClosed = true;
 
-            return !IsClosed;
+            return true;
         }
 
         public int Depth
@@ -299,16 +346,22 @@ namespace ProtoBuf.Data
             {
                 if (disposing)
                 {
+                    if (reader != null)
+                    {
+                        reader.Dispose();
+                        reader = null;
+                    }
+
                     if (stream != null)
                     {
                         stream.Dispose();
                         stream = null;
                     }
 
-                    if (headerAsDataTable != null)
+                    if (dataTable != null)
                     {
-                        headerAsDataTable.Dispose();
-                        headerAsDataTable = null;
+                        dataTable.Dispose();
+                        dataTable = null;
                     }
                 }
 
@@ -322,5 +375,8 @@ namespace ProtoBuf.Data
         }
 
         bool disposed;
+        private List<Func<object>> colReaders;
+        private ProtoReader reader;
+        private int currentField;
     }
 }

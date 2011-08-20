@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -20,6 +22,7 @@ using ProtoBuf.Data.Internal;
 
 namespace ProtoBuf.Data
 {
+
     public class ProtoDataWriter : IProtoDataWriter
     {
         public void Serialize(Stream stream, IDataReader reader)
@@ -27,116 +30,151 @@ namespace ProtoBuf.Data
             if (stream == null) throw new ArgumentNullException("stream");
             if (reader == null) throw new ArgumentNullException("reader");
 
-            var header = GetHeader(reader);
-
-            Serializer.SerializeWithLengthPrefix(stream, header, PrefixStyle.Fixed32);
-
-            var rowFactory = new ProtoDataRowFactory(header);
-
-            while (reader.Read())
-            {
-                var itemArray = new object[header.Columns.Count];
-                reader.GetValues(itemArray);
-
-                var row = rowFactory.CreateRow();
-                PopulateValues(row, header, reader);
-
-                Serializer.SerializeWithLengthPrefix(stream, row, PrefixStyle.Fixed32);
-            }
-        }
-
-        static void PopulateValues(ProtoDataRow row, ProtoDataHeader header, IDataRecord reader)
-        {
-            var values = new object[header.Columns.Count];
-            reader.GetValues(values);
-
-            foreach (var column in header.Columns)
-            {
-                if (values[column.Ordinal] == DBNull.Value)
-                {
-                    row.NullColumns[column.Ordinal] = true;
-                    continue;
-                }
-
-                switch (column.ProtoDataType)
-                {
-                    case ProtoDataType.Bool:
-                        row.BoolValues[column.OrdinalWithinType] = (bool)values[column.Ordinal];
-                        break;
-
-                    case ProtoDataType.Byte:
-                        row.ByteValues[column.OrdinalWithinType] = (byte)values[column.Ordinal];
-                        break;
-
-                    case ProtoDataType.DateTime:
-                        row.DateTimeValues[column.OrdinalWithinType] = (DateTime)values[column.Ordinal];
-                        break;
-
-                    case ProtoDataType.Double:
-                        row.DoubleValues[column.OrdinalWithinType] = (double)values[column.Ordinal];
-                        break;
-
-                    case ProtoDataType.Float:
-                        row.FloatValues[column.OrdinalWithinType] = (float)values[column.Ordinal];
-                        break;
-
-                    case ProtoDataType.Int:
-                        row.Int32Values[column.OrdinalWithinType] = (int)values[column.Ordinal];
-                        break;
-
-                    case ProtoDataType.Long:
-                        row.Int64Values[column.OrdinalWithinType] = (long)values[column.Ordinal];
-                        break;
-
-                    case ProtoDataType.Short:
-                        row.Int16Values[column.OrdinalWithinType] = (short)values[column.Ordinal];
-                        break;
-
-                    case ProtoDataType.Char:
-                        row.CharValues[column.OrdinalWithinType] = (char)values[column.Ordinal];
-                        break;
-
-                    case ProtoDataType.String:
-                        row.StringValues[column.OrdinalWithinType] = (string)values[column.Ordinal];
-                        break;
-
-                    case ProtoDataType.Decimal:
-                        row.DecimalValues[column.OrdinalWithinType] = (decimal)values[column.Ordinal];
-                        break;
-
-                    case ProtoDataType.Guid:
-                        row.GuidValues[column.OrdinalWithinType] = (Guid)values[column.Ordinal];
-                        break;
-                }
-            }
-        }
-
-        static ProtoDataHeader GetHeader(IDataReader reader)
-        {
+            IList<ProtoDataColumn> cols;
             using (var schema = reader.GetSchemaTable())
             {
-                var columns = schema.Rows
-                    .OfType<DataRow>()
-                    .Select(r => new ProtoDataColumn
-                                     {
-                                         ColumnName = r.Field<string>("ColumnName"),
-                                         ProtoDataType = ConvertProtoDataType.FromClrType(r.Field<Type>("DataType")),
-                                         Ordinal = r.Field<int>("ColumnOrdinal")
-                                     })
-                                     .ToList();
+                cols = (from col in schema.AsEnumerable()
+                           let name = col.Field<string>("ColumnName")
+                           let ordinal = col.Field<int>("ColumnOrdinal")
+                           let type = ConvertProtoDataType.FromClrType(col.Field<Type>("DataType"))
+                           select new ProtoDataColumn {ColumnName = name, ProtoDataType = type, Ordinal = ordinal}
+                           ).ToList();
+            }
 
-                foreach (var dataType in ProtoDataTypes.AllTypes)
+            using (var writer = new ProtoWriter(stream, null, null))
+            {
+                // write the schema:
+                var colWriters = new Action<object>[cols.Count];
+                int i = 0;
+
+                foreach (ProtoDataColumn col in cols)
                 {
-                    var cols = columns.Where(c => dataType.Equals(c.ProtoDataType)).ToList();
+                    // for each, write the name and data type
+                    ProtoWriter.WriteFieldHeader(2, WireType.StartGroup, writer);
+                    var token = ProtoWriter.StartSubItem(col, writer);
+                    ProtoWriter.WriteFieldHeader(1, WireType.String, writer);
+                    ProtoWriter.WriteString(col.ColumnName, writer);
+                    ProtoWriter.WriteFieldHeader(2, WireType.Variant, writer);
 
-                    for (int i = 0; i < cols.Count; i++)
-                        cols[i].OrdinalWithinType = i;
+
+                    ProtoWriter.WriteInt32((int) col.ProtoDataType, writer);
+                    ProtoWriter.EndSubItem(token, writer);
+                    int field = i + 1;
+                    Action<object> colWriter;
+                    switch (col.ProtoDataType)
+                    {
+                        case ProtoDataType.String:
+                            colWriter = value =>
+                                            {
+                                                ProtoWriter.WriteFieldHeader(field, WireType.String, writer);
+                                                ProtoWriter.WriteString((string) value, writer);
+                                            };
+                            break;
+                        case ProtoDataType.Short:
+                            colWriter = value =>
+                                            {
+                                                ProtoWriter.WriteFieldHeader(field, WireType.Variant, writer);
+                                                ProtoWriter.WriteInt16((short) value, writer);
+                                            };
+                            break;
+                        case ProtoDataType.Decimal:
+                            colWriter = value =>
+                                            {
+                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                BclHelpers.WriteDecimal((decimal) value, writer);
+                                            };
+                            break;
+                        case ProtoDataType.Int:
+                            colWriter = value =>
+                                            {
+                                                ProtoWriter.WriteFieldHeader(field, WireType.Variant, writer);
+                                                ProtoWriter.WriteInt32((int) value, writer);
+                                            };
+                            break;
+                        case ProtoDataType.Guid:
+                            colWriter = value =>
+                                            {
+                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                BclHelpers.WriteGuid((Guid) value, writer);
+                                            };
+                            break;
+                        case ProtoDataType.DateTime:
+                            colWriter = value =>
+                                            {
+                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                BclHelpers.WriteDateTime((DateTime) value, writer);
+                                            };
+                            break;
+
+                        case ProtoDataType.Bool:
+                            colWriter = value =>
+                                            {
+                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                ProtoWriter.WriteBoolean((bool) value, writer);
+                                            };
+                            break;
+                        case ProtoDataType.Byte:
+                            colWriter = value =>
+                                            {
+                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                ProtoWriter.WriteByte((byte) value, writer);
+                                            };
+                            break;
+                        case ProtoDataType.Char:
+                            colWriter = value =>
+                                            {
+                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                ProtoWriter.WriteInt16((Int16) value, writer);
+                                            };
+                            break;
+                        case ProtoDataType.Double:
+                            colWriter = value =>
+                                            {
+                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                ProtoWriter.WriteDouble((double) value, writer);
+                                            };
+                            break;
+                        case ProtoDataType.Float:
+                            colWriter = value =>
+                                            {
+                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                ProtoWriter.WriteSingle((float) value, writer);
+                                            };
+                            break;
+                        case ProtoDataType.Long:
+                            colWriter = value =>
+                                            {
+                                                ProtoWriter.WriteFieldHeader(field, WireType.StartGroup, writer);
+                                                ProtoWriter.WriteInt64((long) value, writer);
+                                            };
+                            break;
+
+                        default:
+                            throw new NotSupportedException(col.ProtoDataType.ToString());
+                    }
+                    colWriters[i++] = colWriter;
                 }
 
-                return new ProtoDataHeader
-                           {
-                               Columns = columns.ToList()
-                           };
+                // write the rows
+                while (reader.Read())
+                {
+                    i = 0;
+                    ProtoWriter.WriteFieldHeader(3, WireType.StartGroup, writer);
+                    var token = ProtoWriter.StartSubItem(i, writer);
+                    foreach (var col in cols)
+                    {
+                        var value = reader[col.Ordinal];
+                        if (value == null || value is DBNull)
+                        {
+                        }
+                        else
+                        {
+                            colWriters[i](value);
+                        }
+                        i++;
+                    }
+                    ProtoWriter.EndSubItem(token, writer);
+                }
             }
         }
     }
