@@ -13,11 +13,8 @@
 // limitations under the License.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
 using ProtoBuf.Data.Internal;
 
 namespace ProtoBuf.Data
@@ -30,21 +27,24 @@ namespace ProtoBuf.Data
             if (stream == null) throw new ArgumentNullException("stream");
             if (reader == null) throw new ArgumentNullException("reader");
 
-            IList<ProtoDataColumn> cols;
+            ProtoDataColumn[] cols;
             using (var schema = reader.GetSchemaTable())
             {
-                cols = (from col in schema.AsEnumerable()
-                        let name = col.Field<string>("ColumnName")
-                        let ordinal = col.Field<int>("ColumnOrdinal")
-                        let type = ConvertProtoDataType.FromClrType(col.Field<Type>("DataType"))
-                        select new ProtoDataColumn { ColumnName = name, ProtoDataType = type, Ordinal = ordinal }
-                           ).ToList();
+                cols = new ProtoDataColumn[schema.Rows.Count];
+                for (var i = 0; i < schema.Rows.Count; i++)
+                {
+                    // Assumption: rows in the schema table are always ordered by
+                    // Ordinal position, ascending
+                    var row = schema.Rows[i];
+                    cols[i].ProtoDataType = ConvertProtoDataType.FromClrType(row.Field<Type>("DataType"));
+                    cols[i].ColumnName = schema.Rows[i].Field<string>("ColumnName");
+                }
             }
 
             using (var writer = new ProtoWriter(stream, null, null))
             {
                 // write the schema
-                foreach (ProtoDataColumn col in cols)
+                foreach (var col in cols)
                 {
                     // for each, write the name and data type
                     ProtoWriter.WriteFieldHeader(2, WireType.StartGroup, writer);
@@ -65,7 +65,7 @@ namespace ProtoBuf.Data
                     var token = ProtoWriter.StartSubItem(rowIndex, writer);
                     foreach (var col in cols)
                     {
-                        var value = reader[col.Ordinal];
+                        var value = reader[fieldIndex - 1];
                         if (value == null || value is DBNull)
                         {
                             // don't write anything
@@ -135,7 +135,7 @@ namespace ProtoBuf.Data
                                     break;
 
                                 default:
-                                    throw new NotSupportedException(col.ProtoDataType.ToString());
+                                    throw new UnsupportedColumnTypeException(ConvertProtoDataType.ToClrType(col.ProtoDataType));
                             }
                             
                         }

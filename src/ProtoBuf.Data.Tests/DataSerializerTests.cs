@@ -117,7 +117,6 @@ namespace ProtoBuf.Data.Tests
             [TestFixtureSetUp]
             public void TestFixtureSetUp()
             {
-
                 originalTable = new DataTable();
                 originalTable.Columns.Add("Foo", typeof(Foo));
                 originalTable.Rows.Add(new Foo());
