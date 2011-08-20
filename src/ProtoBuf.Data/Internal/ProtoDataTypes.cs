@@ -24,5 +24,10 @@ namespace ProtoBuf.Data.Internal
         {
             get { return Enum.GetValues(typeof (ProtoDataType)).OfType<ProtoDataType>(); }
         }
+
+        public static IEnumerable<Type> AllClrTypes
+        {
+            get { return AllTypes.Select(ConvertProtoDataType.ToClrType); }
+        }
     }
 }

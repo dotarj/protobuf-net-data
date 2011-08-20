@@ -13,14 +13,30 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
+using ProtoBuf.Data.Internal;
 
 namespace ProtoBuf.Data
 {
     public class UnsupportedColumnTypeException : Exception
     {
-        public UnsupportedColumnTypeException(Type type) : base(String.Format("Cannot serialize data column of type '{0}'. Only primitive types are supported.", type))
+        public Type AttemptedType { get; private set; }
+
+        public UnsupportedColumnTypeException(Type type)
+            : base(String.Format("Cannot serialize data column of type '{0}'. Only the following column types are supported: {1}.", type, SupportedClrTypeNames))
         {
-            
+            AttemptedType = type;
+        }
+
+        static readonly string SupportedClrTypeNames;
+
+        static UnsupportedColumnTypeException()
+        {
+            var types = ProtoDataTypes.AllClrTypes
+                .Select(t => t.Name)
+                .OrderBy(s => s);
+
+            SupportedClrTypeNames = String.Join(", ", types);
         }
     }
 }
