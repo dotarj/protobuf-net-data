@@ -41,10 +41,11 @@ namespace ProtoBuf.Data.Tests
                 originalTable.Columns.Add("ID", typeof(Guid));
                 originalTable.Columns.Add("LastName", typeof(string));
                 originalTable.Columns.Add("BlobData", typeof(byte[]));
-                originalTable.Rows.Add(DateTime.Today.Date, 42, "Foo", Guid.NewGuid(), "sdfsdf", new byte[] { 1, 2, 3, 4});
-                originalTable.Rows.Add(DateTime.Today.AddDays(-8).Date, null, "Bar", Guid.NewGuid(), "o2389uf", new byte[0]);
-                originalTable.Rows.Add(null, null, null, null, null, null);
-                originalTable.Rows.Add(DateTime.Today.AddDays(15).Date, null, "Foo", Guid.Empty, "", null);
+                originalTable.Columns.Add("ClobData", typeof(char[]));
+                originalTable.Rows.Add(DateTime.Today.Date, 42, "Foo", Guid.NewGuid(), "sdfsdf", new byte[] { 1, 2, 3, 4}, new[] { 'a' });
+                originalTable.Rows.Add(DateTime.Today.AddDays(-8).Date, null, "Bar", Guid.NewGuid(), "o2389uf", new byte[0], new[] {'a', 'b', 'c'});
+                originalTable.Rows.Add(null, null, null, null, null, null, null);
+                originalTable.Rows.Add(DateTime.Today.AddDays(15).Date, null, "Foo", Guid.Empty, "", null, new char[0]);
 
                 deserializedTable = new DataTable();
 

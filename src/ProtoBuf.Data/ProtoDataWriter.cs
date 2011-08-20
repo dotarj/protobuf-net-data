@@ -138,6 +138,12 @@ namespace ProtoBuf.Data
                                     ProtoWriter.WriteFieldHeader(fieldIndex, WireType.String, writer);
                                     ProtoWriter.WriteBytes((byte[])value, 0, ((byte[])value).Length, writer);
                                     break;
+
+                                case ProtoDataType.CharArray:
+                                    ProtoWriter.WriteFieldHeader(fieldIndex, WireType.String, writer);
+                                    ProtoWriter.WriteString(new string((char[])value), writer);
+                                    break;
+
                                 default:
                                     throw new UnsupportedColumnTypeException(ConvertProtoDataType.ToClrType(col.ProtoDataType));
                             }

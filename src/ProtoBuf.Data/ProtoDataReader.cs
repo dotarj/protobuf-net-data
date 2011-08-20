@@ -127,9 +127,11 @@ namespace ProtoBuf.Data
                     break;
 
                 case ProtoDataType.ByteArray:
-                    colReaders.Add(() => { var results = ProtoReader.AppendBytes(null, reader);
-                                             return results;
-                    });
+                    colReaders.Add(() => ProtoReader.AppendBytes(null, reader));
+                    break;
+
+                case ProtoDataType.CharArray:
+                    colReaders.Add(() => reader.ReadString().ToArray());
                     break;
 
                 default:
@@ -224,7 +226,10 @@ namespace ProtoBuf.Data
 
         public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
-            throw new NotImplementedException();
+            var sourceBuffer = (char[])currentRow[i];
+            length = Math.Min(length, currentRow.Length - (int)fieldoffset);
+            Array.Copy(sourceBuffer, fieldoffset, buffer, bufferoffset, length);
+            return length;
         }
 
         public Guid GetGuid(int i)
