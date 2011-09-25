@@ -33,19 +33,7 @@ namespace ProtoBuf.Data.Tests
             [TestFixtureSetUp]
             public void TestFixtureSetUp()
             {
-
-                originalTable = new DataTable();
-                originalTable.Columns.Add("Birthday", typeof(DateTime));
-                originalTable.Columns.Add("Age", typeof(int));
-                originalTable.Columns.Add("Name", typeof(string));
-                originalTable.Columns.Add("ID", typeof(Guid));
-                originalTable.Columns.Add("LastName", typeof(string));
-                originalTable.Columns.Add("BlobData", typeof(byte[]));
-                originalTable.Columns.Add("ClobData", typeof(char[]));
-                originalTable.Rows.Add(DateTime.Today.Date, 42, "Foo", Guid.NewGuid(), "sdfsdf", new byte[] { 1, 2, 3, 4}, new[] { 'a' });
-                originalTable.Rows.Add(DateTime.Today.AddDays(-8).Date, null, "Bar", Guid.NewGuid(), "o2389uf", new byte[0], new[] {'a', 'b', 'c'});
-                originalTable.Rows.Add(null, null, null, null, null, null, null);
-                originalTable.Rows.Add(DateTime.Today.AddDays(15).Date, null, "Foo", Guid.Empty, "", null, new char[0]);
+                originalTable = TestData.SmallDataTable();
 
                 deserializedTable = new DataTable();
 
@@ -102,32 +90,44 @@ namespace ProtoBuf.Data.Tests
             [Test]
             public void Should_serialize_row_values_correctly()
             {
-                for (var i = 0; i < originalTable.Rows.Count; i++)
-                {
-                    var originalValues = originalTable.Rows[i].ItemArray;
-                    var deserializedValues = deserializedTable.Rows[i].ItemArray;
-                    
-                    for (var j = 0; j < originalValues.Length; j++)
-                    {
-                        if (originalValues[j] is byte[])
-                        {
-                            var sourceArray = (byte[])originalValues[j];
-                            var destArray = deserializedValues[j];                            
-                            AssertArraysEqual(sourceArray, destArray);
-                        }
-                        else
-                            deserializedValues[i].Should().Be.EqualTo(originalValues[i]);
-                    }
-                }
+                TestHelper.AssertValuesEqual(originalTable, deserializedTable);
+            }
+        }
+
+        [TestFixture]
+        public class When_serializing_and_deserializing
+        {
+            private const string TestFile = "SmallDataTable.bin";
+
+            [Test]
+            public void Should_retain_binary_compatibility_when_reading()
+            {
+                var expected = TestData.SmallDataTable();
+
+                var deserializedTable = new DataTable();
+                using (var stream = File.OpenRead(TestFile))
+                using (var reader = DataSerializer.Deserialize(stream))
+                    deserializedTable.Load(reader);
+
+                TestHelper.AssertValuesEqual(expected, deserializedTable);
             }
 
-            private static void AssertArraysEqual(byte[] sourceArray, object destArray)
+            [Test]
+            public void Should_retain_binary_compatibility_when_writing()
             {
-                if (sourceArray.Length == 0)
-                    // Zero-length arrays are deserialized as null.
-                    destArray.Should().Be.InstanceOf<DBNull>();
-                else
-                    ((byte[])destArray).Should().Have.SameSequenceAs(sourceArray);
+                var table = TestData.SmallDataTable();
+
+                using (var stream = new MemoryStream())
+                {
+                    using (var reader = table.CreateDataReader())
+                        DataSerializer.Serialize(stream, reader);
+
+                    var expected = File.ReadAllBytes(TestFile);
+
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    stream.GetBuffer().Take(expected.Length).Should().Have.SameSequenceAs(expected);
+                }
             }
         }
 
