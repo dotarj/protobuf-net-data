@@ -38,5 +38,43 @@ namespace ProtoBuf.Data.Tests
             else
                 ((byte[])destArray).Should().Have.SameSequenceAs(sourceArray);
         }
+
+
+
+        public static void AssertColumnNamesEqual(DataTable expected, DataTable actual)
+        {
+            var expectedNames = expected.Columns
+                    .OfType<DataColumn>().Select(c => c.ColumnName).ToArray();
+
+            var actualNames = actual.Columns
+                .OfType<DataColumn>().Select(c => c.ColumnName).ToArray();
+
+            for (var i = 0; i < expectedNames.Length; i++)
+                actualNames[i].Should().Be.EqualTo(expectedNames[i]);
+        }
+
+        public static void AssertColumnTypesEqual(DataTable expected, DataTable actual)
+        {
+            var originalTypes = expected.Columns
+                    .OfType<DataColumn>().Select(c => c.DataType).ToArray();
+
+            var deserializedTypes = actual.Columns
+                .OfType<DataColumn>().Select(c => c.DataType).ToArray();
+
+            for (var i = 0; i < originalTypes.Length; i++)
+                deserializedTypes[i].Should().Be.EqualTo(originalTypes[i]);
+        }
+
+        public static void AssertRowValuesEqual(DataTable expected, DataTable actual)
+        {
+            actual.Rows.Count.Should().Be(expected.Rows.Count);
+
+            for (var i = 0; i < expected.Rows.Count; i++)
+            {
+                var expectedValues = expected.Rows[i].ItemArray;
+                var actualValues = actual.Rows[i].ItemArray;
+                actualValues.Should().Have.SameSequenceAs(expectedValues);
+            }
+        }
     }
 }
