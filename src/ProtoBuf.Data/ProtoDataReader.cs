@@ -25,9 +25,12 @@ namespace ProtoBuf.Data
     {
         Stream stream;
         object[] currentRow;
-
-        public static long ByteReadBufferSize { get; set; }
-
+        DataTable dataTable;
+        bool disposed;
+        private readonly List<Func<object>> colReaders;
+        private ProtoReader reader;
+        private int currentField;
+        private SubItemToken currentTableToken;
 
         public ProtoDataReader(Stream stream)
         {
@@ -35,9 +38,28 @@ namespace ProtoBuf.Data
             this.stream = stream;
             reader = new ProtoReader(stream, null, null);
             colReaders = new List<Func<object>>();
-            dataTable = new DataTable();
+
+            ResetCurrentSchema(); // just in case they call FieldCount before Read()
+            AdvanceToNextField();
+            if (currentField != 1)
+                throw new InvalidOperationException("No results found! Invalid/corrupt stream.");
+
+            ReadNextTableHeader();
+        }
+
+        private void ReadNextTableHeader()
+        {
+            currentTableToken = ProtoReader.StartSubItem(reader);
 
             AdvanceToNextField();
+
+            if (currentField == 0)
+            {
+                reachedEndOfCurrentTable = true;
+                ProtoReader.EndSubItem(currentTableToken, reader);
+                return;
+            }
+
             if (currentField != 2)
                 throw new InvalidOperationException("No header found! Invalid/corrupt stream.");
 
@@ -49,10 +71,16 @@ namespace ProtoBuf.Data
             currentField = reader.ReadFieldHeader();
         }
 
-
+        void ResetCurrentSchema()
+        {
+            dataTable = new DataTable();
+            colReaders.Clear();
+        }
 
         private void ReadHeader()
         {
+            ResetCurrentSchema();
+
             do
             {
                 ReadColumn();
@@ -146,11 +174,7 @@ namespace ProtoBuf.Data
         {
             int field;
 
-            if (currentRow == null)
-                currentRow = new object[colReaders.Count];
-            else
-                Array.Clear(currentRow, 0, currentRow.Length);
-
+            currentRow = new object[colReaders.Count];
             var token = ProtoReader.StartSubItem(reader);
             while ((field = reader.ReadFieldHeader()) != 0)
             {
@@ -163,9 +187,6 @@ namespace ProtoBuf.Data
             }
             ProtoReader.EndSubItem(token, reader);
         }
-
-
-        DataTable dataTable;
 
         public string GetName(int i)
         {
@@ -304,7 +325,8 @@ namespace ProtoBuf.Data
 
         public void Close()
         {
-            // Nothing to close
+            stream.Close();
+            IsClosed = true;
         }
 
         static Exception NestingNotSupported()
@@ -314,26 +336,56 @@ namespace ProtoBuf.Data
 
         public DataTable GetSchemaTable()
         {
-            using (var reader = dataTable.CreateDataReader())
-                return reader.GetSchemaTable();
+            using (var schemaReader = dataTable.CreateDataReader())
+                return schemaReader.GetSchemaTable();
         }
 
 
         public bool NextResult()
         {
-            return false;
-        }
-
-        public bool Read()
-        {
             if (IsClosed)
                 return false;
 
-            ReadCurrentRow();
+            ConsumeAnyRemainingRows();
+
             AdvanceToNextField();
 
             if (currentField == 0)
+            {
                 IsClosed = true;
+                return false;
+            }
+
+            reachedEndOfCurrentTable = false;
+
+            ReadNextTableHeader();
+
+            return true;
+        }
+
+        private void ConsumeAnyRemainingRows()
+        {
+            // Unfortunately, protocol buffers doesn't let you seek - we have
+            // to consume all the remaining tokens up anyway
+            while (Read());
+        }
+
+        private bool reachedEndOfCurrentTable;
+
+        public bool Read()
+        {
+            if (IsClosed || reachedEndOfCurrentTable)
+                return false;
+
+            if (currentField == 0)
+            {
+                ProtoReader.EndSubItem(currentTableToken, reader);
+                reachedEndOfCurrentTable = true;
+                return false;
+            }
+
+            ReadCurrentRow();
+            AdvanceToNextField();
 
             return true;
         }
@@ -389,10 +441,5 @@ namespace ProtoBuf.Data
         {
             Dispose(false);
         }
-
-        bool disposed;
-        private List<Func<object>> colReaders;
-        private ProtoReader reader;
-        private int currentField;
     }
 }

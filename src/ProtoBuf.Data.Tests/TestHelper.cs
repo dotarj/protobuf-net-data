@@ -9,8 +9,10 @@ namespace ProtoBuf.Data.Tests
 {
     public static class TestHelper
     {
-        public static void AssertValuesEqual(DataTable expected, DataTable actual)
+        public static void AssertRowValuesEqual(DataTable expected, DataTable actual)
         {
+            actual.Rows.Count.Should().Be(expected.Rows.Count);
+
             for (var i = 0; i < expected.Rows.Count; i++)
             {
                 var originalValues = expected.Rows[i].ItemArray;
@@ -24,19 +26,25 @@ namespace ProtoBuf.Data.Tests
                         var destArray = deserializedValues[j];
                         AssertArraysEqual(sourceArray, destArray);
                     }
+                    else if (originalValues[j] is char[])
+                    {
+                        var sourceArray = (char[])originalValues[j];
+                        var destArray = deserializedValues[j];
+                        AssertArraysEqual(sourceArray, destArray);
+                    }
                     else
-                        deserializedValues[i].Should().Be.EqualTo(originalValues[i]);
+                        deserializedValues[j].Should().Be.EqualTo(originalValues[j]);
                 }
             }
         }
 
-        private static void AssertArraysEqual(byte[] sourceArray, object destArray)
+        private static void AssertArraysEqual<T>(T[] sourceArray, object destArray)
         {
             if (sourceArray.Length == 0)
                 // Zero-length arrays are deserialized as null.
                 destArray.Should().Be.InstanceOf<DBNull>();
             else
-                ((byte[])destArray).Should().Have.SameSequenceAs(sourceArray);
+                ((T[])destArray).Should().Have.SameSequenceAs(sourceArray);
         }
 
 
@@ -63,18 +71,6 @@ namespace ProtoBuf.Data.Tests
 
             for (var i = 0; i < originalTypes.Length; i++)
                 deserializedTypes[i].Should().Be.EqualTo(originalTypes[i]);
-        }
-
-        public static void AssertRowValuesEqual(DataTable expected, DataTable actual)
-        {
-            actual.Rows.Count.Should().Be(expected.Rows.Count);
-
-            for (var i = 0; i < expected.Rows.Count; i++)
-            {
-                var expectedValues = expected.Rows[i].ItemArray;
-                var actualValues = actual.Rows[i].ItemArray;
-                actualValues.Should().Have.SameSequenceAs(expectedValues);
-            }
         }
     }
 }
