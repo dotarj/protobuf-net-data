@@ -49,6 +49,8 @@ namespace ProtoBuf.Data
 
         private void ReadNextTableHeader()
         {
+            currentRow = null;
+
             currentTableToken = ProtoReader.StartSubItem(reader);
 
             AdvanceToNextField();
@@ -174,7 +176,11 @@ namespace ProtoBuf.Data
         {
             int field;
 
-            currentRow = new object[colReaders.Count];
+            if (currentRow == null)
+                currentRow = new object[colReaders.Count];
+            else
+                Array.Clear(currentRow, 0, currentRow.Length);
+
             var token = ProtoReader.StartSubItem(reader);
             while ((field = reader.ReadFieldHeader()) != 0)
             {
