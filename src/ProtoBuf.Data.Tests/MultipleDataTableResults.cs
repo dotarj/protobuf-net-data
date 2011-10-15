@@ -71,42 +71,9 @@ namespace ProtoBuf.Data.Tests
             }
 
             [Test]
-            public void Should_produce_the_same_number_of_tables()
+            public void All_tables_should_have_the_same_contents()
             {
-                deserializedDataSet.Tables.Count.Should().Be.EqualTo(2);
-            }
-
-            [Test]
-            public void The_first_table_should_have_the_same_number_of_rows()
-            {
-                deserializedDataSet.Tables[0].Rows.Count.Should().Be.EqualTo(dataSet.Tables[0].Rows.Count);
-            }
-
-            [Test]
-            public void The_second_table_should_have_the_same_number_of_rows()
-            {
-                deserializedDataSet.Tables[1].Rows.Count.Should().Be.EqualTo(dataSet.Tables[1].Rows.Count);
-            }
-
-            [Test]
-            public void The_columns_should_all_have_the_same_names()
-            {
-                for (var i = 0; i < dataSet.Tables.Count; i++)
-                    TestHelper.AssertColumnNamesEqual(dataSet.Tables[i], deserializedDataSet.Tables[i]);
-            }
-
-            [Test]
-            public void The_columns_should_all_have_the_same_types()
-            {
-                for (var i = 0; i < dataSet.Tables.Count; i++)
-                    TestHelper.AssertColumnTypesEqual(dataSet.Tables[i], deserializedDataSet.Tables[i]);
-            }
-
-            [Test]
-            public void Should_serialize_row_values_correctly()
-            {
-                for (var i = 0; i < dataSet.Tables.Count; i++)
-                    TestHelper.AssertRowValuesEqual(dataSet.Tables[i], deserializedDataSet.Tables[i]);
+                AssertHelper.AssertContentsEqual(dataSet, deserializedDataSet);
             }
         }
 

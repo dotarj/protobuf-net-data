@@ -16,7 +16,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using NUnit.Framework;
-using SharpTestsEx;
 
 namespace ProtoBuf.Data.Tests
 {
@@ -70,33 +69,9 @@ namespace ProtoBuf.Data.Tests
             }
 
             [Test]
-            public void Should_produce_the_same_number_of_columns()
+            public void Should_have_the_same_contents_as_the_original()
             {
-                deserializedTable.Columns.Count.Should().Be(originalTable.Columns.Count);
-            }
-
-            [Test]
-            public void Should_produce_the_same_number_of_rows()
-            {
-                deserializedTable.Rows.Count.Should().Be(originalTable.Rows.Count);
-            }
-
-            [Test]
-            public void The_columns_should_all_have_the_same_names()
-            {
-                TestHelper.AssertColumnNamesEqual(originalTable, deserializedTable);
-            }
-
-            [Test]
-            public void The_columns_should_all_have_the_same_types()
-            {
-                TestHelper.AssertColumnTypesEqual(originalTable, deserializedTable);
-            }
-
-            [Test]
-            public void Should_serialize_row_values_correctly()
-            {
-                TestHelper.AssertRowValuesEqual(originalTable, deserializedTable);
+                AssertHelper.AssertContentsEqual(originalTable, deserializedTable);
             }
         }
     }

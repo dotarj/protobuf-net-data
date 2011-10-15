@@ -47,6 +47,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackwardsCompatibilityTests.cs" />
     <Compile Include="BigDataSerializerTests.cs" />
     <Compile Include="DataSerializerTests.cs" />
     <Compile Include="MultipleDataTableResults.cs">
@@ -57,7 +58,7 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="TestData.cs" />
-    <Compile Include="TestHelper.cs" />
+    <Compile Include="AssertHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BackwardsCompatbilityTest.bin">
