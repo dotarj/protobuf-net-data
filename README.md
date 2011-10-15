@@ -73,13 +73,13 @@ DataSerializer packs data faster and smaller than the equivalent DataTable.Save/
 
 ### FAQ
 
-##### Are multiple result sets supported?
+#### Are multiple result sets supported?
 Yes! Multiple result sets - i.e, IDataReader.NextResult() - are now supported. For example, a DataSet containing 3 DataTables.
 
-##### Are nested DataTables supported?
+#### Are nested DataTables supported?
 No, this library is designed for simple tabular data like time series, matrices, CSV files, and SQL query results. Complex or heirarchical data structures should be serialized with JSON or XML.
 
-##### What exactly from the data reader gets serialized?
+#### What exactly from the data reader gets serialized?
 Only the data reader's contents are serialized - i.e., the column name, data type, and values. Metadata about unique keys, auto increment, default value, base table name, data provider, data relations etc is ignored.
 
 ### Roadmap
