@@ -69,7 +69,7 @@ namespace ProtoBuf.Data.Tests
 
                     actual.HasErrors.Should().Be.False();
 
-                    AssertHelper.AssertContentsEqual(expected, actual);
+                    TestHelper.AssertContentsEqual(expected, actual);
                 }
             }
         }

@@ -27,7 +27,6 @@ namespace ProtoBuf.Data.Tests
         {
             private DataSet dataSet;
             private DataSet deserializedDataSet;
-            private Stream stream;
 
             [TestFixtureSetUp]
             public void TestFixtureSetUp()
@@ -35,24 +34,13 @@ namespace ProtoBuf.Data.Tests
                 dataSet = TestData.DataSetFromSql("SELECT TOP 25 * FROM DimCustomer; SELECT TOP 42 * FROM DimProduct;",
                                                   "DimCustomer", "DimProduct");
 
-                deserializedDataSet = new DataSet();
-
-                stream = new MemoryStream();
-                using (var originalReader = dataSet.CreateDataReader())
-                {
-                    DataSerializer.Serialize(stream, originalReader);
-
-                    stream.Seek(0, SeekOrigin.Begin);
-
-                    using (var reader = DataSerializer.Deserialize(stream))
-                        deserializedDataSet.Load(reader, LoadOption.OverwriteChanges, "DimCustomer", "DimProduct");
-                }
+                deserializedDataSet = TestHelper.SerializeAndDeserialize(dataSet, "DimCustomer", "DimProduct");
             }
 
             [Test]
             public void All_tables_should_have_the_same_contents()
             {
-                AssertHelper.AssertContentsEqual(dataSet, deserializedDataSet);
+                TestHelper.AssertContentsEqual(dataSet, deserializedDataSet);
             }
         }
 

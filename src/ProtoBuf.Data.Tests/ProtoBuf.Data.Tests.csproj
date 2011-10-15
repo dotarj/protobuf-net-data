@@ -58,7 +58,7 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="TestData.cs" />
-    <Compile Include="AssertHelper.cs" />
+    <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BackwardsCompatbilityTest.bin">

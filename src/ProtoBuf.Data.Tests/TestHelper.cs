@@ -15,12 +15,13 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
 namespace ProtoBuf.Data.Tests
 {
-    public static class AssertHelper
+    public static class TestHelper
     {
         public static void AssertContentsEqual(DataSet expected, DataSet actual)
         {
@@ -119,5 +120,40 @@ namespace ProtoBuf.Data.Tests
             Assert.That(actualTypes, Is.EquivalentTo(expectedTypes), 
                 "Table {0} column types didn't match.", GetTableNumber(actual));
         }
+
+        public static DataTable SerializeAndDeserialize(DataTable dataTable)
+        {
+            using (var stream = new MemoryStream())
+            using (var originalReader = dataTable.CreateDataReader())
+            {
+                DataSerializer.Serialize(stream, originalReader);
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                var deserializedDataTable = new DataTable();
+                using (var reader = DataSerializer.Deserialize(stream))
+                    deserializedDataTable.Load(reader);
+
+                return deserializedDataTable;
+            }
+        }
+
+        public static DataSet SerializeAndDeserialize(DataSet dataSet, params string[] tableNames)
+        {
+            using (var stream = new MemoryStream())
+            using (var originalReader = dataSet.CreateDataReader())
+            {
+                DataSerializer.Serialize(stream, originalReader);
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                var deserializedDataSet = new DataSet();
+                using (var reader = DataSerializer.Deserialize(stream))
+                    deserializedDataSet.Load(reader, LoadOption.OverwriteChanges, tableNames);
+
+                return deserializedDataSet;
+            }
+        }
     }
+
 }

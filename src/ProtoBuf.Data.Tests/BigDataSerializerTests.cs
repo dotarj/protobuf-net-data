@@ -30,25 +30,13 @@ namespace ProtoBuf.Data.Tests
             public void TestFixtureSetUp()
             {
                 originalTable = TestData.DataTableFromSql("SELECT * FROM DimCustomer");
-
-                deserializedTable = new DataTable();
-
-                using (var stream = new MemoryStream())
-                using (var originalReader = originalTable.CreateDataReader())
-                {
-                    DataSerializer.Serialize(stream, originalReader);
-
-                    stream.Seek(0, SeekOrigin.Begin);
-
-                    using (var reader = DataSerializer.Deserialize(stream))
-                        deserializedTable.Load(reader);
-                }
+                deserializedTable = TestHelper.SerializeAndDeserialize(originalTable);
             }
 
             [Test]
             public void Should_have_the_same_contents_as_the_original()
             {
-                AssertHelper.AssertContentsEqual(originalTable, deserializedTable);
+                TestHelper.AssertContentsEqual(originalTable, deserializedTable);
             }
         }
     }
