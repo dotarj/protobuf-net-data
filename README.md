@@ -65,16 +65,22 @@ DataSerializer supports all the primitive types exposed by [IDataReader](http://
 
 Note that no distinction is made between null and zero-length arrays; both will be deserialized as null.
 
-#### Limitations
-
-* Doesn't (yet) support nested data readers - aka [IDataReader.GetData()](http://msdn.microsoft.com/en-us/library/system.data.idatarecord.getdata.aspx)
-* Doesn't (yet) support multiple DataTables in single DataReader - aka [IDataReader.NextResult()](http://msdn.microsoft.com/en-us/library/system.data.idatareader.nextresult.aspx).
-
 ### Benchmarks
 
 DataSerializer packs data faster and smaller than the equivalent DataTable.Save/Write XML:
 
 ![DataSerializer vs DataTable benchmarks](http://julana.richarddingwall.name/protobuf-net-data-benchmark-1.png "Benchmarks serializing and deserializing the DimCustomer table from the AdventureWorksDW2008R2 database on an i7 620 MacBook Pro running Windows 7.")
+
+### FAQ
+
+##### Are multiple result sets supported?
+Yes! Multiple result sets - i.e, IDataReader.NextResult() - are now supported. For example, a DataSet containing 3 DataTables.
+
+##### Are nested DataTables supported?
+No, this library is designed for simple tabular data like time series, matrices, CSV files, and SQL query results. Complex or heirarchical data structures should be serialized with JSON or XML.
+
+##### What exactly from the data reader gets serialized?
+Only the data reader's contents are serialized - i.e., the column name, data type, and values. Metadata about unique keys, auto increment, default value, base table name, data provider, data relations etc is ignored.
 
 ### Roadmap
 
