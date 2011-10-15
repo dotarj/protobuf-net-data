@@ -47,6 +47,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AfterCloseTests.cs" />
     <Compile Include="BackwardsCompatibilityTests.cs" />
     <Compile Include="BigDataSerializerTests.cs" />
     <Compile Include="DataSerializerTests.cs" />

@@ -49,26 +49,32 @@ namespace ProtoBuf.Data
 
         public string GetName(int i)
         {
+            ErrorIfClosed();
             return dataTable.Columns[i].ColumnName;
         }
 
         public string GetDataTypeName(int i)
         {
+            ErrorIfClosed();
             return dataTable.Columns[i].DataType.Name;
         }
 
         public Type GetFieldType(int i)
         {
+            ErrorIfClosed();
             return dataTable.Columns[i].DataType;
         }
 
         public object GetValue(int i)
         {
+            ErrorIfClosed();
             return currentRow[i];
         }
 
         public int GetValues(object[] values)
         {
+            ErrorIfClosed();
+
             var length = Math.Min(values.Length, dataTable.Columns.Count);
 
             Array.Copy(currentRow, values, length);
@@ -78,21 +84,25 @@ namespace ProtoBuf.Data
 
         public int GetOrdinal(string name)
         {
+            ErrorIfClosed();
             return dataTable.Columns[name].Ordinal;
         }
 
         public bool GetBoolean(int i)
         {
+            ErrorIfClosed();
             return (bool)currentRow[i];
         }
 
         public byte GetByte(int i)
         {
+            ErrorIfClosed();
             return (byte)currentRow[i];
         }
 
         public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
         {
+            ErrorIfClosed();
             var sourceBuffer = (byte[])currentRow[i];
             length = Math.Min(length, currentRow.Length - (int)fieldOffset);
             Array.Copy(sourceBuffer, fieldOffset, buffer, bufferoffset, length);
@@ -101,11 +111,13 @@ namespace ProtoBuf.Data
 
         public char GetChar(int i)
         {
+            ErrorIfClosed();
             return (char)currentRow[i];
         }
 
         public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
+            ErrorIfClosed();
             var sourceBuffer = (char[])currentRow[i];
             length = Math.Min(length, currentRow.Length - (int)fieldoffset);
             Array.Copy(sourceBuffer, fieldoffset, buffer, bufferoffset, length);
@@ -114,72 +126,95 @@ namespace ProtoBuf.Data
 
         public Guid GetGuid(int i)
         {
+            ErrorIfClosed();
             return (Guid)currentRow[i];
         }
 
         public short GetInt16(int i)
         {
+            ErrorIfClosed();
             return (short)currentRow[i];
         }
 
         public int GetInt32(int i)
         {
+            ErrorIfClosed();
             return (int)currentRow[i];
         }
 
         public long GetInt64(int i)
         {
+            ErrorIfClosed();
             return (long)currentRow[i];
         }
 
         public float GetFloat(int i)
         {
+            ErrorIfClosed();
             return (float)currentRow[i];
         }
 
         public double GetDouble(int i)
         {
+            ErrorIfClosed();
             return (double)currentRow[i];
         }
 
         public string GetString(int i)
         {
+            ErrorIfClosed();
             return (string)currentRow[i];
         }
 
         public decimal GetDecimal(int i)
         {
+            ErrorIfClosed();
             return (decimal)currentRow[i];
         }
 
         public DateTime GetDateTime(int i)
         {
+            ErrorIfClosed();
             return (DateTime)currentRow[i];
         }
 
         public IDataReader GetData(int i)
         {
+            ErrorIfClosed();
             throw NestingNotSupported();
         }
 
         public bool IsDBNull(int i)
         {
+            ErrorIfClosed();
             return currentRow[i] == null || currentRow[i] is DBNull;
         }
 
         public int FieldCount
         {
-            get { return dataTable.Columns.Count; }
+            get
+            {
+                ErrorIfClosed();
+                return dataTable.Columns.Count;
+            }
         }
 
         object IDataRecord.this[int i]
         {
-            get { return GetValue(i); }
+            get
+            {
+                ErrorIfClosed();
+                return GetValue(i);
+            }
         }
 
         object IDataRecord.this[string name]
         {
-            get { return GetValue(GetOrdinal(name)); }
+            get
+            {
+                ErrorIfClosed();
+                return GetValue(GetOrdinal(name));
+            }
         }
 
         public void Close()
@@ -190,8 +225,7 @@ namespace ProtoBuf.Data
 
         public bool NextResult()
         {
-            if (IsClosed)
-                return false;
+            ErrorIfClosed();
 
             ConsumeAnyRemainingRows();
 
@@ -217,13 +251,16 @@ namespace ProtoBuf.Data
 
         public DataTable GetSchemaTable()
         {
+            ErrorIfClosed();
             using (var schemaReader = dataTable.CreateDataReader())
                 return schemaReader.GetSchemaTable();
         }
 
         public bool Read()
         {
-            if (IsClosed || reachedEndOfCurrentTable)
+            ErrorIfClosed();
+
+            if (reachedEndOfCurrentTable)
                 return false;
 
             if (currentField == 0)
@@ -241,7 +278,11 @@ namespace ProtoBuf.Data
 
         public int Depth
         {
-            get { return 1; }
+            get
+            {
+                ErrorIfClosed();
+                return 1;
+            }
         }
 
         public bool IsClosed { get; private set; }
@@ -442,6 +483,12 @@ namespace ProtoBuf.Data
                 }
             }
             ProtoReader.EndSubItem(token, reader);
+        }
+
+        private void ErrorIfClosed()
+        {
+            if (IsClosed)
+                throw new InvalidOperationException("Attempt to access ProtoDataReader which was already closed.");
         }
     }
 }
