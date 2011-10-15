@@ -31,6 +31,7 @@ namespace ProtoBuf.Data
         private ProtoReader reader;
         private int currentField;
         private SubItemToken currentTableToken;
+        private bool reachedEndOfCurrentTable;
 
         public ProtoDataReader(Stream stream)
         {
@@ -44,6 +45,257 @@ namespace ProtoBuf.Data
                 throw new InvalidOperationException("No results found! Invalid/corrupt stream.");
 
             ReadNextTableHeader();
+        }
+
+        public string GetName(int i)
+        {
+            return dataTable.Columns[i].ColumnName;
+        }
+
+        public string GetDataTypeName(int i)
+        {
+            return dataTable.Columns[i].DataType.Name;
+        }
+
+        public Type GetFieldType(int i)
+        {
+            return dataTable.Columns[i].DataType;
+        }
+
+        public object GetValue(int i)
+        {
+            return currentRow[i];
+        }
+
+        public int GetValues(object[] values)
+        {
+            var length = Math.Min(values.Length, dataTable.Columns.Count);
+
+            Array.Copy(currentRow, values, length);
+
+            return length;
+        }
+
+        public int GetOrdinal(string name)
+        {
+            return dataTable.Columns[name].Ordinal;
+        }
+
+        public bool GetBoolean(int i)
+        {
+            return (bool)currentRow[i];
+        }
+
+        public byte GetByte(int i)
+        {
+            return (byte)currentRow[i];
+        }
+
+        public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
+        {
+            var sourceBuffer = (byte[])currentRow[i];
+            length = Math.Min(length, currentRow.Length - (int)fieldOffset);
+            Array.Copy(sourceBuffer, fieldOffset, buffer, bufferoffset, length);
+            return length;
+        }
+
+        public char GetChar(int i)
+        {
+            return (char)currentRow[i];
+        }
+
+        public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
+        {
+            var sourceBuffer = (char[])currentRow[i];
+            length = Math.Min(length, currentRow.Length - (int)fieldoffset);
+            Array.Copy(sourceBuffer, fieldoffset, buffer, bufferoffset, length);
+            return length;
+        }
+
+        public Guid GetGuid(int i)
+        {
+            return (Guid)currentRow[i];
+        }
+
+        public short GetInt16(int i)
+        {
+            return (short)currentRow[i];
+        }
+
+        public int GetInt32(int i)
+        {
+            return (int)currentRow[i];
+        }
+
+        public long GetInt64(int i)
+        {
+            return (long)currentRow[i];
+        }
+
+        public float GetFloat(int i)
+        {
+            return (float)currentRow[i];
+        }
+
+        public double GetDouble(int i)
+        {
+            return (double)currentRow[i];
+        }
+
+        public string GetString(int i)
+        {
+            return (string)currentRow[i];
+        }
+
+        public decimal GetDecimal(int i)
+        {
+            return (decimal)currentRow[i];
+        }
+
+        public DateTime GetDateTime(int i)
+        {
+            return (DateTime)currentRow[i];
+        }
+
+        public IDataReader GetData(int i)
+        {
+            throw NestingNotSupported();
+        }
+
+        public bool IsDBNull(int i)
+        {
+            return currentRow[i] == null || currentRow[i] is DBNull;
+        }
+
+        public int FieldCount
+        {
+            get { return dataTable.Columns.Count; }
+        }
+
+        object IDataRecord.this[int i]
+        {
+            get { return GetValue(i); }
+        }
+
+        object IDataRecord.this[string name]
+        {
+            get { return GetValue(GetOrdinal(name)); }
+        }
+
+        public void Close()
+        {
+            stream.Close();
+            IsClosed = true;
+        }
+
+        public bool NextResult()
+        {
+            if (IsClosed)
+                return false;
+
+            ConsumeAnyRemainingRows();
+
+            AdvanceToNextField();
+
+            if (currentField == 0)
+            {
+                IsClosed = true;
+                return false;
+            }
+
+            reachedEndOfCurrentTable = false;
+
+            ReadNextTableHeader();
+
+            return true;
+        }
+
+        static Exception NestingNotSupported()
+        {
+            return new NotImplementedException("Nested data sets are not currently supported.");
+        }
+
+        public DataTable GetSchemaTable()
+        {
+            using (var schemaReader = dataTable.CreateDataReader())
+                return schemaReader.GetSchemaTable();
+        }
+
+        public bool Read()
+        {
+            if (IsClosed || reachedEndOfCurrentTable)
+                return false;
+
+            if (currentField == 0)
+            {
+                ProtoReader.EndSubItem(currentTableToken, reader);
+                reachedEndOfCurrentTable = true;
+                return false;
+            }
+
+            ReadCurrentRow();
+            AdvanceToNextField();
+
+            return true;
+        }
+
+        public int Depth
+        {
+            get { return 1; }
+        }
+
+        public bool IsClosed { get; private set; }
+
+        public int RecordsAffected
+        {
+            get { return 0; }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    if (reader != null)
+                    {
+                        reader.Dispose();
+                        reader = null;
+                    }
+
+                    if (stream != null)
+                    {
+                        stream.Dispose();
+                        stream = null;
+                    }
+
+                    if (dataTable != null)
+                    {
+                        dataTable.Dispose();
+                        dataTable = null;
+                    }
+                }
+
+                disposed = true;
+            }
+        }
+
+        ~ProtoDataReader()
+        {
+            Dispose(false);
+        }
+
+        private void ConsumeAnyRemainingRows()
+        {
+            // Unfortunately, protocol buffers doesn't let you seek - we have
+            // to consume all the remaining tokens up anyway
+            while (Read()) ;
         }
 
         private void ReadNextTableHeader()
@@ -93,7 +345,7 @@ namespace ProtoBuf.Data
             var token = ProtoReader.StartSubItem(reader);
             int field;
             string name = null;
-            var protoDataType = (ProtoDataType) (-1);
+            var protoDataType = (ProtoDataType)(-1);
             while ((field = reader.ReadFieldHeader()) != 0)
             {
                 switch (field)
@@ -102,7 +354,7 @@ namespace ProtoBuf.Data
                         name = reader.ReadString();
                         break;
                     case 2:
-                        protoDataType = (ProtoDataType) reader.ReadInt32();
+                        protoDataType = (ProtoDataType)reader.ReadInt32();
                         break;
                     default:
                         reader.SkipField();
@@ -190,259 +442,6 @@ namespace ProtoBuf.Data
                 }
             }
             ProtoReader.EndSubItem(token, reader);
-        }
-
-        public string GetName(int i)
-        {
-            return dataTable.Columns[i].ColumnName;
-        }
-
-        public string GetDataTypeName(int i)
-        {
-            return dataTable.Columns[i].DataType.Name;
-        }
-
-        public Type GetFieldType(int i)
-        {
-            return dataTable.Columns[i].DataType;
-        }
-
-        public object GetValue(int i)
-        {
-            return currentRow[i];
-        }
-
-        public int GetValues(object[] values)
-        {
-            var length = Math.Min(values.Length, dataTable.Columns.Count);
-
-            Array.Copy(currentRow, values, length);
-
-            return length;
-        }
-
-        public int GetOrdinal(string name)
-        {
-            return dataTable.Columns[name].Ordinal;
-        }
-
-        public bool GetBoolean(int i)
-        {
-            return (bool)currentRow[i];
-        }
-
-        public byte GetByte(int i)
-        {
-            return (byte)currentRow[i];
-        }
-
-        public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
-        {
-            var sourceBuffer = (byte[]) currentRow[i];
-            length = Math.Min(length, currentRow.Length - (int)fieldOffset);
-            Array.Copy(sourceBuffer, fieldOffset, buffer, bufferoffset, length);
-            return length;
-        }
-
-        public char GetChar(int i)
-        {
-            return (char)currentRow[i];
-        }
-
-        public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
-        {
-            var sourceBuffer = (char[])currentRow[i];
-            length = Math.Min(length, currentRow.Length - (int)fieldoffset);
-            Array.Copy(sourceBuffer, fieldoffset, buffer, bufferoffset, length);
-            return length;
-        }
-
-        public Guid GetGuid(int i)
-        {
-            return (Guid)currentRow[i];
-        }
-
-        public short GetInt16(int i)
-        {
-            return (short)currentRow[i];
-        }
-
-        public int GetInt32(int i)
-        {
-            return (int)currentRow[i];
-        }
-
-        public long GetInt64(int i)
-        {
-            return (long)currentRow[i];
-        }
-
-        public float GetFloat(int i)
-        {
-            return (float)currentRow[i];
-        }
-
-        public double GetDouble(int i)
-        {
-            return (double)currentRow[i];
-        }
-
-        public string GetString(int i)
-        {
-            return (string)currentRow[i];
-        }
-
-        public decimal GetDecimal(int i)
-        {
-            return (decimal)currentRow[i];
-        }
-
-        public DateTime GetDateTime(int i)
-        {
-            return (DateTime) currentRow[i];
-        }
-
-        public IDataReader GetData(int i)
-        {
-            throw NestingNotSupported();
-        }
-
-        public bool IsDBNull(int i)
-        {
-            return currentRow[i] == null || currentRow[i] is DBNull;
-        }
-
-        public int FieldCount
-        {
-            get { return dataTable.Columns.Count; }
-        }
-
-        object IDataRecord.this[int i]
-        {
-            get { return GetValue(i); }
-        }
-
-        object IDataRecord.this[string name]
-        {
-            get { return GetValue(GetOrdinal(name)); }
-        }
-
-        public void Close()
-        {
-            stream.Close();
-            IsClosed = true;
-        }
-
-        static Exception NestingNotSupported()
-        {
-            return new NotImplementedException("Nested data sets are not currently supported.");
-        }
-
-        public DataTable GetSchemaTable()
-        {
-            using (var schemaReader = dataTable.CreateDataReader())
-                return schemaReader.GetSchemaTable();
-        }
-
-        public bool NextResult()
-        {
-            if (IsClosed)
-                return false;
-
-            ConsumeAnyRemainingRows();
-
-            AdvanceToNextField();
-
-            if (currentField == 0)
-            {
-                IsClosed = true;
-                return false;
-            }
-
-            reachedEndOfCurrentTable = false;
-
-            ReadNextTableHeader();
-
-            return true;
-        }
-
-        private void ConsumeAnyRemainingRows()
-        {
-            // Unfortunately, protocol buffers doesn't let you seek - we have
-            // to consume all the remaining tokens up anyway
-            while (Read());
-        }
-
-        private bool reachedEndOfCurrentTable;
-
-        public bool Read()
-        {
-            if (IsClosed || reachedEndOfCurrentTable)
-                return false;
-
-            if (currentField == 0)
-            {
-                ProtoReader.EndSubItem(currentTableToken, reader);
-                reachedEndOfCurrentTable = true;
-                return false;
-            }
-
-            ReadCurrentRow();
-            AdvanceToNextField();
-
-            return true;
-        }
-
-        public int Depth
-        {
-            get { return 1; }
-        }
-
-        public bool IsClosed { get; private set; }
-
-        public int RecordsAffected
-        {
-            get { return 0; }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    if (reader != null)
-                    {
-                        reader.Dispose();
-                        reader = null;
-                    }
-
-                    if (stream != null)
-                    {
-                        stream.Dispose();
-                        stream = null;
-                    }
-
-                    if (dataTable != null)
-                    {
-                        dataTable.Dispose();
-                        dataTable = null;
-                    }
-                }
-
-                disposed = true;
-            }
-        }
-
-        ~ProtoDataReader()
-        {
-            Dispose(false);
         }
     }
 }
