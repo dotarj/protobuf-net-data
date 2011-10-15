@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <MSBuildCommunityTasksPath>.</MSBuildCommunityTasksPath>
+
+    <OutputDir>..\output</OutputDir>
+    <ZipCommentFile>ZipCommentTemplate.txt</ZipCommentFile>
+  </PropertyGroup>
+  
+  <Import Project="..\lib\MSBuild.Community.Tasks.v1.2.0.306\MSBuild.Community.Tasks.Targets"/>
+
+  <Target Name="ReleasePackage">
+
+    <RemoveDir Directories="$(OutputDir)" />
+    
+    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj" 
+             Targets="Clean; Rebuild" 
+             Properties="Configuration=Release;OutputPath=..\$(OutputDir)"
+             />
+
+    <Copy SourceFiles="..\license.txt" DestinationFolder="$(OutputDir)" />
+    
+    <GetAssemblyIdentity
+        AssemblyFiles="$(OutputDir)\protobuf-net-data.dll">
+      <Output
+          TaskParameter="Assemblies"
+          ItemName="AssemblyInfo"/>
+    </GetAssemblyIdentity>
+    
+    <ItemGroup>
+      <!-- All files from build -->
+      <ZipFiles Include="$(OutputDir)\*.*" />
+    </ItemGroup>
+
+    <Zip Files="@(ZipFiles)"
+       WorkingDirectory="$(OutputDir)"
+       ZipFileName="$(OutputDir)\protobuf-net-data-%(AssemblyInfo.Version).zip"
+       ZipLevel="9" />
+
+  </Target>
+</Project>
