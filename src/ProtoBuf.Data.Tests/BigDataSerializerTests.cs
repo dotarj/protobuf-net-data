@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 using NUnit.Framework;
 
@@ -30,29 +29,7 @@ namespace ProtoBuf.Data.Tests
             [TestFixtureSetUp]
             public void TestFixtureSetUp()
             {
-
-                var connectionString = new SqlConnectionStringBuilder
-                {
-                    DataSource = @".\SQLEXPRESS",
-                    InitialCatalog = "AdventureWorksDW2008R2",
-                    IntegratedSecurity = true
-                };
-
-                originalTable = new DataTable();
-                using (var connection = new SqlConnection(connectionString.ConnectionString))
-                {
-                    connection.Open();
-                    using (var transaction = connection.BeginTransaction())
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.Transaction = transaction;
-
-                        command.CommandText = "SELECT * FROM DimCustomer";
-
-                        using (var dataReader = command.ExecuteReader())
-                            originalTable.Load(dataReader);
-                    }
-                }
+                originalTable = TestData.DataTableFromSql("SELECT * FROM DimCustomer");
 
                 deserializedTable = new DataTable();
 

@@ -39,7 +39,6 @@ namespace ProtoBuf.Data
             reader = new ProtoReader(stream, null, null);
             colReaders = new List<Func<object>>();
 
-            ResetCurrentSchema(); // just in case they call FieldCount before Read()
             AdvanceToNextField();
             if (currentField != 1)
                 throw new InvalidOperationException("No results found! Invalid/corrupt stream.");
@@ -49,6 +48,7 @@ namespace ProtoBuf.Data
 
         private void ReadNextTableHeader()
         {
+            ResetSchemaTable();
             currentRow = null;
 
             currentTableToken = ProtoReader.StartSubItem(reader);
@@ -73,7 +73,7 @@ namespace ProtoBuf.Data
             currentField = reader.ReadFieldHeader();
         }
 
-        void ResetCurrentSchema()
+        void ResetSchemaTable()
         {
             dataTable = new DataTable();
             colReaders.Clear();
@@ -81,8 +81,6 @@ namespace ProtoBuf.Data
 
         private void ReadHeader()
         {
-            ResetCurrentSchema();
-
             do
             {
                 ReadColumn();
@@ -345,7 +343,6 @@ namespace ProtoBuf.Data
             using (var schemaReader = dataTable.CreateDataReader())
                 return schemaReader.GetSchemaTable();
         }
-
 
         public bool NextResult()
         {

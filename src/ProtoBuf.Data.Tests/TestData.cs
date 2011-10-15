@@ -14,7 +14,9 @@
 
 using System;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using NUnit.Framework;
 
 namespace ProtoBuf.Data.Tests
 {
@@ -64,6 +66,55 @@ namespace ProtoBuf.Data.Tests
                 table.Rows.Add(matrix[i]);
 
             return table;
+        }
+
+        public static IDataReader DataReaderFromSql(string sql)
+        {
+            if (String.IsNullOrWhiteSpace(sql)) throw new ArgumentException("String was null or empty.", "sql");
+
+            var connectionString = new SqlConnectionStringBuilder
+            {
+                DataSource = @".\SQLEXPRESS",
+                InitialCatalog = "AdventureWorksDW2008R2",
+                IntegratedSecurity = true
+            };
+
+            var connection = new SqlConnection(connectionString.ConnectionString);
+            try
+            {
+                connection.Open();
+            }
+            catch (SqlException e)
+            {
+                throw new Exception("These tests require data from the 'AdventureWorksDW2008R2' SQL Server database to run. You can grab it from here: http://msftdbprodsamples.codeplex.com/", e);
+            }
+                
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = sql;
+
+                return command.ExecuteReader(CommandBehavior.CloseConnection);
+            }
+        }
+
+        public static DataTable DataTableFromSql(string sql)
+        {
+            var dataTable = new DataTable();
+
+            using (var reader = DataReaderFromSql(sql))
+                dataTable.Load(reader);
+
+            return dataTable;
+        }
+
+        public static DataSet DataSetFromSql(string sql, params string[] tableNames)
+        {
+            var dataSet = new DataSet();
+
+            using (var reader = DataReaderFromSql(sql))
+                dataSet.Load(reader, LoadOption.OverwriteChanges, tableNames);
+
+            return dataSet;
         }
     }
 }

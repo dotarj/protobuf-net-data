@@ -25,7 +25,7 @@ namespace ProtoBuf.Data.Tests
     {
         static DataSet CreateTablesForBackwardsCompatibilityTest()
             {
-                var tableA = new DataTable();
+                var tableA = new DataTable("A");
                 tableA.Columns.Add("Birthday", typeof(DateTime));
                 tableA.Columns.Add("Age", typeof(int));
                 tableA.Columns.Add("Name", typeof(string));
@@ -38,19 +38,17 @@ namespace ProtoBuf.Data.Tests
                 tableA.Rows.Add(null, null, null, null, null, null, null);
                 tableA.Rows.Add(new DateTime(2008, 01, 11, 11, 4, 1, 491), null, "Foo", Guid.Empty, "", null, new char[0]);
 
-                var tableB = new DataTable();
+                var tableB = new DataTable("B");
+                tableB.Columns.Add("Name", typeof(string));
 
-                var tableC = new DataTable();
-                tableC.Columns.Add("Name", typeof(string));
-
-                var tableD = new DataTable();
-                tableD.Columns.Add("Value", typeof(int));
-                tableD.Rows.Add(1);
-                tableD.Rows.Add(2);
-                tableD.Rows.Add(3);
+                var tableC = new DataTable("C");
+                tableC.Columns.Add("Value", typeof(int));
+                tableC.Rows.Add(1);
+                tableC.Rows.Add(2);
+                tableC.Rows.Add(3);
 
                 var dataSet = new DataSet();
-                dataSet.Tables.AddRange(new[] { tableA, tableB, tableC, tableD });
+                dataSet.Tables.AddRange(new[] { tableA, tableB, tableC });
                 return dataSet;
             }
 
@@ -67,7 +65,9 @@ namespace ProtoBuf.Data.Tests
                 {
                     using (var stream = File.OpenRead(TestFile))
                     using (var reader = DataSerializer.Deserialize(stream))
-                        actual.Load(reader, LoadOption.OverwriteChanges, "A", "B", "C", "D");
+                        actual.Load(reader, LoadOption.PreserveChanges, "A", "B", "C");
+
+                    actual.HasErrors.Should().Be.False();
 
                     AssertHelper.AssertContentsEqual(expected, actual);
                 }
@@ -91,6 +91,18 @@ namespace ProtoBuf.Data.Tests
                     stream.Seek(0, SeekOrigin.Begin);
 
                     stream.GetBuffer().Take(expected.Length).Should().Have.SameSequenceAs(expected);
+                }
+            }
+
+            //[Test]
+            [Ignore("Only when our binary format changes (and we don't care about breaking old versions).")]
+            public void RegenerateTestFile()
+            {
+                using (var dataSet = CreateTablesForBackwardsCompatibilityTest())
+                using (var stream = File.OpenWrite(Path.Combine(@"..\..\", TestFile)))
+                {
+                    using (var reader = dataSet.CreateDataReader())
+                        DataSerializer.Serialize(stream, reader);
                 }
             }
         }

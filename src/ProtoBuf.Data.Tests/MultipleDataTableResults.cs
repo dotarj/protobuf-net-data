@@ -14,7 +14,6 @@
 
 using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 using NUnit.Framework;
 using SharpTestsEx;
@@ -33,28 +32,8 @@ namespace ProtoBuf.Data.Tests
             [TestFixtureSetUp]
             public void TestFixtureSetUp()
             {
-                var connectionString = new SqlConnectionStringBuilder
-                {
-                    DataSource = @".\SQLEXPRESS",
-                    InitialCatalog = "AdventureWorksDW2008R2",
-                    IntegratedSecurity = true
-                };
-
-                dataSet = new DataSet();
-                using (var connection = new SqlConnection(connectionString.ConnectionString))
-                {
-                    connection.Open();
-                    using (var transaction = connection.BeginTransaction())
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.Transaction = transaction;
-
-                        command.CommandText = "SELECT TOP 25 * FROM DimCustomer; SELECT TOP 42 * FROM DimProduct;";
-
-                        using (var dataReader = command.ExecuteReader())
-                            dataSet.Load(dataReader, LoadOption.OverwriteChanges, "DimCustomer", "DimProduct");
-                    }
-                }
+                dataSet = TestData.DataSetFromSql("SELECT TOP 25 * FROM DimCustomer; SELECT TOP 42 * FROM DimProduct;",
+                                                  "DimCustomer", "DimProduct");
 
                 deserializedDataSet = new DataSet();
 
@@ -104,12 +83,12 @@ namespace ProtoBuf.Data.Tests
 
                 var b = new[]
                             {
-                                new object[] {"Letter"},
-                                new object[] {"A"},
-                                new object[] {"B"},
-                                new object[] {"C"},
-                                new object[] {"D"},
-                                new object[] {"E"},
+                                new object[] {"Letter", "Number"},
+                                new object[] {"A", 9},
+                                new object[] {"B", 8},
+                                new object[] {"C", 7},
+                                new object[] {"D", 6},
+                                new object[] {"E", 5},
                             };
 
                 dataSet = new DataSet();
@@ -152,33 +131,45 @@ namespace ProtoBuf.Data.Tests
             [Test]
             public void Should_produce_the_same_number_of_tables()
             {
+                reader.GetSchemaTable().Rows.Count.Should().Be(1);
                 reader.Read().Should().Be.True();
                 reader.GetInt32(0).Should().Be(0);
                 reader.Read().Should().Be.True();
                 reader.GetInt32(0).Should().Be(1);
                 reader.Read().Should().Be.True();
                 reader.GetInt32(0).Should().Be(2);
+                reader.GetSchemaTable().Rows.Count.Should().Be(1);
 
                 reader.NextResult().Should().Be.True();
 
+
+                reader.GetSchemaTable().Rows.Count.Should().Be(2);
                 reader.Read().Should().Be.True();
                 reader.GetString(0).Should().Be("A");
                 reader.Read().Should().Be.True();
                 reader.GetString(0).Should().Be("B");
+                reader.GetSchemaTable().Rows.Count.Should().Be(2);
 
                 reader.NextResult().Should().Be.True();
+                reader.GetSchemaTable().Rows.Count.Should().Be(1);
                 reader.Read().Should().Be.False();
+                reader.GetSchemaTable().Rows.Count.Should().Be(1);
 
                 reader.NextResult().Should().Be.True();
+                reader.GetSchemaTable().Rows.Count.Should().Be(0);
                 reader.Read().Should().Be.False();
+                reader.GetSchemaTable().Rows.Count.Should().Be(0);
                 reader.NextResult().Should().Be.True();
 
+                reader.GetSchemaTable().Rows.Count.Should().Be(1);
                 reader.Read().Should().Be.True();
                 reader.GetInt32(0).Should().Be(9);
                 reader.Read().Should().Be.True();
                 reader.GetInt32(0).Should().Be(8);
                 reader.Read().Should().Be.False();
+                reader.GetSchemaTable().Rows.Count.Should().Be(1);
                 reader.NextResult().Should().Be.False();
+                reader.GetSchemaTable().Rows.Count.Should().Be(1);
             }
         }
 
@@ -197,9 +188,9 @@ namespace ProtoBuf.Data.Tests
                 var tableWithNoRows = new DataTable();
                 var c = new[]
                             {
-                                new object[] {"Number"},
-                                new object[] {9},
-                                new object[] {8}
+                                new object[] {"Number", "Letter"},
+                                new object[] {9, "A"},
+                                new object[] {8, "B"}
                             };
 
                 dataSet.Tables.Add(tableWithNoRows);
@@ -226,15 +217,20 @@ namespace ProtoBuf.Data.Tests
             [Test]
             public void Should_produce_the_same_number_of_tables()
             {
+                reader.GetSchemaTable().Rows.Count.Should().Be(0);
                 reader.Read().Should().Be.False();
+                reader.GetSchemaTable().Rows.Count.Should().Be(0);
                 reader.NextResult().Should().Be.True();
 
+                reader.GetSchemaTable().Rows.Count.Should().Be(2);
                 reader.Read().Should().Be.True();
                 reader.GetInt32(0).Should().Be(9);
                 reader.Read().Should().Be.True();
                 reader.GetInt32(0).Should().Be(8);
                 reader.Read().Should().Be.False();
+                reader.GetSchemaTable().Rows.Count.Should().Be(2);
                 reader.NextResult().Should().Be.False();
+                reader.GetSchemaTable().Rows.Count.Should().Be(2);
             }
         }
 
@@ -254,9 +250,9 @@ namespace ProtoBuf.Data.Tests
                 tableWithNoRows.Columns.Add("Something", typeof (DateTime));
                 var c = new[]
                             {
-                                new object[] {"Number"},
-                                new object[] {9},
-                                new object[] {8}
+                                new object[] {"Number", "Letter"},
+                                new object[] {9, "Z"},
+                                new object[] {8, "Y"}
                             };
 
                 dataSet.Tables.Add(tableWithNoRows);
@@ -283,15 +279,20 @@ namespace ProtoBuf.Data.Tests
             [Test]
             public void Should_produce_the_same_number_of_tables()
             {
+                reader.GetSchemaTable().Rows.Count.Should().Be(1);
                 reader.Read().Should().Be.False();
+                reader.GetSchemaTable().Rows.Count.Should().Be(1);
                 reader.NextResult().Should().Be.True();
 
+                reader.GetSchemaTable().Rows.Count.Should().Be(2);
                 reader.Read().Should().Be.True();
                 reader.GetInt32(0).Should().Be(9);
                 reader.Read().Should().Be.True();
                 reader.GetInt32(0).Should().Be(8);
                 reader.Read().Should().Be.False();
+                reader.GetSchemaTable().Rows.Count.Should().Be(2);
                 reader.NextResult().Should().Be.False();
+                reader.GetSchemaTable().Rows.Count.Should().Be(2);
             }
         }
     }
