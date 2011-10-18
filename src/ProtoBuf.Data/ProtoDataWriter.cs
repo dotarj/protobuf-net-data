@@ -27,9 +27,9 @@ namespace ProtoBuf.Data
             if (reader == null) throw new ArgumentNullException("reader");
 
             int resultIndex = 0;
+
             using (var writer = new ProtoWriter(stream, null, null))
             {
-
                 do
                 {
                     ProtoDataColumn[] cols;
@@ -60,6 +60,8 @@ namespace ProtoBuf.Data
                     //         <(# Column Index) (corresponding type)> Field Value
                     //     </SubItem>
                     // </SubItem>
+                    //
+                    // NB if Field Value is a DataTable, the whole DataTable is 
 
                     // write the table
                     ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);
@@ -166,6 +168,11 @@ namespace ProtoBuf.Data
                                         ProtoWriter.WriteString(new string((char[]) value), writer);
                                         break;
 
+                                    case ProtoDataType.DataTable:
+                                        ProtoWriter.WriteFieldHeader(fieldIndex, WireType.String, writer);
+                                        WriteNestedDataTableBytes(writer, value);
+                                        break;
+
                                     default:
                                         throw new UnsupportedColumnTypeException(
                                             ConvertProtoDataType.ToClrType(col.ProtoDataType));
@@ -181,7 +188,18 @@ namespace ProtoBuf.Data
                     ProtoWriter.EndSubItem(resultToken, writer);
 
                 } while (reader.NextResult());
+            }
+        }
 
+        private static void WriteNestedDataTableBytes(ProtoWriter writer, object value)
+        {
+            var nestedDataTable = (DataTable) value;
+
+            using (var nestedDataReader = nestedDataTable.CreateDataReader())
+            using (var nestedBuffer = new MemoryStream())
+            {
+                new ProtoDataWriter().Serialize(nestedBuffer, nestedDataReader);
+                ProtoWriter.WriteBytes(nestedBuffer.GetBuffer(), writer);
             }
         }
 

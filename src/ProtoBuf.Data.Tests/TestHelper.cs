@@ -66,17 +66,23 @@ namespace ProtoBuf.Data.Tests
 
                 for (var j = 0; j < expectedItemArray.Length; j++)
                 {
-                    if (expectedItemArray[j] is byte[])
+                    if (expectedItemArray[j] is DataTable)
                     {
-                        var sourceArray = (byte[])expectedItemArray[j];
-                        var destArray = actualItemArray[j];
-                        AssertArraysEqual(sourceArray, destArray);
+                        var expectedTable = (DataTable) expectedItemArray[j];
+                        var actualTable = (DataTable)expectedItemArray[j];
+                        AssertContentsEqual(expectedTable, actualTable);
+                    }
+                    else if (expectedItemArray[j] is byte[])
+                    {
+                        var expectedBlob = (byte[])expectedItemArray[j];
+                        var actualBlob = actualItemArray[j];
+                        AssertArraysEqual(expectedBlob, actualBlob);
                     }
                     else if (expectedItemArray[j] is char[])
                     {
-                        var sourceArray = (char[])expectedItemArray[j];
-                        var destArray = actualItemArray[j];
-                        AssertArraysEqual(sourceArray, destArray);
+                        var expectedClob = (char[])expectedItemArray[j];
+                        var actualClob = actualItemArray[j];
+                        AssertArraysEqual(expectedClob, actualClob);
                     }
                     else
                         Assert.That(actualItemArray[j], Is.EqualTo(expectedItemArray[j]), 

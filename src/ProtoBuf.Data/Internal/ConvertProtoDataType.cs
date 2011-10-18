@@ -14,13 +14,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace ProtoBuf.Data.Internal
 {
     public static class ConvertProtoDataType
     {
-        static readonly IDictionary<Type, ProtoDataType> mapping
+        static readonly IDictionary<Type, ProtoDataType> Mapping
             = new Dictionary<Type, ProtoDataType>
                   {
                       { typeof(bool), ProtoDataType.Bool },
@@ -36,13 +37,14 @@ namespace ProtoBuf.Data.Internal
                       { typeof(char), ProtoDataType.Char },
                       { typeof(decimal), ProtoDataType.Decimal },
                       { typeof(byte[]), ProtoDataType.ByteArray },
-                      { typeof(char[]), ProtoDataType.CharArray }
+                      { typeof(char[]), ProtoDataType.CharArray },
+                      { typeof(DataTable), ProtoDataType.DataTable }
                   };
 
         public static ProtoDataType FromClrType(Type type)
         {
             ProtoDataType value;
-            if (mapping.TryGetValue(type, out value))
+            if (Mapping.TryGetValue(type, out value))
                 return value;
 
             throw new UnsupportedColumnTypeException(type);
@@ -50,7 +52,7 @@ namespace ProtoBuf.Data.Internal
 
         public static Type ToClrType(ProtoDataType type)
         {
-            return mapping.Single(p => p.Value.Equals(type)).Key;
+            return Mapping.Single(p => p.Value.Equals(type)).Key;
         }
     }
 }

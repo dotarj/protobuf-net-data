@@ -181,7 +181,7 @@ namespace ProtoBuf.Data
         public IDataReader GetData(int i)
         {
             ErrorIfClosed();
-            throw NestingNotSupported();
+            return ((DataTable) currentRow[i]).CreateDataReader();
         }
 
         public bool IsDBNull(int i)
@@ -242,11 +242,6 @@ namespace ProtoBuf.Data
             ReadNextTableHeader();
 
             return true;
-        }
-
-        static Exception NestingNotSupported()
-        {
-            return new NotImplementedException("Nested data sets are not currently supported.");
         }
 
         public DataTable GetSchemaTable()
@@ -455,12 +450,29 @@ namespace ProtoBuf.Data
                     colReaders.Add(() => reader.ReadString().ToArray());
                     break;
 
+                case ProtoDataType.DataTable:
+                    colReaders.Add(() => GetNestedDataTable(reader));
+                    break;
+
                 default:
                     throw new NotSupportedException(protoDataType.ToString());
             }
 
             ProtoReader.EndSubItem(token, reader);
             dataTable.Columns.Add(name, ConvertProtoDataType.ToClrType(protoDataType));
+        }
+
+        private static DataTable GetNestedDataTable(ProtoReader reader)
+        {
+            var buffer = ProtoReader.AppendBytes(null, reader);
+
+            using (var nestedBuffer = new MemoryStream(buffer))
+            using (var nestedReader = new ProtoDataReader(nestedBuffer))
+            {
+                var dataTable = new DataTable();
+                dataTable.Load(nestedReader);
+                return dataTable;
+            }
         }
 
         private void ReadCurrentRow()
