@@ -117,10 +117,10 @@
         </member>
         <member name="M:ProtoBuf.ProtoIncludeAttribute.#ctor(System.Int32,System.Type)">
             <summary>
-            Creates a new instance of the ProtoIncludeAttribute.
-            </summary>
-            <param name="tag">The unique index (within the type) that will identify this data.</param>
-            <param name="knownType">The additional type to serialize/deserialize.</param>
+             Creates a new instance of the ProtoIncludeAttribute.
+             </summary>
+             <param name="tag">The unique index (within the type) that will identify this data.</param>
+             <param name="knownType">The additional type to serialize/deserialize.</param>
         </member>
         <member name="M:ProtoBuf.ProtoIncludeAttribute.#ctor(System.Int32,System.String)">
             <summary>
@@ -722,6 +722,12 @@
             Adds a member (by name) to the MetaType
             </summary>        
         </member>
+        <member name="M:ProtoBuf.Meta.MetaType.AddField(System.Int32,System.String)">
+            <summary>
+            Adds a member (by name) to the MetaType, returning the ValueMember rather than the fluent API.
+            This is otherwise identical to Add.
+            </summary>
+        </member>
         <member name="M:ProtoBuf.Meta.MetaType.Add(System.String)">
             <summary>
             Adds a member (by name) to the MetaType
@@ -749,6 +755,12 @@
             Adds a member (by name) to the MetaType, including an itemType and defaultType for representing lists
             </summary>
         </member>
+        <member name="M:ProtoBuf.Meta.MetaType.AddField(System.Int32,System.String,System.Type,System.Type)">
+            <summary>
+            Adds a member (by name) to the MetaType, including an itemType and defaultType for representing lists, returning the ValueMember rather than the fluent API.
+            This is otherwise identical to Add.
+            </summary>
+        </member>
         <member name="M:ProtoBuf.Meta.MetaType.CompileInPlace">
             <summary>
             Compiles the serializer for this type; this is *not* a full
@@ -766,6 +778,11 @@
             <summary>
             When used to compile a model, should public serialization/deserialzation methods
             be included for this type?
+            </summary>
+        </member>
+        <member name="P:ProtoBuf.Meta.MetaType.AsReferenceDefault">
+            <summary>
+            Should this type be treated as a reference by default?
             </summary>
         </member>
         <member name="P:ProtoBuf.Meta.MetaType.HasCallbacks">
@@ -815,6 +832,12 @@
             <summary>
             Gets or sets a value indicating that an enum should be treated directly as an int/short/etc, rather
             than enforcing .proto enum rules. This is useful *in particul* for [Flags] enums.
+            </summary>
+        </member>
+        <member name="P:ProtoBuf.Meta.MetaType.IgnoreListHandling">
+            <summary>
+            Gets or sets a value indicating that this type should NOT be treated as a list, even if it has
+            familiar list-like characteristics (enumerable, add, etc)
             </summary>
         </member>
         <member name="T:ProtoBuf.ProtoBeforeSerializationAttribute">
@@ -1682,40 +1705,40 @@
             Parses a Guid from a protobuf stream
             </summary>
         </member>
-        <member name="M:ProtoBuf.BclHelpers.ReadNetObject(System.Object,ProtoBuf.ProtoReader,System.Int32,System.Type)">
+        <member name="M:ProtoBuf.BclHelpers.ReadNetObject(System.Object,ProtoBuf.ProtoReader,System.Int32,System.Type,ProtoBuf.BclHelpers.NetObjectOptions)">
             <summary>
             Reads an *implementation specific* bundled .NET object, including (as options) type-metadata, identity/re-use, etc.
             </summary>
         </member>
-        <member name="M:ProtoBuf.BclHelpers.WriteNetObject(System.Object,ProtoBuf.ProtoWriter,System.Int32,System.Boolean,System.Boolean)">
+        <member name="M:ProtoBuf.BclHelpers.WriteNetObject(System.Object,ProtoBuf.ProtoWriter,System.Int32,ProtoBuf.BclHelpers.NetObjectOptions)">
             <summary>
             Writes an *implementation specific* bundled .NET object, including (as options) type-metadata, identity/re-use, etc.
             </summary>
         </member>
-        <member name="T:ProtoBuf.KeyValuePairSurrogate`2">
+        <member name="T:ProtoBuf.BclHelpers.NetObjectOptions">
             <summary>
-            Mutable version of the common key/value pair struct; used during serialization. This type is intended for internal use only and should not
-            be used by calling code; it is required to be public for implementation reasons.
+            Optional behaviours that introduce .NET-specific functionality
             </summary>
         </member>
-        <member name="M:ProtoBuf.KeyValuePairSurrogate`2.op_Implicit(ProtoBuf.KeyValuePairSurrogate{`0,`1})~System.Collections.Generic.KeyValuePair{`0,`1}">
+        <member name="F:ProtoBuf.BclHelpers.NetObjectOptions.None">
             <summary>
-            Convert a surrogate instance to a standard pair instance.
+            No special behaviour
             </summary>
         </member>
-        <member name="M:ProtoBuf.KeyValuePairSurrogate`2.op_Implicit(System.Collections.Generic.KeyValuePair{`0,`1})~ProtoBuf.KeyValuePairSurrogate{`0,`1}">
+        <member name="F:ProtoBuf.BclHelpers.NetObjectOptions.AsReference">
             <summary>
-            Convert a standard pair instance to a surrogate instance.
+            Enables full object-tracking/full-graph support.
             </summary>
         </member>
-        <member name="P:ProtoBuf.KeyValuePairSurrogate`2.Key">
+        <member name="F:ProtoBuf.BclHelpers.NetObjectOptions.DynamicType">
             <summary>
-            The key of the pair.
+            Embeds the type information into the stream, allowing usage with types not known in advance.
             </summary>
         </member>
-        <member name="P:ProtoBuf.KeyValuePairSurrogate`2.Value">
+        <member name="F:ProtoBuf.BclHelpers.NetObjectOptions.UseConstructor">
             <summary>
-            The value of the pair.
+            If false, the constructor for the type is bypassed during deserialization, meaning any field initializers
+            or other initialization code is skipped.
             </summary>
         </member>
         <member name="T:ProtoBuf.WireType">
@@ -2153,6 +2176,11 @@
             If specified, alternative contract markers (such as markers for XmlSerailizer or DataContractSerializer) are ignored.
             </summary>
         </member>
+        <member name="P:ProtoBuf.ProtoContractAttribute.IgnoreListHandling">
+            <summary>
+            If specified, do NOT treat this type as a list, even if it looks like one.
+            </summary>
+        </member>
         <member name="P:ProtoBuf.ProtoContractAttribute.ImplicitFields">
             <summary>
             Gets or sets the mechanism used to automatically infer field tags
@@ -2303,6 +2331,17 @@
             for usage and <b>important warning</b> / explanation.
             You must set the global default before attempting to serialize/deserialize any
             impacted type.
+            </summary>
+        </member>
+        <member name="P:ProtoBuf.Meta.RuntimeTypeModel.UseImplicitZeroDefaults">
+            <summary>
+            Global switch that enables or disables the implicit
+            handling of "zero defaults"; meanning: if no other default is specified,
+            it assumes bools always default to false, integers to zero, etc.
+            
+            If this is disabled, no such assumptions are made and only *explicit*
+            default values are processed. This is enabled by default to 
+            preserve similar logic to v1.
             </summary>
         </member>
         <member name="P:ProtoBuf.Meta.RuntimeTypeModel.Default">
