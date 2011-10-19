@@ -24,33 +24,54 @@ namespace ProtoBuf.Data.Tests
     public class BackwardsCompatibilityTests
     {
         static DataSet CreateTablesForBackwardsCompatibilityTest()
-            {
-                var tableA = new DataTable("A");
-                tableA.Columns.Add("Birthday", typeof(DateTime));
-                tableA.Columns.Add("Age", typeof(int));
-                tableA.Columns.Add("Name", typeof(string));
-                tableA.Columns.Add("ID", typeof(Guid));
-                tableA.Columns.Add("LastName", typeof(string));
-                tableA.Columns.Add("BlobData", typeof(byte[]));
-                tableA.Columns.Add("ClobData", typeof(char[]));
-                tableA.Rows.Add(new DateTime(2011, 04, 05, 12, 16, 41, 300), 42, "Foo", Guid.Parse("6891816b-a4b9-4749-a9f5-9f6deb377a65"), "sdfsdf", new byte[] { 1, 2, 3, 4 }, new[] { 'a' });
-                tableA.Rows.Add(new DateTime(1920, 04, 03, 12, 48, 31, 210), null, "Bar", Guid.Parse("28545f31-ca0c-40c1-bae0-9b79ca84091b"), "o2389uf", new byte[0], new[] { 'a', 'b', 'c' });
-                tableA.Rows.Add(null, null, null, null, null, null, null);
-                tableA.Rows.Add(new DateTime(2008, 01, 11, 11, 4, 1, 491), null, "Foo", Guid.Empty, "", null, new char[0]);
+        {
+            var tableA = new DataTable("A");
+            tableA.Columns.Add("Birthday", typeof(DateTime));
+            tableA.Columns.Add("Age", typeof(int));
+            tableA.Columns.Add("Name", typeof(string));
+            tableA.Columns.Add("ID", typeof(Guid));
+            tableA.Columns.Add("LastName", typeof(string));
+            tableA.Columns.Add("BlobData", typeof(byte[]));
+            tableA.Columns.Add("ClobData", typeof(char[]));
+            tableA.Rows.Add(new DateTime(2011, 04, 05, 12, 16, 41, 300), 42, "Foo", Guid.Parse("6891816b-a4b9-4749-a9f5-9f6deb377a65"), "sdfsdf", new byte[] { 1, 2, 3, 4 }, new[] { 'a' });
+            tableA.Rows.Add(new DateTime(1920, 04, 03, 12, 48, 31, 210), null, "Bar", Guid.Parse("28545f31-ca0c-40c1-bae0-9b79ca84091b"), "o2389uf", new byte[0], new[] { 'a', 'b', 'c' });
+            tableA.Rows.Add(null, null, null, null, null, null, null);
+            tableA.Rows.Add(new DateTime(2008, 01, 11, 11, 4, 1, 491), null, "Foo", Guid.Empty, "", null, new char[0]);
 
-                var tableB = new DataTable("B");
-                tableB.Columns.Add("Name", typeof(string));
+            var tableB = new DataTable("B");
+            tableB.Columns.Add("Name", typeof(string));
 
-                var tableC = new DataTable("C");
-                tableC.Columns.Add("Value", typeof(int));
-                tableC.Rows.Add(1);
-                tableC.Rows.Add(2);
-                tableC.Rows.Add(3);
+            var tableC = new DataTable("C");
+            tableC.Columns.Add("Value", typeof(int));
+            tableC.Rows.Add(1);
+            tableC.Rows.Add(2);
+            tableC.Rows.Add(3);
 
-                var dataSet = new DataSet();
-                dataSet.Tables.AddRange(new[] { tableA, tableB, tableC });
-                return dataSet;
-            }
+
+            var innerTableA = TestData.FromMatrix(new[]
+                                                      {
+                                                          new object[] {"X", "Y"},
+                                                          new object[] {"Aaa", 25},
+                                                          new object[] {"Bbb", 30},
+                                                      });
+
+            var innerTableB = TestData.FromMatrix(new[]
+                                                      {
+                                                          new object[] {"ColumnA", "ColumnB"},
+                                                          new object[] {false, 25},
+                                                          new object[] {true, 30},
+                                                      });
+
+            var tableD = new DataTable("D");
+            tableD.Columns.Add("ID", typeof(int));
+            tableD.Columns.Add("SubTable", typeof (DataTable));
+            tableD.Rows.Add(42, innerTableA);
+            tableD.Rows.Add(99, innerTableB);
+
+            var dataSet = new DataSet();
+            dataSet.Tables.AddRange(new[] { tableA, tableB, tableC, tableD });
+            return dataSet;
+        }
 
         const string TestFile = "BackwardsCompatbilityTest.bin";
 
@@ -65,7 +86,7 @@ namespace ProtoBuf.Data.Tests
                 {
                     using (var stream = File.OpenRead(TestFile))
                     using (var reader = DataSerializer.Deserialize(stream))
-                        actual.Load(reader, LoadOption.PreserveChanges, "A", "B", "C");
+                        actual.Load(reader, LoadOption.PreserveChanges, "A", "B", "C", "D");
 
                     actual.HasErrors.Should().Be.False();
 
