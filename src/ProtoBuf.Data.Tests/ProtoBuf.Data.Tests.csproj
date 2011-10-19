@@ -52,7 +52,7 @@
     <Compile Include="BigDataSerializerTests.cs" />
     <Compile Include="NestedTablesTests.cs" />
     <Compile Include="DataSerializerTests.cs" />
-    <Compile Include="MultipleDataTableResults.cs">
+    <Compile Include="MultipleDataTableTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -20,7 +20,7 @@ using SharpTestsEx;
 
 namespace ProtoBuf.Data.Tests
 {
-    public class MultipleDataTableResults
+    public class MultipleDataTableTests
     {
         [TestFixture]
         public class When_serializing_a_datareader_with_multiple_result_sets
