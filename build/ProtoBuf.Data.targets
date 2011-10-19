@@ -36,7 +36,7 @@
 
     <Zip Files="@(ZipFiles)"
          WorkingDirectory="$(OutputDir)"
-         ZipFileName="$(OutputDir)\protobuf-net-data-%(AssemblyInfo.Version).zip"
+         ZipFileName="$(OutputDir)\protobuf-net-data-beta-%(AssemblyInfo.Version).zip"
          ZipLevel="9" />
   </Target>
 </Project>
