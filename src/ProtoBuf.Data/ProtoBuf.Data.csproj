@@ -42,7 +42,7 @@
   <ItemGroup>
     <Reference Include="protobuf-net, Version=1.0.0.280, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\protobuf-net-v2-beta-r450\Net-$(TargetFrameworkVersion)\protobuf-net.dll</HintPath>
+      <HintPath>..\..\lib\protobuf-net\Net-$(TargetFrameworkVersion)\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
