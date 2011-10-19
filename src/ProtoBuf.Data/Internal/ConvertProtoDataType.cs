@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 
 namespace ProtoBuf.Data.Internal
 {
@@ -52,7 +51,13 @@ namespace ProtoBuf.Data.Internal
 
         public static Type ToClrType(ProtoDataType type)
         {
-            return Mapping.Single(p => p.Value.Equals(type)).Key;
+            foreach (var pair in Mapping)
+            {
+                if (pair.Value.Equals(type))
+                    return pair.Key;
+            }
+
+            throw new InvalidOperationException("Unknown ProtoDataType.");
         }
     }
 }

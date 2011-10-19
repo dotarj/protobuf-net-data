@@ -16,18 +16,18 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
 using ProtoBuf.Data.Internal;
 
 namespace ProtoBuf.Data
 {
     public class ProtoDataReader : IDataReader
     {
+        delegate object ColReader(); 
         Stream stream;
         object[] currentRow;
         DataTable dataTable;
         bool disposed;
-        private readonly List<Func<object>> colReaders;
+        private readonly List<ColReader> colReaders;
         private ProtoReader reader;
         private int currentField;
         private SubItemToken currentTableToken;
@@ -38,7 +38,7 @@ namespace ProtoBuf.Data
             if (stream == null) throw new ArgumentNullException("stream");
             this.stream = stream;
             reader = new ProtoReader(stream, null, null);
-            colReaders = new List<Func<object>>();
+            colReaders = new List<ColReader>();
 
             AdvanceToNextField();
             if (currentField != 1)
@@ -331,7 +331,7 @@ namespace ProtoBuf.Data
         {
             // Unfortunately, protocol buffers doesn't let you seek - we have
             // to consume all the remaining tokens up anyway
-            while (Read()) ;
+            while (Read());
         }
 
         private void ReadNextTableHeader()
@@ -447,7 +447,7 @@ namespace ProtoBuf.Data
                     break;
 
                 case ProtoDataType.CharArray:
-                    colReaders.Add(() => reader.ReadString().ToArray());
+                    colReaders.Add(() => reader.ReadString().ToCharArray());
                     break;
 
                 case ProtoDataType.DataTable:

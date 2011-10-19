@@ -157,7 +157,6 @@ namespace ProtoBuf.Data.Tests
                 reader.Read().Should().Be.False();
                 reader.GetSchemaTable().Rows.Count.Should().Be(1);
                 reader.NextResult().Should().Be.False();
-                reader.GetSchemaTable().Rows.Count.Should().Be(1);
             }
         }
 
@@ -218,7 +217,6 @@ namespace ProtoBuf.Data.Tests
                 reader.Read().Should().Be.False();
                 reader.GetSchemaTable().Rows.Count.Should().Be(2);
                 reader.NextResult().Should().Be.False();
-                reader.GetSchemaTable().Rows.Count.Should().Be(2);
             }
         }
 
@@ -280,7 +278,6 @@ namespace ProtoBuf.Data.Tests
                 reader.Read().Should().Be.False();
                 reader.GetSchemaTable().Rows.Count.Should().Be(2);
                 reader.NextResult().Should().Be.False();
-                reader.GetSchemaTable().Rows.Count.Should().Be(2);
             }
         }
     }

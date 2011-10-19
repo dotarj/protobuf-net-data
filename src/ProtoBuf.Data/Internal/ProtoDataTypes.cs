@@ -13,21 +13,24 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ProtoBuf.Data.Internal
 {
     public static class ProtoDataTypes
     {
-        public static IEnumerable<ProtoDataType> AllTypes
+        static ProtoDataTypes()
         {
-            get { return Enum.GetValues(typeof (ProtoDataType)).OfType<ProtoDataType>(); }
+            var values = Enum.GetValues(typeof(ProtoDataType));
+            AllTypes = new ProtoDataType[values.Length];
+            for (var i = 0; i < values.Length; i++)
+                AllTypes[i] = (ProtoDataType)values.GetValue(i);
+
+            AllClrTypes = new Type[values.Length];
+            for (var i = 0; i < AllTypes.Length; i++)
+                AllClrTypes[i] = ConvertProtoDataType.ToClrType(AllTypes[i]);
         }
 
-        public static IEnumerable<Type> AllClrTypes
-        {
-            get { return AllTypes.Select(ConvertProtoDataType.ToClrType); }
-        }
+        public static ProtoDataType[] AllTypes { get; private set; }
+        public static Type[] AllClrTypes { get; private set; }
     }
 }

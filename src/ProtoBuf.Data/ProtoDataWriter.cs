@@ -41,8 +41,8 @@ namespace ProtoBuf.Data
                             // Assumption: rows in the schema table are always ordered by
                             // Ordinal position, ascending
                             var row = schema.Rows[i];
-                            cols[i].ProtoDataType = ConvertProtoDataType.FromClrType(row.Field<Type>("DataType"));
-                            cols[i].ColumnName = schema.Rows[i].Field<string>("ColumnName");
+                            cols[i].ProtoDataType = ConvertProtoDataType.FromClrType((Type)row["DataType"]);
+                            cols[i].ColumnName = (string)schema.Rows[i]["ColumnName"];
                         }
                     }
 

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using ProtoBuf.Data.Internal;
 
 namespace ProtoBuf.Data
@@ -32,11 +31,16 @@ namespace ProtoBuf.Data
 
         static UnsupportedColumnTypeException()
         {
-            var types = ProtoDataTypes.AllClrTypes
-                .Select(t => t.Name)
-                .OrderBy(s => s);
+            var types = ProtoDataTypes.AllClrTypes;
 
-            SupportedClrTypeNames = String.Join(", ", types);
+            var names = new string[types.Length];
+
+            for (var i = 0; i < types.Length; i++)
+                names[i] = types[i].Name;
+
+            Array.Sort(names);
+
+            SupportedClrTypeNames = String.Join(", ", names);
         }
     }
 }
