@@ -21,6 +21,7 @@ namespace ProtoBuf.Data
     /// Exception thrown when a <see cref="System.Data.IDataReader"/> with a field
     /// of an unsupported type is attempted to be serialized.
     /// </summary>
+    [Serializable]
     public class UnsupportedColumnTypeException : Exception
     {
         /// <summary>
