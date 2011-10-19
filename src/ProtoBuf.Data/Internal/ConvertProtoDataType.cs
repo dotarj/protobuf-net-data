@@ -18,7 +18,7 @@ using System.Data;
 
 namespace ProtoBuf.Data.Internal
 {
-    public static class ConvertProtoDataType
+    internal static class ConvertProtoDataType
     {
         static readonly IDictionary<Type, ProtoDataType> Mapping
             = new Dictionary<Type, ProtoDataType>

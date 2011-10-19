@@ -14,7 +14,7 @@
 
 namespace ProtoBuf.Data.Internal
 {
-    public enum ProtoDataType
+    internal enum ProtoDataType
     {
         String = 1,
         DateTime = 2,

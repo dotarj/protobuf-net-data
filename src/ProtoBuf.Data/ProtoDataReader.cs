@@ -20,6 +20,10 @@ using ProtoBuf.Data.Internal;
 
 namespace ProtoBuf.Data
 {
+    ///<summary>
+    /// A custom <see cref="System.Data.IDataReader"/> for deserializing a protocol-buffer binary stream back
+    /// into a tabular form.
+    ///</summary>
     public class ProtoDataReader : IDataReader
     {
         delegate object ColReader(); 
@@ -33,7 +37,13 @@ namespace ProtoBuf.Data
         private SubItemToken currentTableToken;
         private bool reachedEndOfCurrentTable;
 
+        /// <summary>
+        /// Initializes a new instance of a <see cref="ProtoBuf.Data.ProtoDataReader"/> type.
+        /// </summary>
+        /// <param name="stream">The <see cref="System.IO.Stream"/> to read from.</param>
+
         public ProtoDataReader(Stream stream)
+
         {
             if (stream == null) throw new ArgumentNullException("stream");
             this.stream = stream;
@@ -46,6 +56,8 @@ namespace ProtoBuf.Data
 
             ReadNextTableHeader();
         }
+
+#pragma warning disable 1591 // Missing XML comment
 
         public string GetName(int i)
         {
@@ -282,6 +294,10 @@ namespace ProtoBuf.Data
 
         public bool IsClosed { get; private set; }
 
+        /// <summary>
+        /// Gets the number of rows changed, inserted, or deleted. 
+        /// </summary>
+        /// <returns>This is always zero in the case of <see cref="ProtoBuf.Data.ProtoDataReader" />.</returns>
         public int RecordsAffected
         {
             get { return 0; }
@@ -293,7 +309,7 @@ namespace ProtoBuf.Data
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposed)
             {
@@ -326,6 +342,8 @@ namespace ProtoBuf.Data
         {
             Dispose(false);
         }
+
+#pragma warning restore 1591 // Missing XML comment
 
         private void ConsumeAnyRemainingRows()
         {

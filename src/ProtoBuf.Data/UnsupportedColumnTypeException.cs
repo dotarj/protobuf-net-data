@@ -17,10 +17,21 @@ using ProtoBuf.Data.Internal;
 
 namespace ProtoBuf.Data
 {
+    /// <summary>
+    /// Exception thrown when a <see cref="System.Data.IDataReader"/> with a field
+    /// of an unsupported type is attempted to be serialized.
+    /// </summary>
     public class UnsupportedColumnTypeException : Exception
     {
+        /// <summary>
+        /// The <see cref="System.Type"/> that was attempted to be serialized.
+        /// </summary>
         public Type AttemptedType { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of a <see cref="ProtoBuf.Data.UnsupportedColumnTypeException"/> type.
+        /// </summary>
+        /// <param name="type">The <see cref="System.Type"/> that was attempted to be serialized.</param>
         public UnsupportedColumnTypeException(Type type)
             : base(String.Format("Cannot serialize data column of type '{0}'. Only the following column types are supported: {1}.", type, SupportedClrTypeNames))
         {

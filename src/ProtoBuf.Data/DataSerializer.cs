@@ -18,8 +18,16 @@ using System.IO;
 
 namespace ProtoBuf.Data
 {
+    /// <summary>
+    /// Provides protocol-buffer serialization for <see cref="System.Data.IDataReader"/>s.
+    /// </summary>
     public static class DataSerializer
     {
+        ///<summary>
+        /// Serialize an <see cref="System.Data.IDataReader"/> to a binary stream using protocol-buffers.
+        ///</summary>
+        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        ///<param name="reader">The <see cref="System.Data.IDataReader"/>who's contents to serialize.</param>
         public static void Serialize(Stream stream, IDataReader reader)
         {
             if (stream == null) throw new ArgumentNullException("stream");
@@ -27,6 +35,10 @@ namespace ProtoBuf.Data
             new ProtoDataWriter().Serialize(stream, reader);
         }
 
+        ///<summary>
+        /// Deserialize a protocol-buffer binary stream back into an <see cref="System.Data.IDataReader"/>.
+        ///</summary>
+        ///<param name="stream">The <see cref="System.IO.Stream"/> to read from.</param>
         public static IDataReader Deserialize(Stream stream)
         {
             if (stream == null) throw new ArgumentNullException("stream");

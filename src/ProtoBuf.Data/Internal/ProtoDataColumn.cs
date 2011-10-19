@@ -14,7 +14,7 @@
 
 namespace ProtoBuf.Data.Internal
 {
-    public struct ProtoDataColumn
+    internal struct ProtoDataColumn
     {
         public ProtoDataType ProtoDataType;
         public string ColumnName;

@@ -16,7 +16,7 @@ using System;
 
 namespace ProtoBuf.Data.Internal
 {
-    public static class ProtoDataTypes
+    internal static class ProtoDataTypes
     {
         static ProtoDataTypes()
         {
