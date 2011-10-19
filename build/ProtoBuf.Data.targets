@@ -3,6 +3,8 @@
   <PropertyGroup>
     <MSBuildCommunityTasksPath>.</MSBuildCommunityTasksPath>
     <OutputDir>..\output</OutputDir>
+    <LicenceFile>..\protobuf-net-data.licence.txt</LicenceFile>
+    <ProtoBufPath>..\lib\protobuf-net-v2-beta-r431</ProtoBufPath>
   </PropertyGroup>
 
   <Import Project="..\lib\MSBuild.Community.Tasks.v1.2.0.306\MSBuild.Community.Tasks.Targets"/>
@@ -10,18 +12,26 @@
   <Target Name="ReleasePackage">
     <RemoveDir Directories="$(OutputDir)" />
 
+    <!-- .NET 2.0 -->
     <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
              Targets="Clean; Rebuild"
-             Properties="Configuration=Release;OutputPath=..\$(OutputDir)" />
+             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\NET20;TargetFrameworkVersion=v2.0" />
+    <Copy SourceFiles="$(LicenceFile)" DestinationFolder="$(OutputDir)\NET20" />
+    <Copy SourceFiles="$(ProtoBufPath)\Net-v2.0\Licence.txt" DestinationFiles="$(OutputDir)\NET20\protobuf-net.licence.txt" />
 
-    <Copy SourceFiles="..\license.txt" DestinationFolder="$(OutputDir)" />
+    <!-- .NET 3.0 -->
+    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
+             Targets="Clean; Rebuild"
+             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\NET30;TargetFrameworkVersion=v3.0" />
+    <Copy SourceFiles="$(LicenceFile)" DestinationFolder="$(OutputDir)\NET30" />
+    <Copy SourceFiles="$(ProtoBufPath)\Net-v3.0\Licence.txt" DestinationFiles="$(OutputDir)\NET30\protobuf-net.licence.txt" />
 
-    <GetAssemblyIdentity  AssemblyFiles="$(OutputDir)\protobuf-net-data.dll">
+    <GetAssemblyIdentity AssemblyFiles="$(OutputDir)\NET20\protobuf-net-data.dll">
       <Output TaskParameter="Assemblies" ItemName="AssemblyInfo"/>
     </GetAssemblyIdentity>
 
     <ItemGroup>
-      <ZipFiles Include="$(OutputDir)\*.*" />
+      <ZipFiles Include="$(OutputDir)\**\*.*" />
     </ItemGroup>
 
     <Zip Files="@(ZipFiles)"
