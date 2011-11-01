@@ -18,8 +18,13 @@ using System.Reflection;
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Protocol Buffers DataReader extensions for .NET")]
 [assembly: AssemblyCopyright("Copyright © Richard Dingwall 2011")]
-[assembly: AssemblyVersion("2.0.0.2")]
-[assembly: AssemblyFileVersion("2.0.0.2")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+// This is the single source of truth for assembly versions.
+// Following the same version number as protobuf-net.
+[assembly: AssemblyVersion("2.0.0.452")]
+[assembly: AssemblyFileVersion("2.0.0.452")]
+
+
 
