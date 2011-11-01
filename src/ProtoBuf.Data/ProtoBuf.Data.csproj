@@ -14,6 +14,32 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
+  <Choose>
+    <When Condition="$(TargetFrameworkVersion) == 'v2.0'">
+      <PropertyGroup>
+        <ProtoBufAssembly>protobuf-net, Version=2.0.0.452, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL</ProtoBufAssembly>
+        <ProtoBufHintPath>..\..\packages\protobuf-net.2.0.0.452\lib\net20\protobuf-net.dll</ProtoBufHintPath>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(TargetFrameworkVersion) == 'v3.0'">
+      <PropertyGroup>
+        <ProtoBufAssembly>protobuf-net, Version=2.0.0.452, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL</ProtoBufAssembly>
+        <ProtoBufHintPath>..\..\packages\protobuf-net.2.0.0.452\lib\net30\protobuf-net.dll</ProtoBufHintPath>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(TargetFrameworkVersion) == 'v3.5'">
+      <PropertyGroup>
+        <ProtoBufAssembly>protobuf-net, Version=2.0.0.452, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL</ProtoBufAssembly>
+        <ProtoBufHintPath>..\..\packages\protobuf-net.2.0.0.452\lib\net35\protobuf-net.dll</ProtoBufHintPath>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(TargetFrameworkVersion) == 'v4.0'">
+      <PropertyGroup>
+        <ProtoBufAssembly>protobuf-net, Version=2.0.0.452, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL</ProtoBufAssembly>
+        <ProtoBufHintPath>..\..\packages\protobuf-net.2.0.0.452\lib\net40\protobuf-net.dll</ProtoBufHintPath>
+      </PropertyGroup>
+    </When>
+  </Choose>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -40,14 +66,11 @@
     <AssemblyOriginatorKeyFile>ProtoBuf.Data.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="protobuf-net, Version=1.0.0.280, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\protobuf-net\Net-$(TargetFrameworkVersion)\protobuf-net.dll</HintPath>
+    <Reference Include="$(ProtoBufAssembly)">
+      <SpecificVersion>True</SpecificVersion>
+      <HintPath>$(ProtoBufHintPath)</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <HintPath>..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\System.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
