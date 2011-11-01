@@ -130,34 +130,20 @@ namespace ProtoBuf.Data.Tests
         public static DataTable SerializeAndDeserialize(DataTable dataTable)
         {
             using (var stream = new MemoryStream())
-            using (var originalReader = dataTable.CreateDataReader())
             {
-                DataSerializer.Serialize(stream, originalReader);
-
+                DataSerializer.Serialize(stream, dataTable);
                 stream.Seek(0, SeekOrigin.Begin);
-
-                var deserializedDataTable = new DataTable();
-                using (var reader = DataSerializer.Deserialize(stream))
-                    deserializedDataTable.Load(reader);
-
-                return deserializedDataTable;
+                return DataSerializer.DeserializeDataTable(stream);
             }
         }
 
-        public static DataSet SerializeAndDeserialize(DataSet dataSet, params string[] tableNames)
+        public static DataSet SerializeAndDeserialize(DataSet dataSet, params string[] tables)
         {
             using (var stream = new MemoryStream())
-            using (var originalReader = dataSet.CreateDataReader())
             {
-                DataSerializer.Serialize(stream, originalReader);
-
+                DataSerializer.Serialize(stream, dataSet);
                 stream.Seek(0, SeekOrigin.Begin);
-
-                var deserializedDataSet = new DataSet();
-                using (var reader = DataSerializer.Deserialize(stream))
-                    deserializedDataSet.Load(reader, LoadOption.OverwriteChanges, tableNames);
-
-                return deserializedDataSet;
+                return DataSerializer.DeserializeDataSet(stream, tables);
             }
         }
     }
