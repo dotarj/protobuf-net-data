@@ -17,26 +17,26 @@
   <Choose>
     <When Condition="$(TargetFrameworkVersion) == 'v2.0'">
       <PropertyGroup>
-        <ProtoBufAssembly>protobuf-net, Version=2.0.0.452, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL</ProtoBufAssembly>
-        <ProtoBufHintPath>..\..\packages\protobuf-net.2.0.0.452\lib\net20\protobuf-net.dll</ProtoBufHintPath>
+        <ProtoBufAssembly>protobuf-net, Version=2.0.0.470, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL</ProtoBufAssembly>
+        <ProtoBufHintPath>..\..\packages\protobuf-net.2.0.0.470\lib\net20\protobuf-net.dll</ProtoBufHintPath>
       </PropertyGroup>
     </When>
     <When Condition="$(TargetFrameworkVersion) == 'v3.0'">
       <PropertyGroup>
-        <ProtoBufAssembly>protobuf-net, Version=2.0.0.452, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL</ProtoBufAssembly>
-        <ProtoBufHintPath>..\..\packages\protobuf-net.2.0.0.452\lib\net30\protobuf-net.dll</ProtoBufHintPath>
+        <ProtoBufAssembly>protobuf-net, Version=2.0.0.470, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL</ProtoBufAssembly>
+        <ProtoBufHintPath>..\..\packages\protobuf-net.2.0.0.470\lib\net30\protobuf-net.dll</ProtoBufHintPath>
       </PropertyGroup>
     </When>
     <When Condition="$(TargetFrameworkVersion) == 'v3.5'">
       <PropertyGroup>
-        <ProtoBufAssembly>protobuf-net, Version=2.0.0.452, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL</ProtoBufAssembly>
-        <ProtoBufHintPath>..\..\packages\protobuf-net.2.0.0.452\lib\net35\protobuf-net.dll</ProtoBufHintPath>
+        <ProtoBufAssembly>protobuf-net, Version=2.0.0.470, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL</ProtoBufAssembly>
+        <ProtoBufHintPath>..\..\packages\protobuf-net.2.0.0.470\lib\net35\protobuf-net.dll</ProtoBufHintPath>
       </PropertyGroup>
     </When>
     <When Condition="$(TargetFrameworkVersion) == 'v4.0'">
       <PropertyGroup>
-        <ProtoBufAssembly>protobuf-net, Version=2.0.0.452, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL</ProtoBufAssembly>
-        <ProtoBufHintPath>..\..\packages\protobuf-net.2.0.0.452\lib\net40\protobuf-net.dll</ProtoBufHintPath>
+        <ProtoBufAssembly>protobuf-net, Version=2.0.0.470, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL</ProtoBufAssembly>
+        <ProtoBufHintPath>..\..\packages\protobuf-net.2.0.0.470\lib\net40\protobuf-net.dll</ProtoBufHintPath>
       </PropertyGroup>
     </When>
   </Choose>
