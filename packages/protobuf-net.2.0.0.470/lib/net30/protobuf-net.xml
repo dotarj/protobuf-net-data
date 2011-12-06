@@ -440,6 +440,13 @@
             implementations if necessary.
             </summary>
         </member>
+        <member name="T:ProtoBuf.ProtoTypeCode">
+            <summary>
+            Intended to be a direct map to regular TypeCode, but:
+            - with missing types
+            - existing on WinRT
+            </summary>
+        </member>
         <member name="T:ProtoBuf.ImplicitFields">
             <summary>
             Specifies the method used to infer field tags for members of the type
@@ -529,6 +536,16 @@
             <param name="beforeDeserialize">The name of the method (or null) called before deserialization begins (or when a new instance is created during deserialization).</param>
             <param name="afterDeserialize">The name of the method (or null) called when deserialization is complete.</param>
             <returns>The set of callbacks.</returns>
+        </member>
+        <member name="M:ProtoBuf.Meta.MetaType.SetFactory(System.Reflection.MethodInfo)">
+            <summary>
+            Designate a factory-method to use to create instances of this type
+            </summary>
+        </member>
+        <member name="M:ProtoBuf.Meta.MetaType.SetFactory(System.String)">
+            <summary>
+            Designate a factory-method to use to create instances of this type
+            </summary>
         </member>
         <member name="M:ProtoBuf.Meta.MetaType.ThrowIfFrozen">
             <summary>
@@ -1311,6 +1328,11 @@
             <summary>
             Gets the logical name for this member in the schema (this is not critical for binary serialization, but may be used
             when inferring a schema).
+            </summary>
+        </member>
+        <member name="P:ProtoBuf.Meta.ValueMember.SupportNull">
+            <summary>
+            Should lists have extended support for null values? Note this makes the serialization less efficient.
             </summary>
         </member>
         <member name="T:ProtoBuf.PrefixStyle">
@@ -2265,6 +2287,13 @@
             <param name="length">The length of the message, if it could be identified.</param>
             <returns>True if a length could be obtained, false otherwise.</returns>
         </member>
+        <member name="M:ProtoBuf.Serializer.FlushPool">
+            <summary>
+            Releases any internal buffers that have been reserved for efficiency; this does not affect any serialization
+            operations; simply: it can be used (optionally) to release the buffers for garbage collection (at the expense
+            of having to re-allocate a new buffer for the next operation, rather than re-use prior buffers).
+            </summary>
+        </member>
         <member name="T:ProtoBuf.Serializer.NonGeneric">
             <summary>
             Provides non-generic access to the default serializer.
@@ -2289,6 +2318,12 @@
             <param name="type">The type to be created.</param>
             <param name="source">The binary stream to apply to the new instance (cannot be null).</param>
             <returns>A new, initialized instance.</returns>
+        </member>
+        <member name="M:ProtoBuf.Serializer.NonGeneric.Merge(System.IO.Stream,System.Object)">
+            <summary>Applies a protocol-buffer stream to an existing instance.</summary>
+            <param name="instance">The existing instance to be modified (cannot be null).</param>
+            <param name="source">The binary stream to apply to the instance (cannot be null).</param>
+            <returns>The updated instance</returns>
         </member>
         <member name="M:ProtoBuf.Serializer.NonGeneric.SerializeWithLengthPrefix(System.IO.Stream,System.Object,ProtoBuf.PrefixStyle,System.Int32)">
             <summary>
