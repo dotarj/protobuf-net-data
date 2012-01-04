@@ -157,7 +157,7 @@ namespace ProtoBuf.Data
                                         break;
 
                                     case ProtoDataType.Float:
-                                        ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, writer);
+                                        ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Fixed32, writer);
                                         ProtoWriter.WriteSingle((float) value, writer);
                                         break;
 
