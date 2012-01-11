@@ -23,8 +23,8 @@ using System.Reflection;
 
 // This is the single source of truth for assembly versions.
 // Following the same version number as protobuf-net.
-[assembly: AssemblyVersion("2.0.1.470")]
-[assembly: AssemblyFileVersion("2.0.1.470")]
+[assembly: AssemblyVersion("2.0.1.480")]
+[assembly: AssemblyFileVersion("2.0.1.480")]
 
 
 
