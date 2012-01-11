@@ -9,6 +9,10 @@
   <Import Project="..\lib\MSBuild.Community.Tasks.v1.2.0.306\MSBuild.Community.Tasks.Targets"/>
   <UsingTask AssemblyFile="..\lib\NuGet.MSBuild.1.5.20831.132\NuGet.MSBuild.dll" TaskName="NuGet.MSBuild.NuGet" />
 
+  <!-- Create our NuGet package. Uses the assembly version (from 
+  SolutionInfo.cs) as the package version and reads the protobuf-net version
+  from packages.config to update the NuGet <dependencies> list. (Automated
+  because I always forgot to do this manually). -->
   <Target Name="CreateNupkg">
     <RemoveDir Directories="$(OutputDir)" />
 
@@ -41,13 +45,25 @@
     <GetAssemblyIdentity AssemblyFiles="$(OutputDir)\lib\net20\protobuf-net-data.dll">
       <Output TaskParameter="Assemblies" ItemName="AssemblyInfo"/>
     </GetAssemblyIdentity>
+    
+    <!-- When updating a package, NuGet seems to leave old versions there. So
+    read the last one (XPath doesn't have a max() function unfortunately) and
+    use that for the <dependencies> list. -->
+    <XmlRead XPath="//package[@id='protobuf-net' and position()=last()]/@version" 
+             XmlFileName="..\src\ProtoBuf.Data\packages.config">
+        <Output TaskParameter="Value" PropertyName="ProtobufNetDependencyVersion" />
+    </XmlRead>
 
     <Copy SourceFiles="$(NuspecFile)" DestinationFolder="$(OutputDir)" />
 
     <XmlUpdate XmlFileName="$(OutputDir)\$(NuspecFile)"
                Xpath="//version"
                Value="%(AssemblyInfo.Version)" />
-
+               
+   <XmlUpdate XmlFileName="$(OutputDir)\$(NuspecFile)"
+               Xpath="//dependency[@id='protobuf-net']/@version"
+               Value="$(ProtobufNetDependencyVersion)" />
+               
     <NuGet BaseDir="$(OutputDir)" 
            PackageDir="$(OutputDir)" 
            SpecFile="$(OutputDir)\$(NuspecFile)" />
