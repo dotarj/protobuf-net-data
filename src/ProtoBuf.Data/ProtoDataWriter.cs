@@ -152,7 +152,7 @@ namespace ProtoBuf.Data
                                         break;
 
                                     case ProtoDataType.Double:
-                                        ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, writer);
+                                        ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Fixed64, writer);
                                         ProtoWriter.WriteDouble((double) value, writer);
                                         break;
 
