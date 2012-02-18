@@ -106,6 +106,8 @@ Only the data reader's contents are serialized - i.e., the column name, data typ
 #### Will protobuf-net v1 be supported?
 No. Only protobuf-net v2 is supported right now, and it is unlikely any effort will be spent back-porting it to v1 (if indeed it is even possible with v1).
 
+#### How can I mock/stub out the DataSerializer class in my unit tests? All its methods are static.
+You can use IDataSerializerEngine/DataSerializerEngine for testing and dependency injection - it has all the same methods as DataSerializer (new in 2.0.2.480). Alternatively, both the lower-level classes, ProtoDataReader and ProtoDataWriter, have interfaces and can be mocked out as well.
 
 # Credits
 
