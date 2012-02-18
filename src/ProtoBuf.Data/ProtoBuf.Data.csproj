@@ -74,7 +74,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataSerializerEngine.cs" />
     <Compile Include="DataSerializer.cs" />
+    <Compile Include="IDataSerializerEngine.cs" />
     <Compile Include="Internal\ConvertProtoDataType.cs" />
     <Compile Include="Internal\ProtoDataColumn.cs" />
     <Compile Include="Internal\ProtoDataType.cs" />

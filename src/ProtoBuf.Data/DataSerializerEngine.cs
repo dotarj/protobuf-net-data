@@ -22,18 +22,21 @@ namespace ProtoBuf.Data
     /// <summary>
     /// Provides protocol-buffer serialization for <see cref="System.Data.IDataReader"/>s.
     /// </summary>
-    public static class DataSerializer
+    public class DataSerializerEngine : IDataSerializerEngine
     {
-        static readonly IDataSerializerEngine engine = new DataSerializerEngine();
+        static readonly IProtoDataWriter writer = new ProtoDataWriter();
 
         ///<summary>
         /// Serialize an <see cref="System.Data.IDataReader"/> to a binary stream using protocol-buffers.
         ///</summary>
         ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
         ///<param name="reader">The <see cref="System.Data.IDataReader"/> who's contents to serialize.</param>
-        public static void Serialize(Stream stream, IDataReader reader)
+        public void Serialize(Stream stream, IDataReader reader)
         {
-            engine.Serialize(stream, reader);
+            if (stream == null) throw new ArgumentNullException("stream");
+            if (reader == null) throw new ArgumentNullException("reader");
+
+            writer.Serialize(stream, reader);
         }
 
         ///<summary>
@@ -41,9 +44,13 @@ namespace ProtoBuf.Data
         ///</summary>
         ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
         ///<param name="dataTable">The <see cref="System.Data.DataTable"/> who's contents to serialize.</param>
-        public static void Serialize(Stream stream, DataTable dataTable)
+        public void Serialize(Stream stream, DataTable dataTable)
         {
-            engine.Serialize(stream, dataTable);
+            if (stream == null) throw new ArgumentNullException("stream");
+            if (dataTable == null) throw new ArgumentNullException("dataTable");
+
+            using (var reader = dataTable.CreateDataReader())
+                Serialize(stream, reader);
         }
 
         ///<summary>
@@ -51,27 +58,38 @@ namespace ProtoBuf.Data
         ///</summary>
         ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
         ///<param name="dataSet">The <see cref="System.Data.DataSet"/> who's contents to serialize.</param>
-        public static void Serialize(Stream stream, DataSet dataSet)
+        public void Serialize(Stream stream, DataSet dataSet)
         {
-            engine.Serialize(stream, dataSet);
+            if (stream == null) throw new ArgumentNullException("stream");
+            if (dataSet == null) throw new ArgumentNullException("dataSet");
+
+            using (var reader = dataSet.CreateDataReader())
+                Serialize(stream, reader);
         }
 
         ///<summary>
         /// Deserialize a protocol-buffer binary stream back into an <see cref="System.Data.IDataReader"/>.
         ///</summary>
         ///<param name="stream">The <see cref="System.IO.Stream"/> to read from.</param>
-        public static IDataReader Deserialize(Stream stream)
+        public IDataReader Deserialize(Stream stream)
         {
-            return engine.Deserialize(stream);
+            if (stream == null) throw new ArgumentNullException("stream");
+
+            return new ProtoDataReader(stream);
         }
 
         ///<summary>
         /// Deserialize a protocol-buffer binary stream back into a <see cref="System.Data.DataTable"/>.
         ///</summary>
         ///<param name="stream">The <see cref="System.IO.Stream"/> to read from.</param>
-        public static DataTable DeserializeDataTable(Stream stream)
+        public DataTable DeserializeDataTable(Stream stream)
         {
-            return engine.DeserializeDataTable(stream);
+            if (stream == null) throw new ArgumentNullException("stream");
+
+            var dataTable = new DataTable();
+            using (var reader = Deserialize(stream))
+                dataTable.Load(reader);
+            return dataTable;
         }
 
         ///<summary>
@@ -79,9 +97,12 @@ namespace ProtoBuf.Data
         ///</summary>
         ///<param name="stream">The <see cref="System.IO.Stream"/> to read from.</param>
         ///<param name="tables">A sequence of strings, from which the <see cref="System.Data.DataSet"/> Load method retrieves table name information.</param>
-        public static DataSet DeserializeDataSet(Stream stream, IEnumerable<string> tables)
+        public DataSet DeserializeDataSet(Stream stream, IEnumerable<string> tables)
         {
-            return engine.DeserializeDataSet(stream, tables);
+            if (stream == null) throw new ArgumentNullException("stream");
+            if (tables == null) throw new ArgumentNullException("tables");
+
+            return DeserializeDataSet(stream, new List<string>(tables).ToArray());
         }
 
         ///<summary>
@@ -89,9 +110,16 @@ namespace ProtoBuf.Data
         ///</summary>
         ///<param name="stream">The <see cref="System.IO.Stream"/> to read from.</param>
         ///<param name="tables">An array of strings, from which the <see cref="System.Data.DataSet"/> Load method retrieves table name information.</param>
-        public static DataSet DeserializeDataSet(Stream stream, params string[] tables)
+        public DataSet DeserializeDataSet(Stream stream, params string[] tables)
         {
-            return engine.DeserializeDataSet(stream, tables);
+            if (stream == null) throw new ArgumentNullException("stream");
+            if (tables == null) throw new ArgumentNullException("tables");
+
+            var dataSet = new DataSet();
+            using (var reader = Deserialize(stream))
+                dataSet.Load(reader, LoadOption.OverwriteChanges, tables);
+
+            return dataSet;
         }
     }
 }
