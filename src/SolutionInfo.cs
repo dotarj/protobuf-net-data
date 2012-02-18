@@ -22,9 +22,11 @@ using System.Reflection;
 [assembly: AssemblyCulture("")]
 
 // This is the single source of truth for assembly versions.
-// Following the same version number as protobuf-net.
-[assembly: AssemblyVersion("2.0.1.480")]
-[assembly: AssemblyFileVersion("2.0.1.480")]
+// Trying to keep the same major/minor/revision number as protobuf-net but the
+// build number is ours i.e. #.#.(our version number).#
+
+[assembly: AssemblyVersion("2.0.2.480")]
+[assembly: AssemblyFileVersion("2.0.2.480")]
 
 
 
