@@ -9,32 +9,14 @@
   <Import Project="..\lib\MSBuild.Community.Tasks.v1.2.0.306\MSBuild.Community.Tasks.Targets"/>
   <UsingTask AssemblyFile="..\lib\NuGet.MSBuild.1.5.20831.132\NuGet.MSBuild.dll" TaskName="NuGet.MSBuild.NuGet" />
 
+  
   <!-- Create our NuGet package. Uses the assembly version (from 
   SolutionInfo.cs) as the package version and reads the protobuf-net version
   from packages.config to update the NuGet <dependencies> list. (Automated
   because I always forgot to do this manually). -->
   <Target Name="CreateNupkg">
-    <RemoveDir Directories="$(OutputDir)" />
 
-    <!-- .NET 2.0 -->
-    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
-             Targets="Clean; Rebuild"
-             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net20;TargetFrameworkVersion=v2.0" />
-
-    <!-- .NET 3.0 -->
-    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
-             Targets="Clean; Rebuild"
-             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net30;TargetFrameworkVersion=v3.0" />
-
-    <!-- .NET 3.5 -->
-    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
-             Targets="Clean; Rebuild"
-             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net35;TargetFrameworkVersion=v3.5" />
-
-    <!-- .NET 4.0 -->
-    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
-             Targets="Clean; Rebuild"
-             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net40;TargetFrameworkVersion=v4.0" />
+    <CallTarget Targets="Rebuild" />
 
     <!-- cleanup any files we won't be distributing in our nupkg -->
     <ItemGroup>
@@ -69,4 +51,52 @@
            SpecFile="$(OutputDir)\$(NuspecFile)" />
     
   </Target>
+
+  <Target Name="CreateZip">
+    <CallTarget Targets="Rebuild" />
+
+    <Copy SourceFiles="..\protobuf-net-data.licence.txt" DestinationFolder="$(OutputDir)\lib" />
+    
+    <ItemGroup>
+      <ZipFiles Include="$(OutputDir)\lib\**\*.*" />
+      
+      <!-- Have to bundle the protobuf-net license ourselves as it's not 
+           included in their nuget package. -->
+      <ZipFiles Include="protobuf-net.license.txt" />
+    </ItemGroup>
+
+    <GetAssemblyIdentity AssemblyFiles="$(OutputDir)\lib\net20\protobuf-net-data.dll">
+      <Output TaskParameter="Assemblies" ItemName="AssemblyInfo"/>
+    </GetAssemblyIdentity>
+
+    <Zip ZipFileName="$(OutputDir)\protobuf-net-data-%(AssemblyInfo.Version).zip"
+         WorkingDirectory="$(OutputDir)\lib"
+         Files="@(ZipFiles)" />
+    
+  </Target>
+
+  <Target Name="Rebuild">
+    <RemoveDir Directories="$(OutputDir)" />
+
+    <!-- .NET 2.0 -->
+    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
+             Targets="Clean; Rebuild"
+             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net20;TargetFrameworkVersion=v2.0" />
+
+    <!-- .NET 3.0 -->
+    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
+             Targets="Clean; Rebuild"
+             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net30;TargetFrameworkVersion=v3.0" />
+
+    <!-- .NET 3.5 -->
+    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
+             Targets="Clean; Rebuild"
+             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net35;TargetFrameworkVersion=v3.5" />
+
+    <!-- .NET 4.0 -->
+    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
+             Targets="Clean; Rebuild"
+             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net40;TargetFrameworkVersion=v4.0" />
+  </Target>
+  
 </Project>
