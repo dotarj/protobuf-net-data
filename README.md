@@ -3,6 +3,11 @@ Protocol Buffers DataReader Extensions for .NET
 
 A library for serializing ADO.NET DataTables and DataReaders into an efficient, portable binary format. Uses [Marc Gravell](http://marcgravell.blogspot.com/)'s Google Protocol Buffers library, [protobuf-net](http://code.google.com/p/protobuf-net/). 
 
+
+### [>>> Get protobuf-net-data via NuGet](http://nuget.org/List/Packages/protobuf-net-data)
+
+
+
 The latest protobuf-net-data is **now available in NuGet [here](http://nuget.org/List/Packages/protobuf-net-data)**, or as a zip from the downloads page.
 
 ## Usage examples
