@@ -121,3 +121,22 @@ Thanks to [Marc Gravell](http://marcgravell.blogspot.com/) for [protobuf-net](ht
 # License
 
 Protocol Buffers DataReader Extensions for .NET is available under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
+# Release History / Changelog
+
+#### 2.0.3.480 - March 16 2012
+* Bug fix for an issue where computed columns were serialized (rdingwall/protobuf-net-data#11).
+
+#### 2.0.2.480 - February 18 2012
+* Extracted IDataSerializerEngine to make mocking and dependency injection easier.
+
+#### 2.0.1.480 - January 11 2012
+* Upgraded to protobuf-net 2.0.0.480.
+* Fixed an issue saving floats and doubles (rdingwall/protobuf-net-data#10).
+
+#### 2.0.1.470 - December 8 2011
+* Upgraded to protobuf-net 2.0.0.470 (rdingwall/protobuf-net-data#9).
+* Version number had to incremented unfortunately due to me uploading a broken package to NuGet.org (version numbers can't be reused).
+
+#### 2.0.0.452 - November 1 2011
+* Initial release.
