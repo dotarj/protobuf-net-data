@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using ProtoBuf.Data.Internal;
@@ -40,17 +41,29 @@ namespace ProtoBuf.Data
             {
                 do
                 {
-                    ProtoDataColumn[] cols;
+                    IList<ProtoDataColumn> cols;
                     using (var schema = reader.GetSchemaTable())
                     {
-                        cols = new ProtoDataColumn[schema.Rows.Count];
+                        cols = new List<ProtoDataColumn>(schema.Rows.Count);
                         for (var i = 0; i < schema.Rows.Count; i++)
                         {
                             // Assumption: rows in the schema table are always ordered by
                             // Ordinal position, ascending
                             var row = schema.Rows[i];
-                            cols[i].ProtoDataType = ConvertProtoDataType.FromClrType((Type)row["DataType"]);
-                            cols[i].ColumnName = (string)schema.Rows[i]["ColumnName"];
+
+                            // Skip computed columns. No point serializing and transmitting
+                            // these - just redeclare them after deserializing.
+                            if (!(row["Expression"] is DBNull))
+                                continue;
+
+                            var col = new ProtoDataColumn
+                                          {
+                                              ColumnIndex = i,
+                                              ProtoDataType = ConvertProtoDataType.FromClrType((Type) row["DataType"]),
+                                              ColumnName = (string) schema.Rows[i]["ColumnName"]
+                                          };
+
+                            cols.Add(col);
                         }
                     }
 
@@ -97,7 +110,7 @@ namespace ProtoBuf.Data
                         var token = ProtoWriter.StartSubItem(rowIndex, writer);
                         foreach (var col in cols)
                         {
-                            var value = reader[fieldIndex - 1];
+                            var value = reader[col.ColumnIndex];
                             if (value == null || value is DBNull || IsZeroLengthArray(value))
                             {
                                 // don't write anything

@@ -105,5 +105,36 @@ namespace ProtoBuf.Data.Tests
                 TestHelper.AssertContentsEqual(originalTable, deserializedTable);
             }
         }
+
+        [TestFixture]
+        public class When_serializing_a_data_table_with_a_computed_column
+        {
+            private DataTable originalTable;
+            private DataTable deserializedTable;
+
+            [TestFixtureSetUp]
+            public void TestFixtureSetUp()
+            {
+                var matrix = new[]
+                                 {
+                                     new object[] {"A", "B"},
+                                     new object[] {1, 2},
+                                     new object[] {10, 20},
+                                 };
+
+                originalTable = TestData.FromMatrix(matrix);
+
+                var computed = TestData.FromMatrix(matrix);
+                computed.Columns.Add(new DataColumn("C", typeof (int), "A+B"));
+
+                deserializedTable = TestHelper.SerializeAndDeserialize(computed);
+            }
+
+            [Test]
+            public void Should_ignore_the_computed_column()
+            {
+                TestHelper.AssertContentsEqual(originalTable, deserializedTable);
+            }
+        }
     }
 }

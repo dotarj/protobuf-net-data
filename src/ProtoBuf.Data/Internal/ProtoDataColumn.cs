@@ -18,6 +18,7 @@ namespace ProtoBuf.Data.Internal
     {
         public ProtoDataType ProtoDataType;
         public string ColumnName;
+        public int ColumnIndex;
 
         public override string ToString()
         {
