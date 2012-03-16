@@ -108,6 +108,9 @@ Yes! Nested DataTables are supported. However note that unlike serializing an ID
 #### What exactly from the data reader gets serialized?
 Only the data reader's contents are serialized - i.e., the column name, data type, and values. Metadata about unique keys, auto increment, default value, base table name, data provider, data relations etc is ignored.
 
+#### What about computed columns?
+Computed columns (i.e. those with an [Expression](http://msdn.microsoft.com/en-us/library/system.data.datacolumn.expression.aspx) set) will be skipped and not written to the byte stream (as of 2.0.3.480).
+
 #### Will protobuf-net v1 be supported?
 No. Only protobuf-net v2 is supported right now, and it is unlikely any effort will be spent back-porting it to v1 (if indeed it is even possible with v1).
 
