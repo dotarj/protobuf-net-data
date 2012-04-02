@@ -106,7 +106,7 @@ Yes! Multiple data tables ([IDataReader.NextResult()](http://msdn.microsoft.com/
 Yes! Nested DataTables are supported. However note that unlike serializing an IDataReader (the goal of this library), a DataTable needs to be entirely buffered in memory and cannot stream its contents row-by-row. This library is designed for simple tabular data like time series, price curves, matrices, CSV files, and SQL query results. Complex or heirarchical data structures should be serialized with JSON or XML.
 
 #### What exactly from the data reader gets serialized?
-Only the data reader's contents are serialized - i.e., the column name, data type, and values. Metadata about unique keys, auto increment, default value, base table name, data provider, data relations etc is ignored.
+Only the data reader's contents are serialized - i.e., the column name, data type, and values. Metadata about unique keys, auto increment, default value, base table name, data provider, data relations etc is ignored. Any other [DataRowVersions](http://msdn.microsoft.com/en-us/library/system.data.datarowversion.aspx) will also ignored.
 
 #### What about computed columns?
 Computed columns (i.e. those with an [Expression](http://msdn.microsoft.com/en-us/library/system.data.datacolumn.expression.aspx) set) will be skipped and not written to the byte stream (as of 2.0.3.480).
