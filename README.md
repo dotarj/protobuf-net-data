@@ -117,6 +117,9 @@ No. Only protobuf-net v2 is supported right now, and it is unlikely any effort w
 #### How can I mock/stub out the DataSerializer class in my unit tests? All its methods are static.
 You can use IDataSerializerEngine/DataSerializerEngine for testing and dependency injection - it has all the same methods as DataSerializer (new in [2.0.2.480](https://nuget.org/packages/protobuf-net-data/2.0.2.480)). Alternatively, both the lower-level classes, ProtoDataReader and ProtoDataWriter, have interfaces and can be mocked out as well.
 
+#### Is this library supported in any other languages? E.g. for Java ResultSets?
+In theory, protobuf-net-data binary streams should be able to be serialized and deserialized by any programming language with a protocol-buffers implementation. The protocol buffer structure is documented in ProtoDataWriter.cs.
+
 # Credits
 
 Thanks to [Marc Gravell](http://marcgravell.blogspot.com/) for [protobuf-net](http://code.google.com/p/protobuf-net/), and the original [DataTableSerializer](http://code.google.com/p/protobuf-net/source/browse/trunk/DataTableSerializer) from which the current implementation of this library is based.
