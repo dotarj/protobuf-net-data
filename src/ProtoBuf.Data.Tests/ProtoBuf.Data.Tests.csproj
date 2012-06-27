@@ -34,6 +34,9 @@
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="SharpTestsEx">
       <HintPath>..\..\packages\SharpTestsEx.1.1.1\lib\SharpTestsEx.dll</HintPath>
     </Reference>

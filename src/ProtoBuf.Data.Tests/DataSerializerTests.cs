@@ -15,6 +15,7 @@
 using System.Data;
 using System.IO;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace ProtoBuf.Data.Tests
 {
@@ -134,6 +135,34 @@ namespace ProtoBuf.Data.Tests
             public void Should_ignore_the_computed_column()
             {
                 TestHelper.AssertContentsEqual(originalTable, deserializedTable);
+            }
+        }
+
+        [TestFixture]
+        public class When_serializing_a_data_reader_with_no_expression_column_in_its_schema_table
+        {
+            [Test]
+            public void Should_not_throw_any_exception()
+            {
+                // Fix for issue #12 https://github.com/rdingwall/protobuf-net-data/issues/12
+                var matrix = new[]
+                                 {
+                                     new object[] {"A", "B"},
+                                     new object[] {1, 2},
+                                     new object[] {10, 20},
+                                 };
+                
+                using (var table = TestData.FromMatrix(matrix))
+                using (var reader = table.CreateDataReader())
+                using (var schemaTable = reader.GetSchemaTable())
+                {
+                    var originalReader = MockRepository.GenerateMock<IDataReader>();
+                    schemaTable.Columns.Remove("Expression");
+                    originalReader.Stub(r => r.GetSchemaTable()).Return(schemaTable);
+
+                    using (var stream = Stream.Null)
+                        new ProtoDataWriter().Serialize(stream, originalReader);
+                }
             }
         }
     }

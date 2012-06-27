@@ -44,6 +44,8 @@ namespace ProtoBuf.Data
                     IList<ProtoDataColumn> cols;
                     using (var schema = reader.GetSchemaTable())
                     {
+                        bool schemaSupportsExpressions = schema.Columns.Contains("Expression");
+
                         cols = new List<ProtoDataColumn>(schema.Rows.Count);
                         for (var i = 0; i < schema.Rows.Count; i++)
                         {
@@ -53,14 +55,14 @@ namespace ProtoBuf.Data
 
                             // Skip computed columns. No point serializing and transmitting
                             // these - just redeclare them after deserializing.
-                            if (!(row["Expression"] is DBNull))
+                            if (schemaSupportsExpressions && !(row["Expression"] is DBNull))
                                 continue;
 
                             var col = new ProtoDataColumn
                                           {
                                               ColumnIndex = i,
                                               ProtoDataType = ConvertProtoDataType.FromClrType((Type) row["DataType"]),
-                                              ColumnName = (string) schema.Rows[i]["ColumnName"]
+                                              ColumnName = (string) row["ColumnName"]
                                           };
 
                             cols.Add(col);
