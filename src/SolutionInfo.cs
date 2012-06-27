@@ -25,8 +25,8 @@ using System.Reflection;
 // Trying to keep the same major/minor/revision number as protobuf-net but the
 // build number is ours i.e. #.#.x.# where x = our version number
 
-[assembly: AssemblyVersion("2.0.3.480")]
-[assembly: AssemblyFileVersion("2.0.3.480")]
+[assembly: AssemblyVersion("2.0.4.480")]
+[assembly: AssemblyFileVersion("2.0.4.480")]
 
 
 
