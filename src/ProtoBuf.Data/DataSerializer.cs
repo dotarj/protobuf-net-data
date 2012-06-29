@@ -35,6 +35,16 @@ namespace ProtoBuf.Data
         {
             engine.Serialize(stream, reader);
         }
+        ///<summary>
+        /// Serialize an <see cref="System.Data.IDataReader"/> to a binary stream using protocol-buffers.
+        ///</summary>
+        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        ///<param name="reader">The <see cref="System.Data.IDataReader"/> who's contents to serialize.</param>
+        /// <param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
+        public static void Serialize(Stream stream, IDataReader reader, ProtoDataWriterOptions options)
+        {
+            engine.Serialize(stream, reader, options);
+        }
 
         ///<summary>
         /// Serialize a <see cref="System.Data.DataTable"/> to a binary stream using protocol-buffers.
@@ -45,6 +55,17 @@ namespace ProtoBuf.Data
         {
             engine.Serialize(stream, dataTable);
         }
+        
+        ///<summary>
+        /// Serialize a <see cref="System.Data.DataTable"/> to a binary stream using protocol-buffers.
+        ///</summary>
+        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        ///<param name="dataTable">The <see cref="System.Data.DataTable"/> who's contents to serialize.</param>
+        ///<param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
+        public static void Serialize(Stream stream, DataTable dataTable, ProtoDataWriterOptions options)
+        {
+            engine.Serialize(stream, dataTable, options);
+        }
 
         ///<summary>
         /// Serialize a <see cref="System.Data.DataSet"/> to a binary stream using protocol-buffers.
@@ -54,6 +75,17 @@ namespace ProtoBuf.Data
         public static void Serialize(Stream stream, DataSet dataSet)
         {
             engine.Serialize(stream, dataSet);
+        }
+
+        ///<summary>
+        /// Serialize a <see cref="System.Data.DataSet"/> to a binary stream using protocol-buffers.
+        ///</summary>
+        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        ///<param name="dataSet">The <see cref="System.Data.DataSet"/> who's contents to serialize.</param>
+        ///<param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
+        public static void Serialize(Stream stream, DataSet dataSet, ProtoDataWriterOptions options)
+        {
+            engine.Serialize(stream, dataSet, options);
         }
 
         ///<summary>

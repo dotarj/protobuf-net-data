@@ -93,10 +93,7 @@ namespace ProtoBuf.Data.Tests
 
         static void AssertArraysEqual<T>(ICollection<T> sourceArray, object destArray)
         {
-            if (sourceArray.Count == 0)
-                Assert.That(destArray, Is.InstanceOf<DBNull>(), "Zero-length arrays should be deserialized as null.");
-            else
-                Assert.That(destArray, Is.EquivalentTo(sourceArray), "Array fields contents didn't match.");
+            Assert.That(destArray, Is.EquivalentTo(sourceArray), "Array fields contents didn't match.");
         }
 
         static void AssertColumnNamesEqual(DataTable expected, DataTable actual)

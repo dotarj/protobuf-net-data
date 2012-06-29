@@ -33,10 +33,7 @@ namespace ProtoBuf.Data
         ///<param name="reader">The <see cref="System.Data.IDataReader"/> who's contents to serialize.</param>
         public void Serialize(Stream stream, IDataReader reader)
         {
-            if (stream == null) throw new ArgumentNullException("stream");
-            if (reader == null) throw new ArgumentNullException("reader");
-
-            writer.Serialize(stream, reader);
+            Serialize(stream, reader, new ProtoDataWriterOptions());
         }
 
         ///<summary>
@@ -46,11 +43,7 @@ namespace ProtoBuf.Data
         ///<param name="dataTable">The <see cref="System.Data.DataTable"/> who's contents to serialize.</param>
         public void Serialize(Stream stream, DataTable dataTable)
         {
-            if (stream == null) throw new ArgumentNullException("stream");
-            if (dataTable == null) throw new ArgumentNullException("dataTable");
-
-            using (var reader = dataTable.CreateDataReader())
-                Serialize(stream, reader);
+            Serialize(stream, dataTable, new ProtoDataWriterOptions());
         }
 
         ///<summary>
@@ -60,11 +53,51 @@ namespace ProtoBuf.Data
         ///<param name="dataSet">The <see cref="System.Data.DataSet"/> who's contents to serialize.</param>
         public void Serialize(Stream stream, DataSet dataSet)
         {
+            Serialize(stream, dataSet, new ProtoDataWriterOptions());
+        }
+
+        ///<summary>
+        /// Serialize an <see cref="System.Data.IDataReader"/> to a binary stream using protocol-buffers.
+        ///</summary>
+        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        ///<param name="reader">The <see cref="System.Data.IDataReader"/> who's contents to serialize.</param>
+        ///<param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
+        public void Serialize(Stream stream, IDataReader reader, ProtoDataWriterOptions options)
+        {
+            if (stream == null) throw new ArgumentNullException("stream");
+            if (reader == null) throw new ArgumentNullException("reader");
+
+            writer.Serialize(stream, reader, options);
+        }
+
+        ///<summary>
+        /// Serialize a <see cref="System.Data.DataTable"/> to a binary stream using protocol-buffers.
+        ///</summary>
+        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        ///<param name="dataTable">The <see cref="System.Data.DataTable"/> who's contents to serialize.</param>
+        ///<param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
+        public void Serialize(Stream stream, DataTable dataTable, ProtoDataWriterOptions options)
+        {
+            if (stream == null) throw new ArgumentNullException("stream");
+            if (dataTable == null) throw new ArgumentNullException("dataTable");
+
+            using (var reader = dataTable.CreateDataReader())
+                Serialize(stream, reader, options);
+        }
+
+        ///<summary>
+        /// Serialize a <see cref="System.Data.DataSet"/> to a binary stream using protocol-buffers.
+        ///</summary>
+        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        ///<param name="dataSet">The <see cref="System.Data.DataSet"/> who's contents to serialize.</param>
+        ///<param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
+        public void Serialize(Stream stream, DataSet dataSet, ProtoDataWriterOptions options)
+        {
             if (stream == null) throw new ArgumentNullException("stream");
             if (dataSet == null) throw new ArgumentNullException("dataSet");
 
             using (var reader = dataSet.CreateDataReader())
-                Serialize(stream, reader);
+                Serialize(stream, reader, options);
         }
 
         ///<summary>

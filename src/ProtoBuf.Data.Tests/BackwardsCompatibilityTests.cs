@@ -73,6 +73,11 @@ namespace ProtoBuf.Data.Tests
             return dataSet;
         }
 
+        /// <summary>
+        /// Version with zero-length arrays serialized as null.
+        /// </summary>
+        const string PreviousVersionTestFile = "OldBackwardsCompatbilityTest.bin";
+
         const string TestFile = "BackwardsCompatbilityTest.bin";
 
         [TestFixture]
@@ -105,9 +110,31 @@ namespace ProtoBuf.Data.Tests
                 using (var stream = new MemoryStream())
                 {
                     using (var reader = dataSet.CreateDataReader())
+                    {
                         DataSerializer.Serialize(stream, reader);
+                    }
 
                     var expected = File.ReadAllBytes(TestFile);
+
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    stream.GetBuffer().Take(expected.Length).Should().Have.SameSequenceAs(expected);
+                }
+            }
+
+            [Test]
+            public void Should_retain_binary_compatibility_with_previous_versions_when_writing()
+            {
+                using (var dataSet = CreateTablesForBackwardsCompatibilityTest())
+                using (var stream = new MemoryStream())
+                {
+                    using (var reader = dataSet.CreateDataReader())
+                    {
+                        var options = new ProtoDataWriterOptions { SerializeEmptyArraysAsNull = true };
+                        DataSerializer.Serialize(stream, reader, options);
+                    }
+
+                    var expected = File.ReadAllBytes(PreviousVersionTestFile);
 
                     stream.Seek(0, SeekOrigin.Begin);
 

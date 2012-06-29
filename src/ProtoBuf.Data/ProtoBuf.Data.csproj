@@ -88,6 +88,7 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="ProtoDataWriterOptions.cs" />
     <Compile Include="UnsupportedColumnTypeException.cs" />
   </ItemGroup>
   <ItemGroup>

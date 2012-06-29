@@ -32,6 +32,12 @@ namespace ProtoBuf.Data
         ///<param name="reader">The <see cref="System.Data.IDataReader"/>who's contents to serialize.</param>
         public void Serialize(Stream stream, IDataReader reader)
         {
+            Serialize(stream, reader, new ProtoDataWriterOptions());
+        }
+
+        
+        public void Serialize(Stream stream, IDataReader reader, ProtoDataWriterOptions options)
+        {
             if (stream == null) throw new ArgumentNullException("stream");
             if (reader == null) throw new ArgumentNullException("reader");
 
@@ -105,6 +111,7 @@ namespace ProtoBuf.Data
 
                     // write the rows
                     var rowIndex = 0;
+                    var serializeZeroLengthArraysAsNull = options.SerializeEmptyArraysAsNull;
                     while (reader.Read())
                     {
                         var fieldIndex = 1;
@@ -113,7 +120,7 @@ namespace ProtoBuf.Data
                         foreach (var col in cols)
                         {
                             var value = reader[col.ColumnIndex];
-                            if (value == null || value is DBNull || IsZeroLengthArray(value))
+                            if (value == null || value is DBNull || (serializeZeroLengthArraysAsNull && IsZeroLengthArray(value)))
                             {
                                 // don't write anything
                             }

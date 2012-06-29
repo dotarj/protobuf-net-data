@@ -165,5 +165,33 @@ namespace ProtoBuf.Data.Tests
                 }
             }
         }
+
+        [TestFixture]
+        public class When_serializing_a_data_table_with_zero_length_arrays
+        {
+            private DataTable originalTable;
+            private DataTable deserializedTable;
+
+            [TestFixtureSetUp]
+            public void TestFixtureSetUp()
+            {
+                var matrix = new[]
+                                 {
+                                     new object[] {"A", "B"},
+                                     new object[] { new byte[] {}, "X" },
+                                     new object[] { null, "Y"},
+                                 };
+
+                originalTable = TestData.FromMatrix(matrix);
+
+                deserializedTable = TestHelper.SerializeAndDeserialize(originalTable);
+            }
+
+            [Test]
+            public void Should_ignore_the_computed_column()
+            {
+                TestHelper.AssertContentsEqual(originalTable, deserializedTable);
+            }
+        }
     }
 }

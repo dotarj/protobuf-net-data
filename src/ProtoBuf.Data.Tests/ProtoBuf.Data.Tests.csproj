@@ -62,6 +62,9 @@
     <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="OldBackwardsCompatbilityTest.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="BackwardsCompatbilityTest.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
