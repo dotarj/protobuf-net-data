@@ -132,6 +132,9 @@ Protocol Buffers DataReader Extensions for .NET is available under the [Apache L
 
 # Release History / Changelog
 
+#### 2.0.4.480 - June 27 2012
+* Bug fix for an issue where ProtoDataWriter incorrectly assumed all IDataReader schema tables have an 'Expression' column ( issue #12 ).
+
 #### 2.0.3.480 - March 16 2012
 * Bug fix for an issue where computed columns were serialized ( issue #11 ).
 
