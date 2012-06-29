@@ -163,7 +163,7 @@ namespace ProtoBuf.Data
 
                                     case ProtoDataType.Char:
                                         ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, writer);
-                                        ProtoWriter.WriteInt16((Int16) value, writer);
+                                        ProtoWriter.WriteInt16((Int16)(char) value, writer);
                                         break;
 
                                     case ProtoDataType.Double:
