@@ -132,6 +132,36 @@ namespace ProtoBuf.Data.Tests
             }
 
             [Test]
+            public void Should_ignore_the_computed_column_by_default()
+            {
+                TestHelper.AssertContentsEqual(originalTable, deserializedTable);
+            }
+        }
+
+        [TestFixture]
+        public class When_serializing_a_data_table_including_computed_columns
+        {
+            private DataTable originalTable;
+            private DataTable deserializedTable;
+
+            [TestFixtureSetUp]
+            public void TestFixtureSetUp()
+            {
+                var matrix = new[]
+                                 {
+                                     new object[] {"A", "B"},
+                                     new object[] {1, 2},
+                                     new object[] {10, 20},
+                                 };
+
+                originalTable = TestData.FromMatrix(matrix);
+                originalTable.Columns.Add(new DataColumn("C", typeof(int), "A+B"));
+
+                deserializedTable = TestHelper.SerializeAndDeserialize(originalTable, 
+                    new ProtoDataWriterOptions { IncludeComputedColumns = true });
+            }
+
+            [Test]
             public void Should_ignore_the_computed_column()
             {
                 TestHelper.AssertContentsEqual(originalTable, deserializedTable);

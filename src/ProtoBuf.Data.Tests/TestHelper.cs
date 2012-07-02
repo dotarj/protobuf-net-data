@@ -126,12 +126,7 @@ namespace ProtoBuf.Data.Tests
 
         public static DataTable SerializeAndDeserialize(DataTable dataTable)
         {
-            using (var stream = new MemoryStream())
-            {
-                DataSerializer.Serialize(stream, dataTable);
-                stream.Seek(0, SeekOrigin.Begin);
-                return DataSerializer.DeserializeDataTable(stream);
-            }
+            return SerializeAndDeserialize(dataTable, new ProtoDataWriterOptions());
         }
 
         public static DataSet SerializeAndDeserialize(DataSet dataSet, params string[] tables)
@@ -141,6 +136,16 @@ namespace ProtoBuf.Data.Tests
                 DataSerializer.Serialize(stream, dataSet);
                 stream.Seek(0, SeekOrigin.Begin);
                 return DataSerializer.DeserializeDataSet(stream, tables);
+            }
+        }
+
+        public static DataTable SerializeAndDeserialize(DataTable dataTable, ProtoDataWriterOptions options)
+        {
+            using (var stream = new MemoryStream())
+            {
+                DataSerializer.Serialize(stream, dataTable, options);
+                stream.Seek(0, SeekOrigin.Begin);
+                return DataSerializer.DeserializeDataTable(stream);
             }
         }
     }

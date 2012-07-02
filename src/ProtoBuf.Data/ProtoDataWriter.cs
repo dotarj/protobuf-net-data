@@ -67,10 +67,10 @@ namespace ProtoBuf.Data
                             // Ordinal position, ascending
                             var row = schema.Rows[i];
 
-                            // Skip computed columns. No point serializing and transmitting
-                            // these - just redeclare them after deserializing.
-                            if (schemaSupportsExpressions && !(row["Expression"] is DBNull))
-                                continue;
+                            // Skip computed columns unless requested.
+                            var isComputedColumn = schemaSupportsExpressions && !(row["Expression"] is DBNull);
+                            if (isComputedColumn && !options.IncludeComputedColumns)
+                                    continue;
 
                             var col = new ProtoDataColumn
                                           {
