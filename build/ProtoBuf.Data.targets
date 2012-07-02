@@ -4,6 +4,13 @@
     <MSBuildCommunityTasksPath>.</MSBuildCommunityTasksPath>
     <OutputDir>..\output</OutputDir>
     <NuspecFile>protobuf-net-data.nuspec</NuspecFile>
+    <Version>2.0.4.480</Version>
+
+    <!-- The git hash is provided to us via the $(build_vcs_number) TeamCity
+    environment variable. But if we are not running inside TeamCity, just call
+    it HEAD. -->
+    <GitCommitShortHash Condition="$(build_vcs_number) == ''">HEAD</GitCommitShortHash>
+    <GitCommitShortHash Condition="$(build_vcs_number) != ''">$(build_vcs_number.Substring(0, 7))</GitCommitShortHash>
   </PropertyGroup>
 
   <Import Project="..\lib\MSBuild.Community.Tasks.v1.2.0.306\MSBuild.Community.Tasks.Targets"/>
@@ -23,10 +30,6 @@
       <FilesToRemove Include="$(OutputDir)\**\protobuf-net.*" />
     </ItemGroup>
     <Delete Files="@(FilesToRemove)" />
-
-    <GetAssemblyIdentity AssemblyFiles="$(OutputDir)\lib\net20\protobuf-net-data.dll">
-      <Output TaskParameter="Assemblies" ItemName="AssemblyInfo"/>
-    </GetAssemblyIdentity>
     
     <!-- When updating a package, NuGet seems to leave old versions there. So
     read the last one (XPath doesn't have a max() function unfortunately) and
@@ -40,7 +43,7 @@
 
     <XmlUpdate XmlFileName="$(OutputDir)\$(NuspecFile)"
                Xpath="//version"
-               Value="%(AssemblyInfo.Version)" />
+               Value="$(Version)" />
                
    <XmlUpdate XmlFileName="$(OutputDir)\$(NuspecFile)"
                Xpath="//dependency[@id='protobuf-net']/@version"
@@ -65,17 +68,13 @@
       <ZipFiles Include="protobuf-net.license.txt" />
     </ItemGroup>
 
-    <GetAssemblyIdentity AssemblyFiles="$(OutputDir)\lib\net20\protobuf-net-data.dll">
-      <Output TaskParameter="Assemblies" ItemName="AssemblyInfo"/>
-    </GetAssemblyIdentity>
-
-    <Zip ZipFileName="$(OutputDir)\protobuf-net-data-%(AssemblyInfo.Version).zip"
+    <Zip ZipFileName="$(OutputDir)\protobuf-net-data-$(Version).zip"
          WorkingDirectory="$(OutputDir)\lib"
          Files="@(ZipFiles)" />
     
   </Target>
 
-  <Target Name="Rebuild">
+  <Target Name="Rebuild" DependsOnTargets="GenerateAssemblyInfo">
     <RemoveDir Directories="$(OutputDir)" />
 
     <!-- .NET 2.0 -->
@@ -97,6 +96,17 @@
     <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
              Targets="Clean; Rebuild"
              Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net40;TargetFrameworkVersion=v4.0" />
+  </Target>
+
+  <Target Name="GenerateAssemblyInfo">
+    <AssemblyInfo CodeLanguage="CS"
+                  OutputFile="..\src\SolutionInfo.cs"
+                  AssemblyConfiguration="Release"
+                  AssemblyProduct="Protocol Buffers DataReader extensions for .NET"
+                  AssemblyCopyright="Copyright &#0169; Richard Dingwall 2012"
+                  AssemblyVersion="$(Version)"
+                  AssemblyFileVersion="$(Version)"
+                  AssemblyInformationalVersion="$(GitCommitShortHash)" />
   </Target>
   
 </Project>

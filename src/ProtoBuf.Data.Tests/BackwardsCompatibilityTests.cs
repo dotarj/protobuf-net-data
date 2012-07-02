@@ -21,6 +21,7 @@ using SharpTestsEx;
 
 namespace ProtoBuf.Data.Tests
 {
+    // For coverage, these tests should exercise all features of this library.
     public class BackwardsCompatibilityTests
     {
         static DataSet CreateTablesForBackwardsCompatibilityTest()
