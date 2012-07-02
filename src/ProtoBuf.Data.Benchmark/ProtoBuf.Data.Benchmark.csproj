@@ -84,9 +84,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ProtoBuf.Data\ProtoBuf.Data.csproj">
+    <ProjectReference Include="..\ProtoBuf.Data\ProtoBuf.Data.Net20.csproj">
       <Project>{424CA2AE-6A6C-4CE1-85FE-3D1059F90DC9}</Project>
-      <Name>ProtoBuf.Data</Name>
+      <Name>ProtoBuf.Data.Net20</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -78,24 +78,24 @@
     <RemoveDir Directories="$(OutputDir)" />
 
     <!-- .NET 2.0 -->
-    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
+    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.Net20.csproj"
              Targets="Clean; Rebuild"
-             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net20;TargetFrameworkVersion=v2.0" />
+             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net20" />
 
     <!-- .NET 3.0 -->
-    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
+    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.Net30.csproj"
              Targets="Clean; Rebuild"
-             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net30;TargetFrameworkVersion=v3.0" />
+             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net30" />
 
     <!-- .NET 3.5 -->
-    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
+    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.Net35.csproj"
              Targets="Clean; Rebuild"
-             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net35;TargetFrameworkVersion=v3.5" />
+             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net35" />
 
     <!-- .NET 4.0 -->
-    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.csproj"
+    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.Net40.csproj"
              Targets="Clean; Rebuild"
-             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net40;TargetFrameworkVersion=v4.0" />
+             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net40" />
   </Target>
 
   <Target Name="GenerateAssemblyInfo">
