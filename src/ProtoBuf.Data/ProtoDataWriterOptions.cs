@@ -28,6 +28,8 @@ namespace ProtoBuf.Data
         /// </summary>
         public bool SerializeEmptyArraysAsNull { get; set; }
 
+#pragma warning disable 1591 // "Missing XML comment for publicly visible type or member"
+
         public bool Equals(ProtoDataWriterOptions other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -47,5 +49,6 @@ namespace ProtoBuf.Data
         {
             return SerializeEmptyArraysAsNull.GetHashCode();
         }
+#pragma warning restore 1591
     }
 }
