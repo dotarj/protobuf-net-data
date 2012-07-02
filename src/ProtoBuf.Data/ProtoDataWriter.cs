@@ -46,6 +46,9 @@ namespace ProtoBuf.Data
             if (stream == null) throw new ArgumentNullException("stream");
             if (reader == null) throw new ArgumentNullException("reader");
 
+            // Null options are permitted to be passed in.
+            options = options ?? new ProtoDataWriterOptions();
+
             // For a (minor) performance improvement, Serialize() has been left
             // as a single long method with functions manually inlined.
 

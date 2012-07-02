@@ -42,6 +42,26 @@ namespace ProtoBuf.Data.Tests
         }
 
         [TestFixture]
+        public class When_serializing_a_data_table_with_null_options
+        {
+            DataTable originalTable;
+            DataTable deserializedTable;
+
+            [TestFixtureSetUp]
+            public void TestFixtureSetUp()
+            {
+                originalTable = TestData.SmallDataTable();
+                deserializedTable = TestHelper.SerializeAndDeserialize(originalTable, null);
+            }
+
+            [Test]
+            public void Should_have_the_same_contents_as_the_original_and_not_throw_any_exception()
+            {
+                TestHelper.AssertContentsEqual(originalTable, deserializedTable);
+            }
+        }
+
+        [TestFixture]
         public class When_serializing_an_unsupported_type
         {
             DataTable originalTable;
