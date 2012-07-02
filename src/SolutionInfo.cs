@@ -1,4 +1,4 @@
-// Copyright 2011 Richard Dingwall - http://richarddingwall.name
+// Copyright 2012 Richard Dingwall - http://richarddingwall.name
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("Release")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Protocol Buffers DataReader extensions for .NET")]
-[assembly: AssemblyCopyright("Copyright © Richard Dingwall 2011")]
+[assembly: AssemblyCopyright("Copyright © Richard Dingwall 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
