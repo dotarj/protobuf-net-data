@@ -13,7 +13,7 @@
     <GitCommitShortHash Condition="$(build_vcs_number) != ''">$(build_vcs_number.Substring(0, 7))</GitCommitShortHash>
   </PropertyGroup>
 
-  <Import Project="..\lib\MSBuild.Community.Tasks.v1.2.0.306\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="..\packages\MSBuildTasks.1.3.0.528\lib\net20\MSBuild.Community.Tasks.Targets"/>
   <UsingTask AssemblyFile="..\lib\NuGet.MSBuild.1.5.20831.132\NuGet.MSBuild.dll" TaskName="NuGet.MSBuild.NuGet" />
 
   
