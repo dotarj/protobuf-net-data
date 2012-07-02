@@ -41,6 +41,9 @@ namespace ProtoBuf.Data
             if (stream == null) throw new ArgumentNullException("stream");
             if (reader == null) throw new ArgumentNullException("reader");
 
+            // For a (minor) performance improvement, Serialize() has been left
+            // as a single long method with functions manually inlined.
+
             var resultIndex = 0;
 
             using (var writer = new ProtoWriter(stream, null, null))
