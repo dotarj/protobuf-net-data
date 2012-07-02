@@ -78,6 +78,24 @@ DataSerializer supports all the types exposed by [IDataReader](http://msdn.micro
 
 Note that no distinction is made between null and zero-length arrays; both will be deserialized as null.
 
+### Custom serialization options
+
+This library supports custom serialization options for data tables/data readers.
+
+```csharp
+var options = new ProtoDataWriterOptions
+{
+    SerializeEmptyArraysAsNull = true,
+    IncludeComputedColumns = true
+};
+
+DataSerializer.Serialize(buffer, reader, options);
+```
+
+The following options are currently supported:
+
+* **SerializeEmptyArraysAsNull**: In versions 2.0.4.480 and earlier, zero-length arrays were serialized as null. After that, they are serialized properly as a zero-length array. Set this flag if you need to write to the old format. Default is false.
+* **IncludeComputedColumns**: Computed columns are ignored by default (columns who's values are determined by an Expression rather than a stored value). Set to  true to include computed columns in serialization.
 
 # Why does this library exist?
 
@@ -114,6 +132,9 @@ Computed columns (i.e. those with an [Expression](http://msdn.microsoft.com/en-u
 #### Will protobuf-net v1 be supported?
 No. Only protobuf-net v2 is supported right now, and it is unlikely any effort will be spent back-porting it to v1 (if indeed it is even possible with v1).
 
+### What about backwards compatiblity?
+This library is backwards compatible with itself (old versions can deserialize binary blobs produced from later versions and vice versa). The only change to the binary serialization format is that prior to version 2.0.4.480, empty arrays were serialized as null. This behaviour is not a breaking change, but will produce different output. The old behaviour can be restored in the current version by setting the SerializeEmptyArraysAsNull option to true.
+
 #### How can I mock/stub out the DataSerializer class in my unit tests? All its methods are static.
 You can use IDataSerializerEngine/DataSerializerEngine for testing and dependency injection - it has all the same methods as DataSerializer (new in [2.0.2.480](https://nuget.org/packages/protobuf-net-data/2.0.2.480)). Alternatively, both the lower-level classes, ProtoDataReader and ProtoDataWriter, have interfaces and can be mocked out as well.
 
@@ -132,21 +153,25 @@ Protocol Buffers DataReader Extensions for .NET is available under the [Apache L
 
 # Release History / Changelog
 
+#### 2.0.5.480 - July 2 2012
+* New feature ProtoDataWriterOptions to specify handling of zero-length arrays and computed columns.
+* Bug fix for an issue where an exception would be thrown when serializing char column values (issue #15).
+
 #### 2.0.4.480 - June 27 2012
-* Bug fix for an issue where ProtoDataWriter incorrectly assumed all IDataReader schema tables have an 'Expression' column ( issue #12 ).
+* Bug fix for an issue where ProtoDataWriter incorrectly assumed all IDataReader schema tables have an 'Expression' column (issue #12).
 
 #### 2.0.3.480 - March 16 2012
-* Bug fix for an issue where computed columns were serialized ( issue #11 ).
+* Bug fix for an issue where computed columns were serialized (issue #11).
 
 #### 2.0.2.480 - February 18 2012
 * Extracted IDataSerializerEngine to make mocking and dependency injection easier.
 
 #### 2.0.1.480 - January 11 2012
 * Upgraded to protobuf-net 2.0.0.480.
-* Fixed an issue saving floats and doubles ( issue #10 ).
+* Fixed an issue saving floats and doubles (issue #10).
 
 #### 2.0.1.470 - December 8 2011
-* Upgraded to protobuf-net 2.0.0.470 ( issue #9 ).
+* Upgraded to protobuf-net 2.0.0.470 (issue #9).
 * Version number had to incremented unfortunately due to me uploading a broken package to NuGet.org (version numbers can't be reused).
 
 #### 2.0.0.452 - November 1 2011
