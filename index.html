@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Protobuf-net-data : Protocol Buffers DataReader Extensions for .NET" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Protobuf-net-data</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/rdingwall/protobuf-net-data">View on GitHub</a>
+
+          <h1 id="project_title">Protobuf-net-data</h1>
+          <h2 id="project_tagline">Protocol Buffers DataReader Extensions for .NET</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/rdingwall/protobuf-net-data/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/rdingwall/protobuf-net-data/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>A library for serializing ADO.NET DataTables and DataReaders into an efficient, portable binary format. Uses <a href="http://marcgravell.blogspot.com/">Marc Gravell</a>'s Google Protocol Buffers library, <a href="http://code.google.com/p/protobuf-net/">protobuf-net</a>. </p>
+
+<h3><a href="http://nuget.org/List/Packages/protobuf-net-data">&gt;&gt;&gt; Get protobuf-net-data via NuGet</a></h3>
+
+<p>The latest protobuf-net-data is <strong>now available in NuGet <a href="http://nuget.org/List/Packages/protobuf-net-data">here</a></strong>, or as a zip from the downloads page.</p>
+
+<h2>Usage examples</h2>
+
+<p>Writing a DataTable to a file:</p>
+
+<div class="highlight">
+<pre><span class="n">DataTable</span> <span class="n">dt</span> <span class="p">=</span> <span class="p">...;</span>
+
+<span class="k">using</span> <span class="p">(</span><span class="n">Stream</span> <span class="n">stream</span> <span class="p">=</span> <span class="n">File</span><span class="p">.</span><span class="n">OpenWrite</span><span class="p">(</span><span class="s">"C:\foo.dat"</span><span class="p">))</span>
+<span class="k">using</span> <span class="p">(</span><span class="n">IDataReader</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">dt</span><span class="p">.</span><span class="n">CreateDataReader</span><span class="p">())</span>
+<span class="p">{</span>
+    <span class="n">DataSerializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">reader</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+</div>
+
+
+<p>Loading a DataTable from a file:</p>
+
+<div class="highlight">
+<pre><span class="n">DataTable</span> <span class="n">dt</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DataTable</span><span class="p">();</span>
+
+<span class="k">using</span> <span class="p">(</span><span class="n">Stream</span> <span class="n">stream</span> <span class="p">=</span> <span class="n">File</span><span class="p">.</span><span class="n">OpenRead</span><span class="p">(</span><span class="s">"C:\foo.dat"</span><span class="p">))</span>
+<span class="k">using</span> <span class="p">(</span><span class="n">IDataReader</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">DataSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="p">{</span>
+    <span class="n">dt</span><span class="p">.</span><span class="n">Load</span><span class="p">(</span><span class="n">reader</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+</div>
+
+
+<p>Serializing an IDataReader into a buffer... and back again:</p>
+
+<div class="highlight">
+<pre><span class="n">Stream</span> <span class="n">buffer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MemoryStream</span><span class="p">();</span>
+
+<span class="c1">// Serialize SQL results to a buffer</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">command</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlCommand</span><span class="p">(</span><span class="s">"SELECT * FROM ..."</span><span class="p">))</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">command</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">())</span>
+    <span class="n">DataSerializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">reader</span><span class="p">);</span>
+
+<span class="c1">// Read them back</span>
+<span class="n">buffer</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">SeekOrigin</span><span class="p">.</span><span class="n">Begin</span><span class="p">);</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">DataSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">reader</span><span class="p">.</span><span class="n">Read</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+</div>
+
+
+<h3>Supported Data Types</h3>
+
+<p>DataSerializer supports all the types exposed by <a href="http://msdn.microsoft.com/en-us/library/system.data.idatareader.aspx">IDataReader</a>:</p>
+
+<ul>
+<li>Boolean</li>
+<li>Byte</li>
+<li>Byte[]</li>
+<li>Char</li>
+<li>Char[]</li>
+<li>DateTime</li>
+<li>Decimal</li>
+<li>Double</li>
+<li>Float</li>
+<li>Guid</li>
+<li>Int16</li>
+<li>Int32</li>
+<li>Int64</li>
+<li>String</li>
+<li>DataTable</li>
+</ul><p>Note that no distinction is made between null and zero-length arrays; both will be deserialized as null.</p>
+
+<h3>Custom serialization options</h3>
+
+<p>This library supports custom serialization options for data tables/data readers.</p>
+
+<div class="highlight">
+<pre><span class="kt">var</span> <span class="n">options</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ProtoDataWriterOptions</span>
+<span class="p">{</span>
+    <span class="n">SerializeEmptyArraysAsNull</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span>
+    <span class="n">IncludeComputedColumns</span> <span class="p">=</span> <span class="k">true</span>
+<span class="p">};</span>
+
+<span class="n">DataSerializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">options</span><span class="p">);</span>
+</pre>
+</div>
+
+
+<p>The following options are currently supported:</p>
+
+<ul>
+<li>
+<strong>SerializeEmptyArraysAsNull</strong>: In versions 2.0.4.480 and earlier, zero-length arrays were serialized as null. After that, they are serialized properly as a zero-length array. Set this flag if you need to write to the old format. Default is false.</li>
+<li>
+<strong>IncludeComputedColumns</strong>: Computed columns are ignored by default (columns who's values are determined by an Expression rather than a stored value). Set to  true to include computed columns in serialization.</li>
+</ul><h1>Why does this library exist?</h1>
+
+<p>.NET, as a mostly-statically typed language, has a lot of really good options for serializing statically-typed objects. Protocol Buffers, MessagePack, JSON, BSON, XML, SOAP, and the BCL's own proprietary binary serialization are all great for CLR objects, where the fields can be determined at runtime.</p>
+
+<p>However, for data that is tabular in nature, there aren't so many options. <strong>Protocol Buffers DataReader Extensions for .NET</strong> was born out of a need to serialize data:</p>
+
+<ul>
+<li>That is tabular - not necessarily CLR DTOs.</li>
+<li>Where the schema is unknown before it is deserialized - each data set can have totally different columns.</li>
+<li>In a way that is streamable, so entire entire data sets do not have to be buffered in memory at once.</li>
+<li>that can be as large as hundreds of thousands of rows/columns.</li>
+<li>In a reasonably performant manner.</li>
+<li>In a way that could potentially be read by different platforms.</li>
+<li>Into as small a number of bytes as possible.</li>
+</ul><p>DataSerializer packs data faster and smaller than the equivalent DataTable.Save/Write XML:</p>
+
+<p><img src="http://julana.richarddingwall.name/protobuf-net-data-benchmark-1.png" alt="DataSerializer vs DataTable benchmarks" title="Benchmarks serializing and deserializing the DimCustomer table from the AdventureWorksDW2008R2 database on an i7 620 MacBook Pro running Windows 7."></p>
+
+<h1>FAQ</h1>
+
+<h4>Are multiple result sets supported?</h4>
+
+<p>Yes! Multiple data tables (<a href="http://msdn.microsoft.com/en-us/library/system.data.idatareader.nextresult.aspx">IDataReader.NextResult()</a>) are now supported. For example, a DataSet containing the results of 3 SQL queries executed as a single batch.</p>
+
+<h4>Are nested DataTables supported?</h4>
+
+<p>Yes! Nested DataTables are supported. However note that unlike serializing an IDataReader (the goal of this library), a DataTable needs to be entirely buffered in memory and cannot stream its contents row-by-row. This library is designed for simple tabular data like time series, price curves, matrices, CSV files, and SQL query results. Complex or heirarchical data structures should be serialized with JSON or XML.</p>
+
+<h4>What exactly from the data reader gets serialized?</h4>
+
+<p>Only the data reader's contents are serialized - i.e., the column name, data type, and values. Metadata about unique keys, auto increment, default value, base table name, data provider, data relations etc is ignored. Any other <a href="http://msdn.microsoft.com/en-us/library/system.data.datarowversion.aspx">DataRowVersions</a> will also ignored.</p>
+
+<h4>What about computed columns?</h4>
+
+<p>Computed columns (i.e. those with an <a href="http://msdn.microsoft.com/en-us/library/system.data.datacolumn.expression.aspx">Expression</a> set) will be skipped and not written to the byte stream (as of 2.0.3.480).</p>
+
+<h4>Will protobuf-net v1 be supported?</h4>
+
+<p>No. Only protobuf-net v2 is supported right now, and it is unlikely any effort will be spent back-porting it to v1 (if indeed it is even possible with v1).</p>
+
+<h3>What about backwards compatiblity?</h3>
+
+<p>This library is backwards compatible with itself (old versions can deserialize binary blobs produced from later versions and vice versa). The only change to the binary serialization format is that prior to version 2.0.4.480, empty arrays were serialized as null. This behaviour is not a breaking change, but will produce different output. The old behaviour can be restored in the current version by setting the SerializeEmptyArraysAsNull option to true.</p>
+
+<h4>How can I mock/stub out the DataSerializer class in my unit tests? All its methods are static.</h4>
+
+<p>You can use IDataSerializerEngine/DataSerializerEngine for testing and dependency injection - it has all the same methods as DataSerializer (new in <a href="https://nuget.org/packages/protobuf-net-data/2.0.2.480">2.0.2.480</a>). Alternatively, both the lower-level classes, ProtoDataReader and ProtoDataWriter, have interfaces and can be mocked out as well.</p>
+
+<h4>Is this library supported in any other languages? E.g. for Java ResultSets?</h4>
+
+<p>In theory, protobuf-net-data binary streams should be able to be serialized and deserialized by any programming language with a protocol-buffers implementation. The protocol buffer structure is documented in ProtoDataWriter.cs.</p>
+
+<p>This would be a great future roadmap - as far as I know there is currently no tool for cross-platform binary (and streaming) serialization of tabular data.</p>
+
+<h1>Credits</h1>
+
+<p>Thanks to <a href="http://marcgravell.blogspot.com/">Marc Gravell</a> for <a href="http://code.google.com/p/protobuf-net/">protobuf-net</a>, and the original <a href="http://code.google.com/p/protobuf-net/source/browse/trunk/DataTableSerializer">DataTableSerializer</a> from which the current implementation of this library is based.</p>
+
+<h1>License</h1>
+
+<p>Protocol Buffers DataReader Extensions for .NET is available under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>.</p>
+
+<h1>Release History / Changelog</h1>
+
+<h4>2.0.5.480 - July 2 2012</h4>
+
+<ul>
+<li>New feature ProtoDataWriterOptions to specify handling of zero-length arrays and computed columns.</li>
+<li>Bug fix for an issue where an exception would be thrown when serializing char column values (issue #15).</li>
+</ul><h4>2.0.4.480 - June 27 2012</h4>
+
+<ul>
+<li>Bug fix for an issue where ProtoDataWriter incorrectly assumed all IDataReader schema tables have an 'Expression' column (issue #12).</li>
+</ul><h4>2.0.3.480 - March 16 2012</h4>
+
+<ul>
+<li>Bug fix for an issue where computed columns were serialized (issue #11).</li>
+</ul><h4>2.0.2.480 - February 18 2012</h4>
+
+<ul>
+<li>Extracted IDataSerializerEngine to make mocking and dependency injection easier.</li>
+</ul><h4>2.0.1.480 - January 11 2012</h4>
+
+<ul>
+<li>Upgraded to protobuf-net 2.0.0.480.</li>
+<li>Fixed an issue saving floats and doubles (issue #10).</li>
+</ul><h4>2.0.1.470 - December 8 2011</h4>
+
+<ul>
+<li>Upgraded to protobuf-net 2.0.0.470 (issue #9).</li>
+<li>Version number had to incremented unfortunately due to me uploading a broken package to NuGet.org (version numbers can't be reused).</li>
+</ul><h4>2.0.0.452 - November 1 2011</h4>
+
+<ul>
+<li>Initial release.</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Protobuf-net-data maintained by <a href="https://github.com/rdingwall">rdingwall</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
