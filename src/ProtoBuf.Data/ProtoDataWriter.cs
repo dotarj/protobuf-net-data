@@ -41,7 +41,7 @@ namespace ProtoBuf.Data
             if (stream == null) throw new ArgumentNullException("stream");
             if (reader == null) throw new ArgumentNullException("reader");
 
-            int resultIndex = 0;
+            var resultIndex = 0;
 
             using (var writer = new ProtoWriter(stream, null, null))
             {
@@ -50,7 +50,7 @@ namespace ProtoBuf.Data
                     IList<ProtoDataColumn> cols;
                     using (var schema = reader.GetSchemaTable())
                     {
-                        bool schemaSupportsExpressions = schema.Columns.Contains("Expression");
+                        var schemaSupportsExpressions = schema.Columns.Contains("Expression");
 
                         cols = new List<ProtoDataColumn>(schema.Rows.Count);
                         for (var i = 0; i < schema.Rows.Count; i++)
@@ -217,6 +217,7 @@ namespace ProtoBuf.Data
 
                     ProtoWriter.EndSubItem(resultToken, writer);
 
+                    resultIndex++;
                 } while (reader.NextResult());
             }
         }
