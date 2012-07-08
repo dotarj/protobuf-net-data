@@ -6,7 +6,7 @@
     <authors>Richard Dingwall</authors>
     <owners>Richard Dingwall</owners>
     <licenseUrl>https://raw.github.com/rdingwall/protobuf-net-data/master/protobuf-net-data.licence.txt</licenseUrl>
-    <projectUrl>https://github.com/rdingwall/protobuf-net-data</projectUrl>
+    <projectUrl>http://rdingwall.github.com/protobuf-net-data/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A library for serializing ADO.NET DataTables and DataReaders into an efficient, portable binary format. Uses Marc Gravell's Google Protocol Buffers library, protobuf-net.</description>
     <language>en-US</language>
