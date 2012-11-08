@@ -121,7 +121,9 @@ DataSerializer packs data faster and smaller than the equivalent DataTable.Save/
 Yes! Multiple data tables ([IDataReader.NextResult()](http://msdn.microsoft.com/en-us/library/system.data.idatareader.nextresult.aspx)) are now supported. For example, a DataSet containing the results of 3 SQL queries executed as a single batch.
 
 #### Are nested DataTables supported?
-Yes! Nested DataTables are supported. However note that unlike serializing an IDataReader (the goal of this library), a DataTable needs to be entirely buffered in memory and cannot stream its contents row-by-row. This library is designed for simple tabular data like time series, price curves, matrices, CSV files, and SQL query results. Complex or heirarchical data structures should be serialized with JSON or XML.
+No. Nested DataTable support was removed in protobuf-net-data 2.0.5.601 because they are not portable and the way they were implemented was actually violating the protobuf spec. If nested DataTables is required we recommend you dump them out using an old version of this library into another format.
+
+. However note that unlike serializing an IDataReader (the goal of this library), a DataTable needs to be entirely buffered in memory and cannot stream its contents row-by-row. This library is designed for simple tabular data like time series, price curves, matrices, CSV files, and SQL query results. Complex or heirarchical data structures should be serialized with JSON or XML.
 
 #### What exactly from the data reader gets serialized?
 Only the data reader's contents are serialized - i.e., the column name, data type, and values. Metadata about unique keys, auto increment, default value, base table name, data provider, data relations etc is ignored. Any other [DataRowVersions](http://msdn.microsoft.com/en-us/library/system.data.datarowversion.aspx) will also ignored.
@@ -152,6 +154,10 @@ Thanks to [Marc Gravell](http://marcgravell.blogspot.com/) for [protobuf-net](ht
 Protocol Buffers DataReader Extensions for .NET is available under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
 # Release History / Changelog
+
+#### 2.0.5.601 - Nov 8 2012
+* Upgraded to protobuf-net 2.0.0.601.
+* Removed nested DataTables support.
 
 #### 2.0.5.480 - July 2 2012
 * New feature ProtoDataWriterOptions to specify handling of zero-length arrays and computed columns.
