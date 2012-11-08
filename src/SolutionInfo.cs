@@ -16,8 +16,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("Release")]
 [assembly: AssemblyProduct("Protocol Buffers DataReader extensions for .NET")]
 [assembly: AssemblyCopyright("Copyright © Richard Dingwall 2012")]
-[assembly: AssemblyVersion("2.0.4.601")]
-[assembly: AssemblyFileVersion("2.0.4.601")]
+[assembly: AssemblyVersion("0.0.0.0")]
+[assembly: AssemblyFileVersion("0.0.0.0")]
 [assembly: AssemblyInformationalVersion("HEAD")]
 
 
