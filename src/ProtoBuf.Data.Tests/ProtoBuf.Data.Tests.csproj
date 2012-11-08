@@ -53,7 +53,6 @@
     <Compile Include="AfterCloseTests.cs" />
     <Compile Include="BackwardsCompatibilityTests.cs" />
     <Compile Include="BigDataSerializerTests.cs" />
-    <Compile Include="NestedTablesTests.cs" />
     <Compile Include="DataSerializerTests.cs" />
     <Compile Include="MultipleDataTableTests.cs">
       <SubType>Code</SubType>
