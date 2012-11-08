@@ -468,29 +468,12 @@ namespace ProtoBuf.Data
                     colReaders.Add(() => reader.ReadString().ToCharArray());
                     break;
 
-                case ProtoDataType.DataTable:
-                    colReaders.Add(() => GetNestedDataTable(reader));
-                    break;
-
                 default:
                     throw new NotSupportedException(protoDataType.ToString());
             }
 
             ProtoReader.EndSubItem(token, reader);
             dataTable.Columns.Add(name, ConvertProtoDataType.ToClrType(protoDataType));
-        }
-
-        private static DataTable GetNestedDataTable(ProtoReader reader)
-        {
-            var buffer = ProtoReader.AppendBytes(null, reader);
-
-            using (var nestedBuffer = new MemoryStream(buffer))
-            using (var nestedReader = new ProtoDataReader(nestedBuffer))
-            {
-                var dataTable = new DataTable();
-                dataTable.Load(nestedReader);
-                return dataTable;
-            }
         }
 
         private void ReadCurrentRow()

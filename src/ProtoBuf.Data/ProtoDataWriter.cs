@@ -209,11 +209,6 @@ namespace ProtoBuf.Data
                                         ProtoWriter.WriteString(new string((char[]) value), writer);
                                         break;
 
-                                    case ProtoDataType.DataTable:
-                                        ProtoWriter.WriteFieldHeader(fieldIndex, WireType.String, writer);
-                                        WriteNestedDataTableBytes(writer, value);
-                                        break;
-
                                     default:
                                         throw new UnsupportedColumnTypeException(
                                             ConvertProtoDataType.ToClrType(col.ProtoDataType));
@@ -230,18 +225,6 @@ namespace ProtoBuf.Data
 
                     resultIndex++;
                 } while (reader.NextResult());
-            }
-        }
-
-        private static void WriteNestedDataTableBytes(ProtoWriter writer, object value)
-        {
-            var nestedDataTable = (DataTable) value;
-
-            using (var nestedDataReader = nestedDataTable.CreateDataReader())
-            using (var nestedBuffer = new MemoryStream())
-            {
-                new ProtoDataWriter().Serialize(nestedBuffer, nestedDataReader);
-                ProtoWriter.WriteBytes(nestedBuffer.GetBuffer(), writer);
             }
         }
 

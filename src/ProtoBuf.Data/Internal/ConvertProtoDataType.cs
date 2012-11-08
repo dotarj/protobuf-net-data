@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace ProtoBuf.Data.Internal
 {
@@ -36,8 +35,7 @@ namespace ProtoBuf.Data.Internal
                       { typeof(char), ProtoDataType.Char },
                       { typeof(decimal), ProtoDataType.Decimal },
                       { typeof(byte[]), ProtoDataType.ByteArray },
-                      { typeof(char[]), ProtoDataType.CharArray },
-                      { typeof(DataTable), ProtoDataType.DataTable }
+                      { typeof(char[]), ProtoDataType.CharArray }
                   };
 
         public static ProtoDataType FromClrType(Type type)

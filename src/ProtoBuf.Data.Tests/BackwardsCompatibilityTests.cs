@@ -48,26 +48,10 @@ namespace ProtoBuf.Data.Tests
             tableC.Rows.Add(2);
             tableC.Rows.Add(3);
 
-
-            var innerTableA = TestData.FromMatrix(new[]
-                                                      {
-                                                          new object[] {"X", "Y"},
-                                                          new object[] {"Aaa", 25},
-                                                          new object[] {"Bbb", 30},
-                                                      });
-
-            var innerTableB = TestData.FromMatrix(new[]
-                                                      {
-                                                          new object[] {"ColumnA", "ColumnB"},
-                                                          new object[] {false, 25},
-                                                          new object[] {true, 30},
-                                                      });
-
             var tableD = new DataTable("D");
             tableD.Columns.Add("ID", typeof(int));
-            tableD.Columns.Add("SubTable", typeof (DataTable));
-            tableD.Rows.Add(42, innerTableA);
-            tableD.Rows.Add(99, innerTableB);
+            tableD.Rows.Add(42);
+            tableD.Rows.Add(99);
 
             var dataSet = new DataSet();
             dataSet.Tables.AddRange(new[] { tableA, tableB, tableC, tableD });
@@ -148,7 +132,7 @@ namespace ProtoBuf.Data.Tests
             public void RegenerateTestFile()
             {
                 using (var dataSet = CreateTablesForBackwardsCompatibilityTest())
-                using (var stream = File.OpenWrite(Path.Combine(@"..\..\", TestFile)))
+                using (var stream = new FileStream(Path.Combine(@"..\..\", TestFile), FileMode.Create))
                 {
                     using (var reader = dataSet.CreateDataReader())
                         DataSerializer.Serialize(stream, reader);
