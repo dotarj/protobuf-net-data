@@ -41,36 +41,29 @@
 
 <p>Writing a DataTable to a file:</p>
 
-<div class="highlight">
-<pre><span class="n">DataTable</span> <span class="n">dt</span> <span class="p">=</span> <span class="p">...;</span>
+<div class="highlight"><pre><span class="n">DataTable</span> <span class="n">dt</span> <span class="p">=</span> <span class="p">...;</span>
 
 <span class="k">using</span> <span class="p">(</span><span class="n">Stream</span> <span class="n">stream</span> <span class="p">=</span> <span class="n">File</span><span class="p">.</span><span class="n">OpenWrite</span><span class="p">(</span><span class="s">"C:\foo.dat"</span><span class="p">))</span>
 <span class="k">using</span> <span class="p">(</span><span class="n">IDataReader</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">dt</span><span class="p">.</span><span class="n">CreateDataReader</span><span class="p">())</span>
 <span class="p">{</span>
     <span class="n">DataSerializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">reader</span><span class="p">);</span>
 <span class="p">}</span>
-</pre>
-</div>
-
+</pre></div>
 
 <p>Loading a DataTable from a file:</p>
 
-<div class="highlight">
-<pre><span class="n">DataTable</span> <span class="n">dt</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DataTable</span><span class="p">();</span>
+<div class="highlight"><pre><span class="n">DataTable</span> <span class="n">dt</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DataTable</span><span class="p">();</span>
 
 <span class="k">using</span> <span class="p">(</span><span class="n">Stream</span> <span class="n">stream</span> <span class="p">=</span> <span class="n">File</span><span class="p">.</span><span class="n">OpenRead</span><span class="p">(</span><span class="s">"C:\foo.dat"</span><span class="p">))</span>
 <span class="k">using</span> <span class="p">(</span><span class="n">IDataReader</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">DataSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
 <span class="p">{</span>
     <span class="n">dt</span><span class="p">.</span><span class="n">Load</span><span class="p">(</span><span class="n">reader</span><span class="p">);</span>
 <span class="p">}</span>
-</pre>
-</div>
-
+</pre></div>
 
 <p>Serializing an IDataReader into a buffer... and back again:</p>
 
-<div class="highlight">
-<pre><span class="n">Stream</span> <span class="n">buffer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MemoryStream</span><span class="p">();</span>
+<div class="highlight"><pre><span class="n">Stream</span> <span class="n">buffer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MemoryStream</span><span class="p">();</span>
 
 <span class="c1">// Serialize SQL results to a buffer</span>
 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">command</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlCommand</span><span class="p">(</span><span class="s">"SELECT * FROM ..."</span><span class="p">))</span>
@@ -86,9 +79,7 @@
         <span class="p">...</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</pre>
-</div>
-
+</pre></div>
 
 <h3>Supported Data Types</h3>
 
@@ -109,24 +100,20 @@
 <li>Int32</li>
 <li>Int64</li>
 <li>String</li>
-<li>DataTable</li>
 </ul><p>Note that no distinction is made between null and zero-length arrays; both will be deserialized as null.</p>
 
 <h3>Custom serialization options</h3>
 
 <p>This library supports custom serialization options for data tables/data readers.</p>
 
-<div class="highlight">
-<pre><span class="kt">var</span> <span class="n">options</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ProtoDataWriterOptions</span>
+<div class="highlight"><pre><span class="kt">var</span> <span class="n">options</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ProtoDataWriterOptions</span>
 <span class="p">{</span>
     <span class="n">SerializeEmptyArraysAsNull</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span>
     <span class="n">IncludeComputedColumns</span> <span class="p">=</span> <span class="k">true</span>
 <span class="p">};</span>
 
 <span class="n">DataSerializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">options</span><span class="p">);</span>
-</pre>
-</div>
-
+</pre></div>
 
 <p>The following options are currently supported:</p>
 
@@ -161,7 +148,9 @@
 
 <h4>Are nested DataTables supported?</h4>
 
-<p>Yes! Nested DataTables are supported. However note that unlike serializing an IDataReader (the goal of this library), a DataTable needs to be entirely buffered in memory and cannot stream its contents row-by-row. This library is designed for simple tabular data like time series, price curves, matrices, CSV files, and SQL query results. Complex or heirarchical data structures should be serialized with JSON or XML.</p>
+<p>No. Nested DataTable support was removed in protobuf-net-data 2.0.5.601 because they are not portable and the way they were implemented was actually violating the protobuf spec. If nested DataTables is required we recommend you dump them out using an old version of this library into another format.</p>
+
+<p>. However note that unlike serializing an IDataReader (the goal of this library), a DataTable needs to be entirely buffered in memory and cannot stream its contents row-by-row. This library is designed for simple tabular data like time series, price curves, matrices, CSV files, and SQL query results. Complex or heirarchical data structures should be serialized with JSON or XML.</p>
 
 <h4>What exactly from the data reader gets serialized?</h4>
 
@@ -199,7 +188,12 @@
 
 <h1>Release History / Changelog</h1>
 
-<h4>2.0.5.480 - July 2 2012</h4>
+<h4>2.0.5.601 - Nov 8 2012</h4>
+
+<ul>
+<li>Upgraded to protobuf-net 2.0.0.601.</li>
+<li>Removed nested DataTables support.</li>
+</ul><h4>2.0.5.480 - July 2 2012</h4>
 
 <ul>
 <li>New feature ProtoDataWriterOptions to specify handling of zero-length arrays and computed columns.</li>
