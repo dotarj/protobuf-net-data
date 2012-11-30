@@ -122,8 +122,6 @@ Yes! Multiple data tables ([IDataReader.NextResult()](http://msdn.microsoft.com/
 #### Are nested DataTables supported?
 No. Nested DataTable support was removed in protobuf-net-data 2.0.5.601 because they are not portable and the way they were implemented was actually violating the protobuf spec. If nested DataTables is required we recommend you dump them out using an old version of this library into another format.
 
-. However note that unlike serializing an IDataReader (the goal of this library), a DataTable needs to be entirely buffered in memory and cannot stream its contents row-by-row. This library is designed for simple tabular data like time series, price curves, matrices, CSV files, and SQL query results. Complex or heirarchical data structures should be serialized with JSON or XML.
-
 #### What exactly from the data reader gets serialized?
 Only the data reader's contents are serialized - i.e., the column name, data type, and values. Metadata about unique keys, auto increment, default value, base table name, data provider, data relations etc is ignored. Any other [DataRowVersions](http://msdn.microsoft.com/en-us/library/system.data.datarowversion.aspx) will also ignored.
 
@@ -133,7 +131,7 @@ Computed columns (i.e. those with an [Expression](http://msdn.microsoft.com/en-u
 #### Will protobuf-net v1 be supported?
 No. Only protobuf-net v2 is supported right now, and it is unlikely any effort will be spent back-porting it to v1 (if indeed it is even possible with v1).
 
-### What about backwards compatiblity?
+#### What about backwards compatiblity?
 This library is backwards compatible with itself (old versions can deserialize binary blobs produced from later versions and vice versa). The only change to the binary serialization format is that prior to version 2.0.4.480, empty arrays were serialized as null. This behaviour is not a breaking change, but will produce different output. The old behaviour can be restored in the current version by setting the SerializeEmptyArraysAsNull option to true.
 
 #### How can I mock/stub out the DataSerializer class in my unit tests? All its methods are static.
