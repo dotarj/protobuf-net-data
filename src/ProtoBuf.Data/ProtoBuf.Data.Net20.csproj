@@ -53,19 +53,25 @@
   <ItemGroup>
     <Compile Include="DataSerializerEngine.cs" />
     <Compile Include="DataSerializer.cs" />
+    <Compile Include="Internal\WriteAheadReadBufferStream.cs" />
+    <Compile Include="Internal\HeaderWriter.cs" />
     <Compile Include="IDataSerializerEngine.cs" />
     <Compile Include="Internal\ConvertProtoDataType.cs" />
     <Compile Include="Internal\ProtoDataColumn.cs" />
+    <Compile Include="Internal\ProtoDataStreamState.cs" />
     <Compile Include="Internal\ProtoDataType.cs" />
     <Compile Include="Internal\ProtoDataTypes.cs" />
+    <Compile Include="Internal\ProtoDataColumnFactory.cs" />
     <Compile Include="IProtoDataWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtoDataReader.cs" />
+    <Compile Include="ProtoDataStream.cs" />
     <Compile Include="ProtoDataWriter.cs" />
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="ProtoDataWriterOptions.cs" />
+    <Compile Include="Internal\RowWriter.cs" />
     <Compile Include="UnsupportedColumnTypeException.cs" />
   </ItemGroup>
   <ItemGroup>

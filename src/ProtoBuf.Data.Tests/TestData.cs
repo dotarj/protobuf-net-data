@@ -51,7 +51,7 @@ namespace ProtoBuf.Data.Tests
             table.Columns.Add("Cat", typeof(DateTime));
             table.Rows.Add(42, "Foo", new DateTime(2011, 04, 05, 12, 16, 41, 300));
             table.Rows.Add(null, "Bar", new DateTime(1920, 04, 03, 12, 48, 31, 210));
-            table.Rows.Add(null, null, null, null, null, null, null);
+            table.Rows.Add(null, null, null);
             return table;
         }
 
@@ -119,6 +119,20 @@ namespace ProtoBuf.Data.Tests
                 dataSet.Load(reader, LoadOption.OverwriteChanges, tableNames);
 
             return dataSet;
+        }
+
+        public static IDataReader ReaderWithMutlipleTables()
+        {
+            var dataSet = new DataSet
+                {
+                    Tables =
+                        {
+                            SmallDataTable(),
+                            DifferentSmallDataTable()
+                        }
+                };
+
+            return dataSet.CreateDataReader();
         }
     }
 }

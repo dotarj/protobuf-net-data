@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Net20", "src\ProtoBuf.Data\ProtoBuf.Data.Net20.csproj", "{424CA2AE-6A6C-4CE1-85FE-3D1059F90DC9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Tests", "src\ProtoBuf.Data.Tests\ProtoBuf.Data.Tests.csproj", "{CDDFE764-6BF8-432A-BC60-D2829E8934CB}"
@@ -69,7 +69,6 @@ Global
 		{641A8111-4CD6-4FF3-81DB-87625D7D4423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{641A8111-4CD6-4FF3-81DB-87625D7D4423}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{641A8111-4CD6-4FF3-81DB-87625D7D4423}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{641A8111-4CD6-4FF3-81DB-87625D7D4423}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{641A8111-4CD6-4FF3-81DB-87625D7D4423}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{641A8111-4CD6-4FF3-81DB-87625D7D4423}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{641A8111-4CD6-4FF3-81DB-87625D7D4423}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -79,7 +78,6 @@ Global
 		{EC52C353-F25A-4845-BA6E-9A6BA73A22BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EC52C353-F25A-4845-BA6E-9A6BA73A22BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC52C353-F25A-4845-BA6E-9A6BA73A22BC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{EC52C353-F25A-4845-BA6E-9A6BA73A22BC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{EC52C353-F25A-4845-BA6E-9A6BA73A22BC}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{EC52C353-F25A-4845-BA6E-9A6BA73A22BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC52C353-F25A-4845-BA6E-9A6BA73A22BC}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -89,7 +87,6 @@ Global
 		{8AF4B609-09D4-4A18-BF92-5C5CDB13CB1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8AF4B609-09D4-4A18-BF92-5C5CDB13CB1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AF4B609-09D4-4A18-BF92-5C5CDB13CB1D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{8AF4B609-09D4-4A18-BF92-5C5CDB13CB1D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{8AF4B609-09D4-4A18-BF92-5C5CDB13CB1D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{8AF4B609-09D4-4A18-BF92-5C5CDB13CB1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AF4B609-09D4-4A18-BF92-5C5CDB13CB1D}.Release|Any CPU.Build.0 = Release|Any CPU

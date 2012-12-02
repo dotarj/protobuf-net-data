@@ -61,6 +61,7 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="ProtoDataStreamTests.cs" />
     <Compile Include="TestData.cs" />
     <Compile Include="TestHelper.cs" />
   </ItemGroup>
