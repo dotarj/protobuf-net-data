@@ -43,36 +43,58 @@
     <AssemblyOriginatorKeyFile>ProtoBuf.Data.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="protobuf-net, Version=2.0.0.480, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+    <Reference Include="protobuf-net, Version=2.0.0.611, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\protobuf-net.2.0.0.602\lib\net35\protobuf-net.dll</HintPath>
+      <HintPath>..\..\packages\protobuf-net.2.0.0.611\lib\net35\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataSerializerEngine.cs" />
-    <Compile Include="DataSerializer.cs" />
-    <Compile Include="IDataSerializerEngine.cs" />
-    <Compile Include="Internal\ConvertProtoDataType.cs" />
-    <Compile Include="Internal\ProtoDataColumn.cs" />
-    <Compile Include="Internal\ProtoDataType.cs" />
-    <Compile Include="Internal\ProtoDataTypes.cs" />
-    <Compile Include="IProtoDataWriter.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProtoDataReader.cs" />
-    <Compile Include="ProtoDataWriter.cs" />
+    <Compile Include="..\ProtoBuf.Data\DataSerializerEngine.cs">
+      <Link>DataSerializerEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\DataSerializer.cs">
+      <Link>DataSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\IDataSerializerEngine.cs">
+      <Link>IDataSerializerEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\Internal\ConvertProtoDataType.cs" />
+    <Compile Include="..\ProtoBuf.Data\Internal\ProtoDataColumn.cs">
+      <Link>Internal\ProtoDataColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\Internal\ProtoDataType.cs">
+      <Link>Internal\ProtoDataType.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\Internal\ProtoDataTypes.cs">
+      <Link>Internal\ProtoDataTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\IProtoDataWriter.cs">
+      <Link>IProtoDataWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\ProtoDataReader.cs">
+      <Link>ProtoDataReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\ProtoDataWriter.cs">
+      <Link>ProtoDataWriter.cs</Link>
+    </Compile>
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="ProtoDataWriterOptions.cs" />
-    <Compile Include="UnsupportedColumnTypeException.cs" />
+    <Compile Include="..\ProtoBuf.Data\ProtoDataWriterOptions.cs">
+      <Link>ProtoDataWriterOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\UnsupportedColumnTypeException.cs">
+      <Link>UnsupportedColumnTypeException.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
     <None Include="ProtoBuf.Data.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
