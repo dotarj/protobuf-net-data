@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Net20", "src\ProtoBuf.Data\ProtoBuf.Data.Net20.csproj", "{424CA2AE-6A6C-4CE1-85FE-3D1059F90DC9}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Net20", "src\ProtoBuf.Data.Net20\ProtoBuf.Data.Net20.csproj", "{424CA2AE-6A6C-4CE1-85FE-3D1059F90DC9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Tests", "src\ProtoBuf.Data.Tests\ProtoBuf.Data.Tests.csproj", "{CDDFE764-6BF8-432A-BC60-D2829E8934CB}"
 EndProject
@@ -14,11 +14,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{6BCB74
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Net30", "src\ProtoBuf.Data\ProtoBuf.Data.Net30.csproj", "{641A8111-4CD6-4FF3-81DB-87625D7D4423}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Net30", "src\ProtoBuf.Data.Net30\ProtoBuf.Data.Net30.csproj", "{641A8111-4CD6-4FF3-81DB-87625D7D4423}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Net35", "src\ProtoBuf.Data\ProtoBuf.Data.Net35.csproj", "{EC52C353-F25A-4845-BA6E-9A6BA73A22BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Net35", "src\ProtoBuf.Data.Net35\ProtoBuf.Data.Net35.csproj", "{EC52C353-F25A-4845-BA6E-9A6BA73A22BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Net40", "src\ProtoBuf.Data\ProtoBuf.Data.Net40.csproj", "{8AF4B609-09D4-4A18-BF92-5C5CDB13CB1D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Net40", "src\ProtoBuf.Data.Net40\ProtoBuf.Data.Net40.csproj", "{8AF4B609-09D4-4A18-BF92-5C5CDB13CB1D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A9E88F8A-F1E2-4DFB-BC86-A41CF4633DDB}"
 	ProjectSection(SolutionItems) = preProject

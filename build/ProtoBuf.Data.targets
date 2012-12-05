@@ -35,7 +35,7 @@
     read the last one (XPath doesn't have a max() function unfortunately) and
     use that for the <dependencies> list. -->
     <XmlRead XPath="//package[@id='protobuf-net' and position()=last()]/@version" 
-             XmlFileName="..\src\ProtoBuf.Data\packages.config">
+             XmlFileName="..\src\ProtoBuf.Data.Net20\packages.config">
         <Output TaskParameter="Value" PropertyName="ProtobufNetDependencyVersion" />
     </XmlRead>
 
@@ -78,22 +78,22 @@
     <RemoveDir Directories="$(OutputDir)" />
 
     <!-- .NET 2.0 -->
-    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.Net20.csproj"
+    <MSBuild Projects="..\src\ProtoBuf.Data.Net20\ProtoBuf.Data.Net20.csproj"
              Targets="Clean; Rebuild"
              Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net20" />
 
     <!-- .NET 3.0 -->
-    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.Net30.csproj"
+    <MSBuild Projects="..\src\ProtoBuf.Data.Net30\ProtoBuf.Data.Net30.csproj"
              Targets="Clean; Rebuild"
              Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net30" />
 
     <!-- .NET 3.5 -->
-    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.Net35.csproj"
+    <MSBuild Projects="..\src\ProtoBuf.Data.Net35\ProtoBuf.Data.Net35.csproj"
              Targets="Clean; Rebuild"
              Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net35" />
 
     <!-- .NET 4.0 -->
-    <MSBuild Projects="..\src\ProtoBuf.Data\ProtoBuf.Data.Net40.csproj"
+    <MSBuild Projects="..\src\ProtoBuf.Data.Net40\ProtoBuf.Data.Net40.csproj"
              Targets="Clean; Rebuild"
              Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net40" />
   </Target>
