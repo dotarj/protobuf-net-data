@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build\ProtoBuf.Data.targets = build\ProtoBuf.Data.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoBuf.Data.Net45", "src\ProtoBuf.Data.Net45\ProtoBuf.Data.Net45.csproj", "{FB6590F9-13B6-4501-AE30-8AEDCF4C5D7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,16 @@ Global
 		{8AF4B609-09D4-4A18-BF92-5C5CDB13CB1D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8AF4B609-09D4-4A18-BF92-5C5CDB13CB1D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8AF4B609-09D4-4A18-BF92-5C5CDB13CB1D}.Release|x86.ActiveCfg = Release|Any CPU
+		{FB6590F9-13B6-4501-AE30-8AEDCF4C5D7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB6590F9-13B6-4501-AE30-8AEDCF4C5D7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB6590F9-13B6-4501-AE30-8AEDCF4C5D7B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FB6590F9-13B6-4501-AE30-8AEDCF4C5D7B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FB6590F9-13B6-4501-AE30-8AEDCF4C5D7B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FB6590F9-13B6-4501-AE30-8AEDCF4C5D7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB6590F9-13B6-4501-AE30-8AEDCF4C5D7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB6590F9-13B6-4501-AE30-8AEDCF4C5D7B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FB6590F9-13B6-4501-AE30-8AEDCF4C5D7B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FB6590F9-13B6-4501-AE30-8AEDCF4C5D7B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

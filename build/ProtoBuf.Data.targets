@@ -96,6 +96,11 @@
     <MSBuild Projects="..\src\ProtoBuf.Data.Net40\ProtoBuf.Data.Net40.csproj"
              Targets="Clean; Rebuild"
              Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net40" />
+
+    <!-- .NET 4.5 -->
+    <MSBuild Projects="..\src\ProtoBuf.Data.Net45\ProtoBuf.Data.Net45.csproj"
+             Targets="Clean; Rebuild"
+             Properties="Configuration=Release;OutputPath=..\$(OutputDir)\lib\net45" />
   </Target>
 
   <Target Name="GenerateAssemblyInfo">
