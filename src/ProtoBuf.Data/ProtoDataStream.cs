@@ -14,6 +14,7 @@ namespace ProtoBuf.Data
         private SubItemToken currentResultToken;
         private Stream bufferStream;
         private bool readerIsClosed;
+        private readonly ProtoDataColumnFactory columnFactory;
 
         public ProtoDataStream(DataTable dataTable)
             : this(dataTable.CreateDataReader(), new ProtoDataWriterOptions()) { }
@@ -32,6 +33,7 @@ namespace ProtoBuf.Data
             this.options = options;
 
             resultIndex = 0;
+            columnFactory = new ProtoDataColumnFactory();
             bufferStream = new WriteAheadReadBufferStream();
             writer = new ProtoWriter(bufferStream, null, null);
         }
@@ -55,33 +57,67 @@ namespace ProtoBuf.Data
             if (bufferStream.Length == 0 && readerIsClosed)
                 return 0;
 
-            FillBuffer(count);
+            if (!readerIsClosed)
+                FillBuffer(count);
+
             return bufferStream.Read(buffer, offset, count);
+        }
+
+        private bool isHeaderWritten;
+        private RowWriter rowWriter;
+
+        private void WriteHeaderIfRequired()
+        {
+            if (isHeaderWritten)
+                return;
+
+            ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);
+
+            currentResultToken = ProtoWriter.StartSubItem(resultIndex, writer);
+
+            var columns = columnFactory.GetColumns(reader, options);
+            new HeaderWriter(writer).WriteHeader(columns);
+
+            rowWriter = new RowWriter(writer, columns, options);
+
+            isHeaderWritten = true;
         }
 
         private void FillBuffer(int requestedLength)
         {
             // only supports 1 data table currently
 
-            ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);
-
-            currentResultToken = ProtoWriter.StartSubItem(resultIndex, writer);
-
-            var columns = new ProtoDataColumnFactory().GetColumns(reader, options);
-
-            new HeaderWriter(writer).WriteHeader(columns);
-
-            var rowWriter = new RowWriter(writer, columns, options);
+            WriteHeaderIfRequired();
 
             // write the rows
-            while (reader.Read())
-                rowWriter.WriteRow(reader);
+            while (bufferStream.Length < requestedLength)
+            {
+                // NB protobuf-net only flushes every 1024 bytes. So
+                // it might take a few iterations for bufferStream.Length to
+                // see any change.
+                if (reader.Read())
+                    rowWriter.WriteRow(reader);
+                else
+                {
+                    resultIndex++;
+                    ProtoWriter.EndSubItem(currentResultToken, writer);
 
-            ProtoWriter.EndSubItem(currentResultToken, writer);
-
-            resultIndex++;
-
-            readerIsClosed = true;
+                    if (reader.NextResult())
+                    {
+                        // Start next data table.
+                        isHeaderWritten = false;
+                        FillBuffer(requestedLength);
+                    }
+                    else
+                    {
+                        // All done, no more results.
+                        writer.Close();
+                        Close();
+                    }
+                    
+                    break;
+                }
+            }
         }
 
         public override void Write(byte[] buffer, int offset, int count)
@@ -121,25 +157,47 @@ namespace ProtoBuf.Data
             }
         }
 
+        public override void Close()
+        {
+            readerIsClosed = true;
+            if (reader != null)
+                reader.Close();
+        }
+
         protected override void Dispose(bool disposing)
         {
-            if (writer != null)
+            if (!disposed)
             {
-                writer.Close();
-                writer = null;
-            }
+                if (disposing)
+                {
+                    if (writer != null)
+                    {
+                        ((IDisposable)writer).Dispose();
+                        writer = null;
+                    }
 
-            if (reader != null)
-            {
-                reader.Dispose();
-                reader = null;
-            }
+                    if (reader != null)
+                    {
+                        reader.Dispose();
+                        reader = null;
+                    }
 
-            if (bufferStream != null)
-            {
-                bufferStream.Dispose();
-                bufferStream = null;
+                    if (bufferStream != null)
+                    {
+                        bufferStream.Dispose();
+                        bufferStream = null;
+                    }
+                }
+
+                disposed = true;
             }
         }
+
+        ~ProtoDataStream()
+        {
+            Dispose(false);
+        }
+
+        private bool disposed;
     }
 }

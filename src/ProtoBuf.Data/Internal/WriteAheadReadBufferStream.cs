@@ -25,20 +25,33 @@ namespace ProtoBuf.Data.Internal
         {
             if (buffer == null) throw new ArgumentNullException("buffer");
 
-            var noMoreBuffersAvailable = HasNoMoreBuffersAvailable();
-
-            if (noMoreBuffersAvailable)
+            if (HasNoMoreBuffersAvailable())
                 return 0;
 
-            var currentBuffer = GetCurrentBuffer();
-            var numberOfBytesRead = DoRead(buffer, count, currentBuffer, offset);
+            if (count == 0)
+                return 0;
 
-            PutLeftoverBytesAtFrontOfQueue(currentBuffer, numberOfBytesRead);
+            byte[] currentBuffer;
 
-            length -= numberOfBytesRead;
-            position += numberOfBytesRead;
+            var totalNumberOfBytesRead = 0;
+            int numberOfBytesReadFromCurrentBuffer;
+            do
+            {
+                currentBuffer = GetCurrentBuffer();
 
-            return numberOfBytesRead;
+                numberOfBytesReadFromCurrentBuffer = DoRead(buffer, 
+                    count - totalNumberOfBytesRead, currentBuffer, offset + totalNumberOfBytesRead);
+
+                totalNumberOfBytesRead += numberOfBytesReadFromCurrentBuffer;
+
+            } while (totalNumberOfBytesRead < count && !HasNoMoreBuffersAvailable());
+
+            PutLeftoverBytesAtFrontOfQueue(currentBuffer, numberOfBytesReadFromCurrentBuffer);
+
+            length -= totalNumberOfBytesRead;
+            position += totalNumberOfBytesRead;
+
+            return totalNumberOfBytesRead;
         }
 
         // Check if caller didn't have enough space to fit the buffer.

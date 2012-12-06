@@ -54,6 +54,7 @@
     <Compile Include="BackwardsCompatibilityTests.cs" />
     <Compile Include="BigDataSerializerTests.cs" />
     <Compile Include="DataSerializerTests.cs" />
+    <Compile Include="MemoryStreamExtensions.cs" />
     <Compile Include="MultipleDataTableTests.cs">
       <SubType>Code</SubType>
     </Compile>

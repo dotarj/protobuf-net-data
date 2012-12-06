@@ -22,6 +22,8 @@ namespace ProtoBuf.Data.Tests
 {
     public static class TestData
     {
+        private static Random random = new Random();
+
         public static DataTable SmallDataTable()
         {
             var table = new DataTable();
@@ -133,6 +135,26 @@ namespace ProtoBuf.Data.Tests
                 };
 
             return dataSet.CreateDataReader();
+        }
+
+        public static DataTable GenerateRandomDataTable(int numberOfColumns, int numberOfRows)
+        {
+            var dataTable = new DataTable();
+            for (var i = 0; i < numberOfColumns; i++)
+                dataTable.Columns.Add("Column_" + i, typeof (float));
+
+            for (var i = 0; i < numberOfRows; i++)
+            {
+                var objectArray = Enumerable
+                    .Range(0, numberOfColumns)
+                    .Select(_ => random.NextDouble())
+                    .Cast<object>()
+                    .ToArray();
+
+                dataTable.Rows.Add(objectArray);
+            }
+
+            return dataTable;
         }
     }
 }
