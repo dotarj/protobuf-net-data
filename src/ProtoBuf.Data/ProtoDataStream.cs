@@ -59,7 +59,7 @@ namespace ProtoBuf.Data
 
             resultIndex = 0;
             columnFactory = new ProtoDataColumnFactory();
-            bufferStream = new WriteAheadReadBufferStream();
+            bufferStream = new CircularStream(128 * 1024);
             writer = new ProtoWriter(bufferStream, null, null);
         }
 
