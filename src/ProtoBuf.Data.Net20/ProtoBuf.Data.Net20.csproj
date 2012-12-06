@@ -70,9 +70,6 @@
     <Compile Include="..\ProtoBuf.Data\Internal\ProtoDataColumnFactory.cs">
       <Link>Internal\ProtoDataColumnFactory.cs</Link>
     </Compile>
-    <Compile Include="..\ProtoBuf.Data\Internal\ProtoDataStreamState.cs">
-      <Link>Internal\ProtoDataStreamState.cs</Link>
-    </Compile>
     <Compile Include="..\ProtoBuf.Data\Internal\ProtoDataType.cs">
       <Link>Internal\ProtoDataType.cs</Link>
     </Compile>

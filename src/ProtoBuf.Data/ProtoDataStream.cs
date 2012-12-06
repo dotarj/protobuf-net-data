@@ -1,20 +1,45 @@
-﻿using System;
+﻿// Copyright 2012 Richard Dingwall - http://richarddingwall.name
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using System;
 using System.Data;
 using System.IO;
 using ProtoBuf.Data.Internal;
 
 namespace ProtoBuf.Data
 {
+    ///<summary>
+    /// Serializes an <see cref="System.Data.IDataReader"/> to a binary stream
+    /// which can be read (it serializes additional rows with subsequent calls
+    /// to <see cref="Read"/>). Useful for scenarios like WCF where you cannot
+    /// write to the output stream directly.
+    ///</summary>
+    /// <remarks>Not guaranteed to be thread safe.</remarks>
     public class ProtoDataStream : Stream
     {
-        private IDataReader reader;
         private readonly ProtoDataWriterOptions options;
-        private ProtoWriter writer;
-        private int resultIndex;
-        private SubItemToken currentResultToken;
-        private Stream bufferStream;
-        private bool readerIsClosed;
         private readonly ProtoDataColumnFactory columnFactory;
+
+        private IDataReader reader;
+        private ProtoWriter writer;
+        private Stream bufferStream;
+
+        private int resultIndex;
+        private bool isHeaderWritten;
+        private RowWriter rowWriter;
+        private SubItemToken currentResultToken;
+        private bool readerIsClosed;
 
         public ProtoDataStream(DataTable dataTable)
             : this(dataTable.CreateDataReader(), new ProtoDataWriterOptions()) { }
@@ -62,9 +87,6 @@ namespace ProtoBuf.Data
 
             return bufferStream.Read(buffer, offset, count);
         }
-
-        private bool isHeaderWritten;
-        private RowWriter rowWriter;
 
         private void WriteHeaderIfRequired()
         {
