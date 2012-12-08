@@ -100,7 +100,7 @@ The following options are currently supported:
 
 protobuf-net-data provides a readable **ProtoDataStream** class, which incrementally serializes a data reader (row by row) as it is read.
 
-This is required for [WCF Streaming](http://msdn.microsoft.com/en-us/library/ms733742.aspx), where a readable Stream instance must be returned. (Instead of writing directly to the output stream like in most other .NET stream-based interfaces e.g. HTTP and file IO).
+This is required for [WCF Streaming](http://msdn.microsoft.com/en-us/library/ms733742.aspx), where a readable Stream instance must be returned from your operation contract (instead of writing directly to the output stream like in most other .NET stream-based interfaces e.g. HTTP and file IO).
 
  Usage example:
 
