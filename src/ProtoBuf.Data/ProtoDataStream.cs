@@ -28,6 +28,8 @@ namespace ProtoBuf.Data
     /// <remarks>Not guaranteed to be thread safe.</remarks>
     public class ProtoDataStream : Stream
     {
+        public const int DefaultBufferSize = 80 * 1024;
+
         private readonly ProtoDataWriterOptions options;
         private readonly ProtoDataColumnFactory columnFactory;
 
@@ -41,16 +43,26 @@ namespace ProtoBuf.Data
         private SubItemToken currentResultToken;
         private bool readerIsClosed;
 
-        public ProtoDataStream(DataTable dataTable)
-            : this(dataTable.CreateDataReader(), new ProtoDataWriterOptions()) { }
+        public ProtoDataStream(
+            DataTable dataTable,
+            int bufferSize = DefaultBufferSize)
+            : this(dataTable.CreateDataReader(),
+                   new ProtoDataWriterOptions(),
+                   bufferSize)
+        {
+        }
 
-        public ProtoDataStream(DataTable dataTable, ProtoDataWriterOptions options)
-            : this(dataTable.CreateDataReader(), options) { }
+        public ProtoDataStream(DataTable dataTable,
+            ProtoDataWriterOptions options, int bufferSize = DefaultBufferSize)
+            : this(dataTable.CreateDataReader(), options, bufferSize) { }
 
-        public ProtoDataStream(IDataReader reader)
-            : this(reader, new ProtoDataWriterOptions()) { }
+        public ProtoDataStream(IDataReader reader, int bufferSize = DefaultBufferSize)
+            : this(reader, new ProtoDataWriterOptions(), bufferSize) { }
 
-        public ProtoDataStream(IDataReader reader, ProtoDataWriterOptions options)
+        public ProtoDataStream(
+            IDataReader reader, 
+            ProtoDataWriterOptions options, 
+            int bufferSize = DefaultBufferSize)
         {
             if (reader == null) throw new ArgumentNullException("reader");
             if (options == null) throw new ArgumentNullException("options");
@@ -59,7 +71,7 @@ namespace ProtoBuf.Data
 
             resultIndex = 0;
             columnFactory = new ProtoDataColumnFactory();
-            bufferStream = new CircularStream(128 * 1024);
+            bufferStream = new CircularStream(bufferSize);
             writer = new ProtoWriter(bufferStream, null, null);
         }
 
