@@ -61,15 +61,30 @@
     <Compile Include="..\ProtoBuf.Data\IDataSerializerEngine.cs">
       <Link>IDataSerializerEngine.cs</Link>
     </Compile>
+    <Compile Include="..\ProtoBuf.Data\Internal\CircularBuffer.cs">
+      <Link>Internal\CircularBuffer.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\Internal\CircularStream.cs">
+      <Link>Internal\CircularStream.cs</Link>
+    </Compile>
     <Compile Include="..\ProtoBuf.Data\Internal\ConvertProtoDataType.cs" />
+    <Compile Include="..\ProtoBuf.Data\Internal\HeaderWriter.cs">
+      <Link>Internal\HeaderWriter.cs</Link>
+    </Compile>
     <Compile Include="..\ProtoBuf.Data\Internal\ProtoDataColumn.cs">
       <Link>Internal\ProtoDataColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\Internal\ProtoDataColumnFactory.cs">
+      <Link>Internal\ProtoDataColumnFactory.cs</Link>
     </Compile>
     <Compile Include="..\ProtoBuf.Data\Internal\ProtoDataType.cs">
       <Link>Internal\ProtoDataType.cs</Link>
     </Compile>
     <Compile Include="..\ProtoBuf.Data\Internal\ProtoDataTypes.cs">
       <Link>Internal\ProtoDataTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\Internal\RowWriter.cs">
+      <Link>Internal\RowWriter.cs</Link>
     </Compile>
     <Compile Include="..\ProtoBuf.Data\IProtoDataWriter.cs">
       <Link>IProtoDataWriter.cs</Link>
@@ -79,6 +94,9 @@
     </Compile>
     <Compile Include="..\ProtoBuf.Data\ProtoDataReader.cs">
       <Link>ProtoDataReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ProtoBuf.Data\ProtoDataStream.cs">
+      <Link>ProtoDataStream.cs</Link>
     </Compile>
     <Compile Include="..\ProtoBuf.Data\ProtoDataWriter.cs">
       <Link>ProtoDataWriter.cs</Link>
