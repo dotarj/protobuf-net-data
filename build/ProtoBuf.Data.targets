@@ -58,7 +58,7 @@
   <Target Name="CreateZip">
     <CallTarget Targets="Rebuild" />
 
-    <Copy SourceFiles="..\protobuf-net-data.licence.txt" DestinationFolder="$(OutputDir)\lib" />
+    <Copy SourceFiles="..\protobuf-net-data.license.txt" DestinationFolder="$(OutputDir)\lib" />
     
     <ItemGroup>
       <ZipFiles Include="$(OutputDir)\lib\**\*.*" />
