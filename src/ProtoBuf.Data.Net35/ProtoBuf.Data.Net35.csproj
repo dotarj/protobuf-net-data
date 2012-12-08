@@ -68,6 +68,9 @@
       <Link>Internal\CircularStream.cs</Link>
     </Compile>
     <Compile Include="..\ProtoBuf.Data\Internal\ConvertProtoDataType.cs" />
+    <Compile Include="..\ProtoBuf.Data\Internal\ExcludeFromCodeCoverageAttribute.cs">
+      <Link>Internal\ExcludeFromCodeCoverageAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\ProtoBuf.Data\Internal\HeaderWriter.cs">
       <Link>Internal\HeaderWriter.cs</Link>
     </Compile>

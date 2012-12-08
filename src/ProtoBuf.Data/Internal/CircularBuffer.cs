@@ -30,6 +30,7 @@ using System.Threading;
 
 namespace ProtoBuf.Data.Internal
 {
+    [ExcludeFromCodeCoverage("Third party")]
     internal class CircularBuffer<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnumerable
     {
         private int capacity;

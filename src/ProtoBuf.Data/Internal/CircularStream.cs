@@ -28,6 +28,7 @@ using System.IO;
 
 namespace ProtoBuf.Data.Internal
 {
+    [ExcludeFromCodeCoverage("Third party")]
     internal class CircularStream : Stream
     {
         private CircularBuffer<byte> buffer;
