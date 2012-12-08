@@ -25,7 +25,7 @@ namespace ProtoBuf.Data
     /// to <see cref="Read"/>). Useful for scenarios like WCF where you cannot
     /// write to the output stream directly.
     ///</summary>
-    /// <remarks>Not guaranteed to be thread safe.</remarks>
+    ///<remarks>Not guaranteed to be thread safe.</remarks>
     public class ProtoDataStream : Stream
     {
         public const int DefaultBufferSize = 80 * 1024;
@@ -43,6 +43,45 @@ namespace ProtoBuf.Data
         private SubItemToken currentResultToken;
         private bool readerIsClosed;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProtoDataStream"/> class.
+        /// </summary>
+        /// <param name="dataSet">The <see cref="DataSet"/>who's contents to serialize.</param>
+        /// <param name="bufferSize">Buffer size to use when serializing rows. 
+        /// You should not need to change this unless you have exceptionally
+        /// large rows or an exceptionally high number of columns.</param>
+        public ProtoDataStream(
+            DataSet dataSet,
+            int bufferSize = DefaultBufferSize)
+            : this(dataSet.CreateDataReader(),
+                   new ProtoDataWriterOptions(),
+                   bufferSize)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProtoDataStream"/> class.
+        /// </summary>
+        /// <param name="dataSet">The <see cref="DataSet"/>who's contents to serialize.</param>
+        /// <param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
+        /// <param name="bufferSize">Buffer size to use when serializing rows. 
+        /// You should not need to change this unless you have exceptionally
+        /// large rows or an exceptionally high number of columns.</param>
+        public ProtoDataStream(
+            DataSet dataSet,
+            ProtoDataWriterOptions options,
+            int bufferSize = DefaultBufferSize)
+            : this(dataSet.CreateDataReader(), options, bufferSize)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProtoDataStream"/> class.
+        /// </summary>
+        /// <param name="dataTable">The <see cref="DataTable"/>who's contents to serialize.</param>
+        /// <param name="bufferSize">Buffer size to use when serializing rows. 
+        /// You should not need to change this unless you have exceptionally
+        /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(
             DataTable dataTable,
             int bufferSize = DefaultBufferSize)
@@ -52,13 +91,42 @@ namespace ProtoBuf.Data
         {
         }
 
-        public ProtoDataStream(DataTable dataTable,
-            ProtoDataWriterOptions options, int bufferSize = DefaultBufferSize)
-            : this(dataTable.CreateDataReader(), options, bufferSize) { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProtoDataStream"/> class.
+        /// </summary>
+        /// <param name="dataTable">The <see cref="DataTable"/>who's contents to serialize.</param>
+        /// <param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
+        /// <param name="bufferSize">Buffer size to use when serializing rows. 
+        /// You should not need to change this unless you have exceptionally
+        /// large rows or an exceptionally high number of columns.</param>
+        public ProtoDataStream(
+            DataTable dataTable,
+            ProtoDataWriterOptions options,
+            int bufferSize = DefaultBufferSize)
+            : this(dataTable.CreateDataReader(), options, bufferSize)
+        {
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProtoDataStream"/> class.
+        /// </summary>
+        /// <param name="reader">The <see cref="IDataReader"/>who's contents to serialize.</param>
+        /// <param name="bufferSize">Buffer size to use when serializing rows. 
+        /// You should not need to change this unless you have exceptionally
+        /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(IDataReader reader, int bufferSize = DefaultBufferSize)
-            : this(reader, new ProtoDataWriterOptions(), bufferSize) { }
+            : this(reader, new ProtoDataWriterOptions(), bufferSize)
+        {
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProtoDataStream"/> class.
+        /// </summary>
+        /// <param name="reader">The <see cref="IDataReader"/>who's contents to serialize.</param>
+        /// <param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
+        /// <param name="bufferSize">Buffer size to use when serializing rows. 
+        /// You should not need to change this unless you have exceptionally
+        /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(
             IDataReader reader, 
             ProtoDataWriterOptions options, 
