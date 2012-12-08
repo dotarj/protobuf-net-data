@@ -12,6 +12,7 @@ namespace ProtoBuf.Data.Internal
         | AttributeTargets.Method
         | AttributeTargets.Property
         | AttributeTargets.Struct)]
+    [ExcludeFromCodeCoverageAttribute]
     internal class ExcludeFromCodeCoverageAttribute : Attribute
     {
         public ExcludeFromCodeCoverageAttribute()
