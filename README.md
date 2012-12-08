@@ -96,6 +96,28 @@ The following options are currently supported:
 * **SerializeEmptyArraysAsNull**: In versions 2.0.4.480 and earlier, zero-length arrays were serialized as null. After that, they are serialized properly as a zero-length array. Set this flag if you need to write to the old format. Default is false.
 * **IncludeComputedColumns**: Computed columns are ignored by default (columns who's values are determined by an Expression rather than a stored value). Set to  true to include computed columns in serialization.
 
+### WCF Streaming support
+
+protobuf-net-data provides a readable **ProtoDataStream** class, which incrementally serializes a data reader (row by row) as it is read.
+
+This is required for [WCF Streaming](http://msdn.microsoft.com/en-us/library/ms733742.aspx), where a readable Stream instance must be returned. (Instead of writing directly to the output stream like in most other .NET stream-based interfaces e.g. HTTP and file IO).
+
+ Usage example:
+
+```csharp
+[ServiceContract]
+public class MyWcfService : IMyWcfService
+{
+    [OperationContract]
+    public Stream GetStream()
+    {
+        using (var command = new SqlCommand("SELECT * FROM ..."))
+        using (var reader = command.ExecuteReader())
+            return new ProtoDataStream(reader);
+    }
+}
+```
+
 # Why does this library exist?
 
 .NET, as a mostly-statically typed language, has a lot of really good options for serializing statically-typed objects. Protocol Buffers, MessagePack, JSON, BSON, XML, SOAP, and the BCL's own proprietary binary serialization are all great for CLR objects, where the fields can be determined at runtime.
@@ -144,13 +166,19 @@ This would be a great future roadmap - as far as I know there is currently no to
 
 # Credits
 
-Thanks to [Marc Gravell](http://marcgravell.blogspot.com/) for [protobuf-net](http://code.google.com/p/protobuf-net/), and the original [DataTableSerializer](http://code.google.com/p/protobuf-net/source/browse/trunk/DataTableSerializer) from which the current implementation of this library is based.
+Thanks to:
+
+* [Marc Gravell](http://marcgravell.blogspot.com/) for [protobuf-net](http://code.google.com/p/protobuf-net/), and the original [DataTableSerializer](http://code.google.com/p/protobuf-net/source/browse/trunk/DataTableSerializer) from which the current implementation of this library is based.
+* [Alex Reg](http://noldorin.com) for his great [CircularBuffer](http://circularbuffer.codeplex.com/) implementation.
 
 # License
 
 Protocol Buffers DataReader Extensions for .NET is available under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
 # Release History / Changelog
+
+#### 2.0.6.611 - Dec 8 2012
+* Added ProtoDataStream to support WCF Streaming (issue #20).
 
 #### 2.0.5.611 - Dec 5 2012
 * Upgraded to protobuf-net 2.0.0.611.
