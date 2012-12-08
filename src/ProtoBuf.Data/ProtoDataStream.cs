@@ -28,7 +28,7 @@ namespace ProtoBuf.Data
     ///<remarks>Not guaranteed to be thread safe.</remarks>
     public class ProtoDataStream : Stream
     {
-        public const int DefaultBufferSize = 80 * 1024;
+        public const int DefaultBufferSize = 128 * 1024;
 
         private readonly ProtoDataWriterOptions options;
         private readonly ProtoDataColumnFactory columnFactory;
