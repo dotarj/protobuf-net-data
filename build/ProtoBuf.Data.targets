@@ -63,9 +63,8 @@
     <ItemGroup>
       <ZipFiles Include="$(OutputDir)\lib\**\*.*" />
       
-      <!-- Have to bundle the protobuf-net license ourselves as it's not 
-           included in their nuget package. -->
       <ZipFiles Include="protobuf-net.license.txt" />
+      <ZipFiles Include="CircularBuffer.license.txt" />
     </ItemGroup>
 
     <Zip ZipFileName="$(OutputDir)\protobuf-net-data-$(Version).zip"

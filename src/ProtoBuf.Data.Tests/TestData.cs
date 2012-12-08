@@ -22,6 +22,8 @@ namespace ProtoBuf.Data.Tests
 {
     public static class TestData
     {
+        private static Random random = new Random();
+
         public static DataTable SmallDataTable()
         {
             var table = new DataTable();
@@ -51,7 +53,7 @@ namespace ProtoBuf.Data.Tests
             table.Columns.Add("Cat", typeof(DateTime));
             table.Rows.Add(42, "Foo", new DateTime(2011, 04, 05, 12, 16, 41, 300));
             table.Rows.Add(null, "Bar", new DateTime(1920, 04, 03, 12, 48, 31, 210));
-            table.Rows.Add(null, null, null, null, null, null, null);
+            table.Rows.Add(null, null, null);
             return table;
         }
 
@@ -119,6 +121,40 @@ namespace ProtoBuf.Data.Tests
                 dataSet.Load(reader, LoadOption.OverwriteChanges, tableNames);
 
             return dataSet;
+        }
+
+        public static IDataReader ReaderWithMutlipleTables()
+        {
+            var dataSet = new DataSet
+                {
+                    Tables =
+                        {
+                            SmallDataTable(),
+                            DifferentSmallDataTable()
+                        }
+                };
+
+            return dataSet.CreateDataReader();
+        }
+
+        public static DataTable GenerateRandomDataTable(int numberOfColumns, int numberOfRows)
+        {
+            var dataTable = new DataTable();
+            for (var i = 0; i < numberOfColumns; i++)
+                dataTable.Columns.Add("Column_" + i, typeof (float));
+
+            for (var i = 0; i < numberOfRows; i++)
+            {
+                var objectArray = Enumerable
+                    .Range(0, numberOfColumns)
+                    .Select(_ => random.NextDouble())
+                    .Cast<object>()
+                    .ToArray();
+
+                dataTable.Rows.Add(objectArray);
+            }
+
+            return dataTable;
         }
     }
 }
