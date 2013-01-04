@@ -6,9 +6,11 @@ A library for serializing ADO.NET DataTables and DataReaders into an efficient, 
 
 ### [>>> Get protobuf-net-data via NuGet](http://nuget.org/List/Packages/protobuf-net-data)
 
+```
+Install-Package protobuf-net-data
+```
 
-
-The latest protobuf-net-data is **now available in NuGet [here](http://nuget.org/List/Packages/protobuf-net-data)**, or as a zip from the downloads page.
+The latest protobuf-net-data is **now available in NuGet [here](http://nuget.org/List/Packages/protobuf-net-data)**, or as a zip from the [downloads page](http://code.google.com/p/protobuf-net-data/downloads/list) (protobuf-net-data downloads now moved to Google Code!)
 
 ## Usage examples
 
@@ -176,6 +178,9 @@ Thanks to:
 Protocol Buffers DataReader Extensions for .NET is available under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
 # Release History / Changelog
+
+#### 2.0.6.614 - Jan 4 2013
+* Upgraded to protobuf-net 2.0.614.
 
 #### 2.0.6.612 - Dec 10 2012
 * Upgraded to protobuf-net 2.0.612.
