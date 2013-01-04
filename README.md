@@ -10,7 +10,7 @@ A library for serializing ADO.NET DataTables and DataReaders into an efficient, 
 Install-Package protobuf-net-data
 ```
 
-The latest protobuf-net-data is **now available in NuGet [here](http://nuget.org/List/Packages/protobuf-net-data)**, or as a zip from the [downloads page](http://code.google.com/p/protobuf-net-data/downloads/list) (protobuf-net-data downloads now moved to Google Code!)
+The latest protobuf-net-data is **now available in NuGet [here](http://nuget.org/List/Packages/protobuf-net-data)**, or as a zip from the [Google Code downloads page](http://code.google.com/p/protobuf-net-data/downloads/list).
 
 ## Usage examples
 
