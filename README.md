@@ -177,6 +177,9 @@ Protocol Buffers DataReader Extensions for .NET is available under the [Apache L
 
 # Release History / Changelog
 
+#### 2.0.6.612 - Dec 10 2012
+* Upgraded to protobuf-net 2.0.612.
+
 #### 2.0.6.611 - Dec 8 2012
 * Added ProtoDataStream to support WCF Streaming (issue #20).
 
