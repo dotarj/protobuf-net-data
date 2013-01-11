@@ -4,7 +4,7 @@
     <MSBuildCommunityTasksPath>.</MSBuildCommunityTasksPath>
     <OutputDir>..\output</OutputDir>
     <NuspecFile>protobuf-net-data.nuspec</NuspecFile>
-    <Version>2.0.6.614</Version>
+    <Version>2.0.6.619</Version>
 
     <!-- The git hash is provided to us via the $(build_vcs_number) TeamCity
     environment variable. But if we are not running inside TeamCity, just call
