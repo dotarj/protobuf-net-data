@@ -179,6 +179,9 @@ Protocol Buffers DataReader Extensions for .NET is available under the [Apache L
 
 # Release History / Changelog
 
+#### 2.0.6.619 - Jan 11 2013
+* Upgraded to protobuf-net 2.0.619.
+
 #### 2.0.6.614 - Jan 4 2013
 * Upgraded to protobuf-net 2.0.614.
 
