@@ -150,13 +150,13 @@ No. Nested DataTable support was removed in protobuf-net-data 2.0.5.601 because 
 Only the data reader's contents are serialized - i.e., the column name, data type, and values. Metadata about unique keys, auto increment, default value, base table name, data provider, data relations etc is ignored. Any other [DataRowVersions](http://msdn.microsoft.com/en-us/library/system.data.datarowversion.aspx) will also ignored.
 
 #### What about computed columns?
-Computed columns (i.e. those with an [Expression](http://msdn.microsoft.com/en-us/library/system.data.datacolumn.expression.aspx) set) will be skipped and not written to the byte stream (as of 2.0.3.480).
+By default, computed columns (i.e. those with an [Expression](http://msdn.microsoft.com/en-us/library/system.data.datacolumn.expression.aspx) set) will be skipped and not written to the byte stream. Set the **IncludeComputedColumns** option true to override this.
 
 #### Will protobuf-net v1 be supported?
 No. Only protobuf-net v2 is supported right now, and it is unlikely any effort will be spent back-porting it to v1 (if indeed it is even possible with v1).
 
 #### What about backwards compatiblity?
-This library is backwards compatible with itself (old versions can deserialize binary blobs produced from later versions and vice versa). The only change to the binary serialization format is that prior to version 2.0.4.480, empty arrays were serialized as null. This behaviour is not a breaking change, but will produce different output. The old behaviour can be restored in the current version by setting the SerializeEmptyArraysAsNull option to true.
+This library is backwards compatible with itself (old versions can deserialize binary blobs produced from later versions and vice versa). The only change to the binary serialization format is that prior to version 2.0.4.480, empty arrays were serialized as null. This behaviour is not a breaking change, but will produce different output. The old behaviour can be restored in the current version by setting the **SerializeEmptyArraysAsNull** option to true.
 
 #### How can I mock/stub out the DataSerializer class in my unit tests? All its methods are static.
 You can use IDataSerializerEngine/DataSerializerEngine for testing and dependency injection - it has all the same methods as DataSerializer (new in [2.0.2.480](https://nuget.org/packages/protobuf-net-data/2.0.2.480)). Alternatively, both the lower-level classes, ProtoDataReader and ProtoDataWriter, have interfaces and can be mocked out as well.
