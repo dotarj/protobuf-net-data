@@ -10,7 +10,7 @@ A library for serializing ADO.NET DataTables and DataReaders into an efficient, 
 Install-Package protobuf-net-data
 ```
 
-The latest protobuf-net-data is **now available in NuGet [here](http://nuget.org/List/Packages/protobuf-net-data)**, or as a zip from the [Google Code downloads page](http://code.google.com/p/protobuf-net-data/downloads/list).
+The latest protobuf-net-data is **now available in NuGet [here](http://nuget.org/List/Packages/protobuf-net-data)**, or as a zip from the [GitHub Releases](https://github.com/rdingwall/protobuf-net-data/releases) page.
 
 ## Usage examples
 
@@ -182,55 +182,4 @@ Protocol Buffers DataReader Extensions for .NET is available under the [Apache L
 
 # Release History / Changelog
 
-#### 2.0.6.640 - Jun 9 2013
-* Upgraded to protobuf-net 2.0.640.
-
-#### 2.0.6.621 - Jan 17 2013
-* Upgraded to protobuf-net 2.0.621.
-
-#### 2.0.6.619 - Jan 11 2013
-* Upgraded to protobuf-net 2.0.619.
-
-#### 2.0.6.614 - Jan 4 2013
-* Upgraded to protobuf-net 2.0.614.
-
-#### 2.0.6.612 - Dec 10 2012
-* Upgraded to protobuf-net 2.0.612.
-
-#### 2.0.6.611 - Dec 8 2012
-* Added ProtoDataStream to support WCF Streaming (issue #20).
-
-#### 2.0.5.611 - Dec 5 2012
-* Upgraded to protobuf-net 2.0.0.611.
-* Now supporting .NET 4.5.
-
-#### 2.0.5.602 - Nov 14 2012
-* Upgraded to protobuf-net 2.0.0.602.
-
-#### 2.0.5.601 - Nov 8 2012
-* Upgraded to protobuf-net 2.0.0.601.
-* Removed nested DataTables support.
-
-#### 2.0.5.480 - July 2 2012
-* New feature ProtoDataWriterOptions to specify handling of zero-length arrays and computed columns.
-* Bug fix for an issue where an exception would be thrown when serializing char column values (issue #15).
-
-#### 2.0.4.480 - June 27 2012
-* Bug fix for an issue where ProtoDataWriter incorrectly assumed all IDataReader schema tables have an 'Expression' column (issue #12).
-
-#### 2.0.3.480 - March 16 2012
-* Bug fix for an issue where computed columns were serialized (issue #11).
-
-#### 2.0.2.480 - February 18 2012
-* Extracted IDataSerializerEngine to make mocking and dependency injection easier.
-
-#### 2.0.1.480 - January 11 2012
-* Upgraded to protobuf-net 2.0.0.480.
-* Fixed an issue saving floats and doubles (issue #10).
-
-#### 2.0.1.470 - December 8 2011
-* Upgraded to protobuf-net 2.0.0.470 (issue #9).
-* Version number had to incremented unfortunately due to me uploading a broken package to NuGet.org (version numbers can't be reused).
-
-#### 2.0.0.452 - November 1 2011
-* Initial release.
+See the [Releases page](https://github.com/rdingwall/protobuf-net-data/releases).
