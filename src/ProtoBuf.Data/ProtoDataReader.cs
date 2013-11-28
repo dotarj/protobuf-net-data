@@ -468,6 +468,10 @@ namespace ProtoBuf.Data
                     colReaders.Add(() => reader.ReadString().ToCharArray());
                     break;
 
+                case ProtoDataType.TimeSpan:
+                    colReaders.Add(() => BclHelpers.ReadTimeSpan(reader));
+                    break;
+
                 default:
                     throw new NotSupportedException(protoDataType.ToString());
             }

@@ -126,6 +126,11 @@ namespace ProtoBuf.Data.Internal
                             ProtoWriter.WriteString(new string((char[])value), writer);
                             break;
 
+                        case ProtoDataType.TimeSpan:
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.StartGroup, writer);
+                            BclHelpers.WriteTimeSpan((TimeSpan)value, writer);
+                            break;
+
                         default:
                             throw new UnsupportedColumnTypeException(
                                 ConvertProtoDataType.ToClrType(column.ProtoDataType));
