@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-
 namespace ProtoBuf.Data.Internal
 {
-    internal class RowWriter
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+
+    internal sealed class RowWriter
     {
         private readonly ProtoWriter writer;
         private readonly IEnumerable<ProtoDataColumn> columns;
@@ -30,9 +30,21 @@ namespace ProtoBuf.Data.Internal
             IEnumerable<ProtoDataColumn> columns,
             ProtoDataWriterOptions options)
         {
-            if (writer == null) throw new ArgumentNullException("writer");
-            if (columns == null) throw new ArgumentNullException("columns");
-            if (options == null) throw new ArgumentNullException("options");
+            if (writer == null)
+            {
+                throw new ArgumentNullException("writer");
+            }
+
+            if (columns == null)
+            {
+                throw new ArgumentNullException("columns");
+            }
+
+            if (options == null)
+            {
+                throw new ArgumentNullException("options");
+            }
+
             this.writer = writer;
             this.columns = columns;
             this.options = options;
@@ -41,13 +53,13 @@ namespace ProtoBuf.Data.Internal
 
         public void WriteRow(IDataRecord row)
         {
-            var fieldIndex = 1;
+            int fieldIndex = 1;
             ProtoWriter.WriteFieldHeader(3, WireType.StartGroup, writer);
-            var token = ProtoWriter.StartSubItem(rowIndex, writer);
+            SubItemToken token = ProtoWriter.StartSubItem(rowIndex, writer);
 
-            foreach (var column in columns)
+            foreach (ProtoDataColumn column in columns)
             {
-                var value = row[column.ColumnIndex];
+                object value = row[column.ColumnIndex];
                 if (value == null || value is DBNull || (options.SerializeEmptyArraysAsNull && IsZeroLengthArray(value)))
                 {
                     // don't write anything
@@ -98,7 +110,7 @@ namespace ProtoBuf.Data.Internal
 
                         case ProtoDataType.Char:
                             ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, writer);
-                            ProtoWriter.WriteInt16((Int16)(char)value, writer);
+                            ProtoWriter.WriteInt16((short)(char)value, writer);
                             break;
 
                         case ProtoDataType.Double:
@@ -136,8 +148,10 @@ namespace ProtoBuf.Data.Internal
                                 ConvertProtoDataType.ToClrType(column.ProtoDataType));
                     }
                 }
+
                 fieldIndex++;
             }
+
             ProtoWriter.EndSubItem(token, writer);
             rowIndex++;
         }
@@ -147,7 +161,9 @@ namespace ProtoBuf.Data.Internal
             var array = value as Array;
 
             if (array == null)
+            {
                 return false;
+            }
 
             return array.Length == 0;
         }

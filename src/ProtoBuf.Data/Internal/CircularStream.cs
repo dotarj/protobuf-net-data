@@ -23,12 +23,14 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-using System;
-using System.IO;
-
 namespace ProtoBuf.Data.Internal
 {
-    [ExcludeFromCodeCoverage("Third party")]
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.IO;
+
+    [ExcludeFromCodeCoverage]
+    [SuppressMessage("StyleCop.CSharp.*", "*", Justification = "Third party")]
     internal class CircularStream : Stream
     {
         private CircularBuffer<byte> buffer;

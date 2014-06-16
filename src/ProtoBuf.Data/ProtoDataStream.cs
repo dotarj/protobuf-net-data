@@ -12,22 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Data;
-using System.IO;
-using ProtoBuf.Data.Internal;
-
 namespace ProtoBuf.Data
 {
-    ///<summary>
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using ProtoBuf.Data.Internal;
+
+    /// <summary>
     /// Serializes an <see cref="System.Data.IDataReader"/> to a binary stream
     /// which can be read (it serializes additional rows with subsequent calls
     /// to <see cref="Read"/>). Useful for scenarios like WCF where you cannot
     /// write to the output stream directly.
-    ///</summary>
-    ///<remarks>Not guaranteed to be thread safe.</remarks>
+    /// </summary>
+    /// <remarks>Not guaranteed to be thread safe.</remarks>
     public class ProtoDataStream : Stream
     {
+        /// <summary>
+        /// Buffer size.
+        /// </summary>
         public const int DefaultBufferSize = 128 * 1024;
 
         private readonly ProtoDataWriterOptions options;
@@ -36,7 +40,7 @@ namespace ProtoBuf.Data
         private IDataReader reader;
         private ProtoWriter writer;
         private Stream bufferStream;
-
+        private bool disposed;
         private int resultIndex;
         private bool isHeaderWritten;
         private RowWriter rowWriter;
@@ -51,11 +55,8 @@ namespace ProtoBuf.Data
         /// You should not need to change this unless you have exceptionally
         /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(
-            DataSet dataSet,
-            int bufferSize = DefaultBufferSize)
-            : this(dataSet.CreateDataReader(),
-                   new ProtoDataWriterOptions(),
-                   bufferSize)
+            DataSet dataSet, int bufferSize = DefaultBufferSize)
+            : this(dataSet.CreateDataReader(), new ProtoDataWriterOptions(), bufferSize)
         {
         }
 
@@ -83,11 +84,8 @@ namespace ProtoBuf.Data
         /// You should not need to change this unless you have exceptionally
         /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(
-            DataTable dataTable,
-            int bufferSize = DefaultBufferSize)
-            : this(dataTable.CreateDataReader(),
-                   new ProtoDataWriterOptions(),
-                   bufferSize)
+            DataTable dataTable, int bufferSize = DefaultBufferSize)
+            : this(dataTable.CreateDataReader(), new ProtoDataWriterOptions(), bufferSize)
         {
         }
 
@@ -132,8 +130,16 @@ namespace ProtoBuf.Data
             ProtoDataWriterOptions options, 
             int bufferSize = DefaultBufferSize)
         {
-            if (reader == null) throw new ArgumentNullException("reader");
-            if (options == null) throw new ArgumentNullException("options");
+            if (reader == null)
+            {
+                throw new ArgumentNullException("reader");
+            }
+
+            if (options == null)
+            {
+                throw new ArgumentNullException("options");
+            }
+
             this.reader = reader;
             this.options = options;
 
@@ -143,88 +149,9 @@ namespace ProtoBuf.Data
             writer = new ProtoWriter(bufferStream, null, null);
         }
 
-        public override void Flush()
+        ~ProtoDataStream()
         {
-        }
-
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            throw new InvalidOperationException("This stream cannot seek.");
-        }
-
-        public override void SetLength(long value)
-        {
-            throw new InvalidOperationException();
-        }
-
-        public override int Read(byte[] buffer, int offset, int count)
-        {
-            if (bufferStream.Length == 0 && readerIsClosed)
-                return 0;
-
-            if (!readerIsClosed)
-                FillBuffer(count);
-
-            return bufferStream.Read(buffer, offset, count);
-        }
-
-        private void WriteHeaderIfRequired()
-        {
-            if (isHeaderWritten)
-                return;
-
-            ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);
-
-            currentResultToken = ProtoWriter.StartSubItem(resultIndex, writer);
-
-            var columns = columnFactory.GetColumns(reader, options);
-            new HeaderWriter(writer).WriteHeader(columns);
-
-            rowWriter = new RowWriter(writer, columns, options);
-
-            isHeaderWritten = true;
-        }
-
-        private void FillBuffer(int requestedLength)
-        {
-            // only supports 1 data table currently
-
-            WriteHeaderIfRequired();
-
-            // write the rows
-            while (bufferStream.Length < requestedLength)
-            {
-                // NB protobuf-net only flushes every 1024 bytes. So
-                // it might take a few iterations for bufferStream.Length to
-                // see any change.
-                if (reader.Read())
-                    rowWriter.WriteRow(reader);
-                else
-                {
-                    resultIndex++;
-                    ProtoWriter.EndSubItem(currentResultToken, writer);
-
-                    if (reader.NextResult())
-                    {
-                        // Start next data table.
-                        isHeaderWritten = false;
-                        FillBuffer(requestedLength);
-                    }
-                    else
-                    {
-                        // All done, no more results.
-                        writer.Close();
-                        Close();
-                    }
-                    
-                    break;
-                }
-            }
-        }
-
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            throw new InvalidOperationException("This is a stream for reading serialized bytes. Writing is not supported.");
+            Dispose(false);
         }
 
         public override bool CanRead
@@ -253,17 +180,54 @@ namespace ProtoBuf.Data
             {
                 return bufferStream.Position;
             }
+
             set
             {
                 throw new InvalidOperationException("Cannot set stream position.");
             }
         }
 
+        public override void Flush()
+        {
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            throw new InvalidOperationException("This stream cannot seek.");
+        }
+
+        public override void SetLength(long value)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            if (bufferStream.Length == 0 && readerIsClosed)
+            {
+                return 0;
+            }
+
+            if (!readerIsClosed)
+            {
+                FillBuffer(count);
+            }
+
+            return bufferStream.Read(buffer, offset, count);
+        }
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            throw new InvalidOperationException("This is a stream for reading serialized bytes. Writing is not supported.");
+        }
+
         public override void Close()
         {
             readerIsClosed = true;
             if (reader != null)
+            {
                 reader.Close();
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -295,11 +259,61 @@ namespace ProtoBuf.Data
             }
         }
 
-        ~ProtoDataStream()
+        private void WriteHeaderIfRequired()
         {
-            Dispose(false);
+            if (isHeaderWritten)
+            {
+                return;
+            }
+
+            ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);
+
+            currentResultToken = ProtoWriter.StartSubItem(resultIndex, writer);
+
+            IList<ProtoDataColumn> columns = columnFactory.GetColumns(reader, options);
+            new HeaderWriter(writer).WriteHeader(columns);
+
+            rowWriter = new RowWriter(writer, columns, options);
+
+            isHeaderWritten = true;
         }
 
-        private bool disposed;
+        private void FillBuffer(int requestedLength)
+        {
+            // Only supports 1 data table currently.
+            WriteHeaderIfRequired();
+
+            // write the rows
+            while (bufferStream.Length < requestedLength)
+            {
+                // NB protobuf-net only flushes every 1024 bytes. So
+                // it might take a few iterations for bufferStream.Length to
+                // see any change.
+                if (reader.Read())
+                {
+                    rowWriter.WriteRow(reader);
+                }
+                else
+                {
+                    resultIndex++;
+                    ProtoWriter.EndSubItem(currentResultToken, writer);
+
+                    if (reader.NextResult())
+                    {
+                        // Start next data table.
+                        isHeaderWritten = false;
+                        FillBuffer(requestedLength);
+                    }
+                    else
+                    {
+                        // All done, no more results.
+                        writer.Close();
+                        Close();
+                    }
+
+                    break;
+                }
+            }
+        }
     }
 }

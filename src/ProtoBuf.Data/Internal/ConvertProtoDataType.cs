@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-
 namespace ProtoBuf.Data.Internal
 {
+    using System;
+    using System.Collections.Generic;
+
     internal static class ConvertProtoDataType
     {
-        static readonly IDictionary<Type, ProtoDataType> Mapping
+        private static readonly IDictionary<Type, ProtoDataType> Mapping
             = new Dictionary<Type, ProtoDataType>
                   {
                       { typeof(bool), ProtoDataType.Bool },
@@ -43,7 +43,9 @@ namespace ProtoBuf.Data.Internal
         {
             ProtoDataType value;
             if (Mapping.TryGetValue(type, out value))
+            {
                 return value;
+            }
 
             throw new UnsupportedColumnTypeException(type);
         }
@@ -53,7 +55,9 @@ namespace ProtoBuf.Data.Internal
             foreach (var pair in Mapping)
             {
                 if (pair.Value.Equals(type))
+                {
                     return pair.Key;
+                }
             }
 
             throw new InvalidOperationException("Unknown ProtoDataType.");

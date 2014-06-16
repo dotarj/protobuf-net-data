@@ -23,14 +23,16 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-
 namespace ProtoBuf.Data.Internal
 {
-    [ExcludeFromCodeCoverage("Third party")]
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Threading;
+
+    [ExcludeFromCodeCoverage]
+    [SuppressMessage("StyleCop.CSharp.*", "*", Justification = "Third party")]
     internal class CircularBuffer<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnumerable
     {
         private int capacity;

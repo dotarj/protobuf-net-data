@@ -71,11 +71,11 @@ namespace ProtoBuf.Data.Tests
             [Test]
             public void Should_retain_binary_compatibility_when_reading()
             {
-                using (var expected = CreateTablesForBackwardsCompatibilityTest())
-                using (var actual = new DataSet())
+                using (DataSet expected = CreateTablesForBackwardsCompatibilityTest())
+                using (DataSet actual = new DataSet())
                 {
-                    using (var stream = File.OpenRead(TestFile))
-                    using (var reader = DataSerializer.Deserialize(stream))
+                    using (FileStream stream = File.OpenRead(TestFile))
+                    using (IDataReader reader = DataSerializer.Deserialize(stream))
                         actual.Load(reader, LoadOption.PreserveChanges, "A", "B", "C", "D");
 
                     actual.HasErrors.Should().Be.False();
@@ -91,15 +91,15 @@ namespace ProtoBuf.Data.Tests
             [Test]
             public void Should_retain_binary_compatibility_when_writing()
             {
-                using (var dataSet = CreateTablesForBackwardsCompatibilityTest())
+                using (DataSet dataSet = CreateTablesForBackwardsCompatibilityTest())
                 using (var stream = new MemoryStream())
                 {
-                    using (var reader = dataSet.CreateDataReader())
+                    using (DataTableReader reader = dataSet.CreateDataReader())
                     {
                         DataSerializer.Serialize(stream, reader);
                     }
 
-                    var expected = File.ReadAllBytes(TestFile);
+                    byte[] expected = File.ReadAllBytes(TestFile);
 
                     stream.Seek(0, SeekOrigin.Begin);
 
@@ -110,16 +110,16 @@ namespace ProtoBuf.Data.Tests
             [Test]
             public void Should_retain_binary_compatibility_with_previous_versions_when_writing()
             {
-                using (var dataSet = CreateTablesForBackwardsCompatibilityTest())
+                using (DataSet dataSet = CreateTablesForBackwardsCompatibilityTest())
                 using (var stream = new MemoryStream())
                 {
-                    using (var reader = dataSet.CreateDataReader())
+                    using (DataTableReader reader = dataSet.CreateDataReader())
                     {
                         var options = new ProtoDataWriterOptions { SerializeEmptyArraysAsNull = true };
                         DataSerializer.Serialize(stream, reader, options);
                     }
 
-                    var expected = File.ReadAllBytes(PreviousVersionTestFile);
+                    byte[] expected = File.ReadAllBytes(PreviousVersionTestFile);
 
                     stream.Seek(0, SeekOrigin.Begin);
 
@@ -131,10 +131,10 @@ namespace ProtoBuf.Data.Tests
             [Ignore("Only when our binary format changes (and we don't care about breaking old versions).")]
             public void RegenerateTestFile()
             {
-                using (var dataSet = CreateTablesForBackwardsCompatibilityTest())
-                using (var stream = new FileStream(Path.Combine(@"..\..\", TestFile), FileMode.Create))
+                using (DataSet dataSet = CreateTablesForBackwardsCompatibilityTest())
+                using (FileStream stream = new FileStream(Path.Combine(@"..\..\", TestFile), FileMode.Create))
                 {
-                    using (var reader = dataSet.CreateDataReader())
+                    using (DataTableReader reader = dataSet.CreateDataReader())
                         DataSerializer.Serialize(stream, reader);
                 }
             }

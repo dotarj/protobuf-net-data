@@ -12,49 +12,109 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using ProtoBuf.Data.Internal;
-
 namespace ProtoBuf.Data
 {
-    ///<summary>
-    /// A custom <see cref="System.Data.IDataReader"/> for deserializing a protocol-buffer binary stream back
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using ProtoBuf.Data.Internal;
+
+    /// <summary>
+    /// A custom <see cref="System.Data.IDataReader"/> for de-serializing a protocol-buffer binary stream back
     /// into a tabular form.
-    ///</summary>
-    public class ProtoDataReader : IDataReader
+    /// </summary>
+    public sealed class ProtoDataReader : IDataReader
     {
-        delegate object ColReader(); 
-        Stream stream;
-        object[] currentRow;
-        DataTable dataTable;
-        bool disposed;
         private readonly List<ColReader> colReaders;
+
+        private Stream stream;
+        private object[] currentRow;
+        private DataTable dataTable;
+        private bool disposed;
         private ProtoReader reader;
         private int currentField;
         private SubItemToken currentTableToken;
         private bool reachedEndOfCurrentTable;
 
         /// <summary>
-        /// Initializes a new instance of a <see cref="ProtoBuf.Data.ProtoDataReader"/> type.
+        /// Initializes a new instance of the <see cref="ProtoDataReader"/> class. 
         /// </summary>
-        /// <param name="stream">The <see cref="System.IO.Stream"/> to read from.</param>
-
+        /// <param name="stream">
+        /// The <see cref="System.IO.Stream"/> to read from.
+        /// </param>
         public ProtoDataReader(Stream stream)
-
         {
-            if (stream == null) throw new ArgumentNullException("stream");
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
             this.stream = stream;
             reader = new ProtoReader(stream, null, null);
             colReaders = new List<ColReader>();
 
             AdvanceToNextField();
             if (currentField != 1)
+            {
                 throw new InvalidOperationException("No results found! Invalid/corrupt stream.");
+            }
 
             ReadNextTableHeader();
+        }
+
+        ~ProtoDataReader()
+        {
+            Dispose(false);
+        }
+
+        private delegate object ColReader();
+
+        public int FieldCount
+        {
+            get
+            {
+                ErrorIfClosed();
+                return dataTable.Columns.Count;
+            }
+        }
+
+        public int Depth
+        {
+            get
+            {
+                ErrorIfClosed();
+                return 1;
+            }
+        }
+
+        public bool IsClosed { get; private set; }
+
+        /// <summary>
+        /// Gets the number of rows changed, inserted, or deleted. 
+        /// </summary>
+        /// <returns>This is always zero in the case of <see cref="ProtoBuf.Data.ProtoDataReader" />.</returns>
+        public int RecordsAffected
+        {
+            get { return 0; }
+        }
+
+        object IDataRecord.this[int i]
+        {
+            get
+            {
+                ErrorIfClosed();
+                return GetValue(i);
+            }
+        }
+
+        object IDataRecord.this[string name]
+        {
+            get
+            {
+                ErrorIfClosed();
+                return GetValue(GetOrdinal(name));
+            }
         }
 
 #pragma warning disable 1591 // Missing XML comment
@@ -87,7 +147,7 @@ namespace ProtoBuf.Data
         {
             ErrorIfClosed();
 
-            var length = Math.Min(values.Length, dataTable.Columns.Count);
+            int length = Math.Min(values.Length, dataTable.Columns.Count);
 
             Array.Copy(currentRow, values, length);
 
@@ -193,40 +253,13 @@ namespace ProtoBuf.Data
         public IDataReader GetData(int i)
         {
             ErrorIfClosed();
-            return ((DataTable) currentRow[i]).CreateDataReader();
+            return ((DataTable)currentRow[i]).CreateDataReader();
         }
 
         public bool IsDBNull(int i)
         {
             ErrorIfClosed();
             return currentRow[i] == null || currentRow[i] is DBNull;
-        }
-
-        public int FieldCount
-        {
-            get
-            {
-                ErrorIfClosed();
-                return dataTable.Columns.Count;
-            }
-        }
-
-        object IDataRecord.this[int i]
-        {
-            get
-            {
-                ErrorIfClosed();
-                return GetValue(i);
-            }
-        }
-
-        object IDataRecord.this[string name]
-        {
-            get
-            {
-                ErrorIfClosed();
-                return GetValue(GetOrdinal(name));
-            }
         }
 
         public void Close()
@@ -260,7 +293,9 @@ namespace ProtoBuf.Data
         {
             ErrorIfClosed();
             using (var schemaReader = dataTable.CreateDataReader())
+            {
                 return schemaReader.GetSchemaTable();
+            }
         }
 
         public bool Read()
@@ -268,7 +303,9 @@ namespace ProtoBuf.Data
             ErrorIfClosed();
 
             if (reachedEndOfCurrentTable)
+            {
                 return false;
+            }
 
             if (currentField == 0)
             {
@@ -281,26 +318,6 @@ namespace ProtoBuf.Data
             AdvanceToNextField();
 
             return true;
-        }
-
-        public int Depth
-        {
-            get
-            {
-                ErrorIfClosed();
-                return 1;
-            }
-        }
-
-        public bool IsClosed { get; private set; }
-
-        /// <summary>
-        /// Gets the number of rows changed, inserted, or deleted. 
-        /// </summary>
-        /// <returns>This is always zero in the case of <see cref="ProtoBuf.Data.ProtoDataReader" />.</returns>
-        public int RecordsAffected
-        {
-            get { return 0; }
         }
 
         public void Dispose()
@@ -338,18 +355,15 @@ namespace ProtoBuf.Data
             }
         }
 
-        ~ProtoDataReader()
-        {
-            Dispose(false);
-        }
-
 #pragma warning restore 1591 // Missing XML comment
 
         private void ConsumeAnyRemainingRows()
         {
             // Unfortunately, protocol buffers doesn't let you seek - we have
             // to consume all the remaining tokens up anyway
-            while (Read());
+            while (Read())
+            {
+            }
         }
 
         private void ReadNextTableHeader()
@@ -369,17 +383,19 @@ namespace ProtoBuf.Data
             }
 
             if (currentField != 2)
+            {
                 throw new InvalidOperationException("No header found! Invalid/corrupt stream.");
+            }
 
             ReadHeader();
         }
 
-        void AdvanceToNextField()
+        private void AdvanceToNextField()
         {
             currentField = reader.ReadFieldHeader();
         }
 
-        void ResetSchemaTable()
+        private void ResetSchemaTable()
         {
             dataTable = new DataTable();
             colReaders.Clear();
@@ -391,10 +407,11 @@ namespace ProtoBuf.Data
             {
                 ReadColumn();
                 AdvanceToNextField();
-            } while (currentField == 2);
+            }
+            while (currentField == 2);
         }
 
-        void ReadColumn()
+        private void ReadColumn()
         {
             var token = ProtoReader.StartSubItem(reader);
             int field;
@@ -485,27 +502,37 @@ namespace ProtoBuf.Data
             int field;
 
             if (currentRow == null)
+            {
                 currentRow = new object[colReaders.Count];
+            }
             else
+            {
                 Array.Clear(currentRow, 0, currentRow.Length);
+            }
 
-            var token = ProtoReader.StartSubItem(reader);
+            SubItemToken token = ProtoReader.StartSubItem(reader);
             while ((field = reader.ReadFieldHeader()) != 0)
             {
-                if (field > currentRow.Length) reader.SkipField();
+                if (field > currentRow.Length)
+                {
+                    reader.SkipField();
+                }
                 else
                 {
                     int i = field - 1;
                     currentRow[i] = colReaders[i]();
                 }
             }
+
             ProtoReader.EndSubItem(token, reader);
         }
 
         private void ErrorIfClosed()
         {
             if (IsClosed)
+            {
                 throw new InvalidOperationException("Attempt to access ProtoDataReader which was already closed.");
+            }
         }
     }
 }

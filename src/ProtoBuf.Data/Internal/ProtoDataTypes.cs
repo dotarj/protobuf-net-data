@@ -12,25 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
 namespace ProtoBuf.Data.Internal
 {
+    using System;
+
     internal static class ProtoDataTypes
     {
         static ProtoDataTypes()
         {
-            var values = Enum.GetValues(typeof(ProtoDataType));
+            Array values = Enum.GetValues(typeof(ProtoDataType));
             AllTypes = new ProtoDataType[values.Length];
-            for (var i = 0; i < values.Length; i++)
+            for (int i = 0; i < values.Length; i++)
+            {
                 AllTypes[i] = (ProtoDataType)values.GetValue(i);
+            }
 
             AllClrTypes = new Type[values.Length];
-            for (var i = 0; i < AllTypes.Length; i++)
+            for (int i = 0; i < AllTypes.Length; i++)
+            {
                 AllClrTypes[i] = ConvertProtoDataType.ToClrType(AllTypes[i]);
+            }
         }
 
         public static ProtoDataType[] AllTypes { get; private set; }
+
         public static Type[] AllClrTypes { get; private set; }
     }
 }

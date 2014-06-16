@@ -12,28 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-
 namespace ProtoBuf.Data.Internal
 {
-    internal class ProtoDataColumnFactory
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+
+    internal sealed class ProtoDataColumnFactory
     {
-        private static readonly bool isRunningOnMono;
+        private static readonly bool IsRunningOnMono;
 
         static ProtoDataColumnFactory()
         {
             // From http://stackoverflow.com/a/721194/91551
-            isRunningOnMono = Type.GetType("Mono.Runtime") != null;
+            IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
         }
 
-        public IEnumerable<ProtoDataColumn> GetColumns(
+        public IList<ProtoDataColumn> GetColumns(
             IDataReader reader, 
             ProtoDataWriterOptions options)
         {
-            if (reader == null) throw new ArgumentNullException("reader");
-            if (options == null) throw new ArgumentNullException("options");
+            if (reader == null)
+            {
+                throw new ArgumentNullException("reader");
+            }
+
+            if (options == null)
+            {
+                throw new ArgumentNullException("options");
+            }
 
             using (DataTable schema = reader.GetSchemaTable())
             {
@@ -51,9 +58,9 @@ namespace ProtoBuf.Data.Internal
                     {
                         bool isComputedColumn;
 
-                        if (isRunningOnMono)
+                        if (IsRunningOnMono)
                         {
-                            isComputedColumn = Equals(row["Expression"], String.Empty);
+                            isComputedColumn = Equals(row["Expression"], string.Empty);
                         }
                         else
                         {
@@ -61,7 +68,9 @@ namespace ProtoBuf.Data.Internal
                         }
 
                         if (isComputedColumn && !options.IncludeComputedColumns)
+                        {
                             continue;
+                        }
                     }
 
                     var col = new ProtoDataColumn

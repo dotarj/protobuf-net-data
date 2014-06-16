@@ -12,85 +12,91 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Data;
-using System.IO;
-using ProtoBuf.Data.Internal;
-
 namespace ProtoBuf.Data
 {
-    ///<summary>
+    using System;
+    using System.Data;
+    using System.IO;
+    using ProtoBuf.Data.Internal;
+
+    /// <summary>
     /// Serializes an <see cref="System.Data.IDataReader"/> to a binary stream.
-    ///</summary>
+    /// </summary>
     public class ProtoDataWriter : IProtoDataWriter
     {
-        ///<summary>
+        /// <summary>
         /// Serialize an <see cref="System.Data.IDataReader"/> to a binary stream using protocol-buffers.
-        ///</summary>
-        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
-        ///<param name="dataSet">The <see cref="System.Data.DataSet"/>who's contents to serialize.</param>
+        /// </summary>
+        /// <param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        /// <param name="dataSet">The <see cref="System.Data.DataSet"/>who's contents to serialize.</param>
         public void Serialize(Stream stream, DataSet dataSet)
         {
             Serialize(stream, dataSet.CreateDataReader(), new ProtoDataWriterOptions());
         }
 
-        ///<summary>
+        /// <summary>
         /// Serialize an <see cref="System.Data.IDataReader"/> to a binary stream using protocol-buffers.
-        ///</summary>
-        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
-        ///<param name="dataSet">The <see cref="System.Data.DataSet"/>who's contents to serialize.</param>
+        /// </summary>
+        /// <param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        /// <param name="dataSet">The <see cref="System.Data.DataSet"/>who's contents to serialize.</param>
         public void Serialize(Stream stream, DataSet dataSet, ProtoDataWriterOptions options)
         {
             Serialize(stream, dataSet.CreateDataReader(), options);
         }
 
-        ///<summary>
+        /// <summary>
         /// Serialize an <see cref="System.Data.IDataReader"/> to a binary stream using protocol-buffers.
-        ///</summary>
-        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
-        ///<param name="dataTable">The <see cref="System.Data.DataTable"/>who's contents to serialize.</param>
+        /// </summary>
+        /// <param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        /// <param name="dataTable">The <see cref="System.Data.DataTable"/>who's contents to serialize.</param>
         public void Serialize(Stream stream, DataTable dataTable)
         {
             Serialize(stream, dataTable.CreateDataReader(), new ProtoDataWriterOptions());
         }
 
-        ///<summary>
+        /// <summary>
         /// Serialize an <see cref="System.Data.IDataReader"/> to a binary stream using protocol-buffers.
-        ///</summary>
-        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
-        ///<param name="dataTable">The <see cref="System.Data.DataTable"/>who's contents to serialize.</param>
+        /// </summary>
+        /// <param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        /// <param name="dataTable">The <see cref="System.Data.DataTable"/>who's contents to serialize.</param>
         public void Serialize(Stream stream, DataTable dataTable, ProtoDataWriterOptions options)
         {
             Serialize(stream, dataTable.CreateDataReader(), options);
         }
 
-        ///<summary>
+        /// <summary>
         /// Serialize an <see cref="System.Data.IDataReader"/> to a binary stream using protocol-buffers.
-        ///</summary>
-        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
-        ///<param name="reader">The <see cref="System.Data.IDataReader"/>who's contents to serialize.</param>
+        /// </summary>
+        /// <param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        /// <param name="reader">The <see cref="System.Data.IDataReader"/>who's contents to serialize.</param>
         public void Serialize(Stream stream, IDataReader reader)
         {
             Serialize(stream, reader, new ProtoDataWriterOptions());
         }
 
-        ///<summary>
+        /// <summary>
         /// Serialize an <see cref="System.Data.IDataReader"/> to a binary stream using protocol-buffers.
-        ///</summary>
-        ///<param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
-        ///<param name="reader">The <see cref="System.Data.IDataReader"/>who's contents to serialize.</param>
-        ///<param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
+        /// </summary>
+        /// <param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
+        /// <param name="reader">The <see cref="System.Data.IDataReader"/>who's contents to serialize.</param>
+        /// <param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
         public void Serialize(Stream stream, IDataReader reader, ProtoDataWriterOptions options)
         {
-            if (stream == null) throw new ArgumentNullException("stream");
-            if (reader == null) throw new ArgumentNullException("reader");
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
+            if (reader == null)
+            {
+                throw new ArgumentNullException("reader");
+            }
 
             // Null options are permitted to be passed in.
             options = options ?? new ProtoDataWriterOptions();
 
             // For a (minor) performance improvement, Serialize() has been left
             // as a single long method with functions manually inlined.
-
             var resultIndex = 0;
 
             using (var writer = new ProtoWriter(stream, null, null))
@@ -116,8 +122,8 @@ namespace ProtoBuf.Data
 
                     // write the table
                     ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);
-                    
-                    var resultToken = ProtoWriter.StartSubItem(resultIndex, writer);
+
+                    SubItemToken resultToken = ProtoWriter.StartSubItem(resultIndex, writer);
 
                     var columns = new ProtoDataColumnFactory().GetColumns(reader, options);
 
@@ -127,12 +133,15 @@ namespace ProtoBuf.Data
 
                     // write the rows
                     while (reader.Read())
+                    {
                         rowWriter.WriteRow(reader);
+                    }
 
                     ProtoWriter.EndSubItem(resultToken, writer);
 
                     resultIndex++;
-                } while (reader.NextResult());
+                }
+                while (reader.NextResult());
             }
         }
     }
