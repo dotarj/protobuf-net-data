@@ -18,8 +18,8 @@ build:
 after_build:
 - cmd: nuget pack protobuf-net-data.nuspec -version "%nuget_version%"
 - cmd: nuget pack protobuf-net-data.symbols.nuspec -version "%nuget_version%" -Symbols
-- cmd: 7z a ..\protobuf-net-data-%nuget_version%.zip *.license.txt
-- cmd: cd output && 7z u ..\protobuf-net-data-%nuget_version%.zip **\*
+- cmd: 7z a protobuf-net-data-%nuget_version%.zip *.license.txt
+- cmd: cd output && 7z a ..\protobuf-net-data-%nuget_version%.zip **\*
 test:
   assemblies: src\ProtoBuf.Data.Tests\bin\Release\ProtoBuf.Data.Tests.dll
   categories:
