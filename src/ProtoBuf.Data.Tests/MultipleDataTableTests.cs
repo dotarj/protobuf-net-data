@@ -22,7 +22,7 @@ namespace ProtoBuf.Data.Tests
 {
     public class MultipleDataTableTests
     {
-        [TestFixture]
+        [TestFixture, Category("Integration")]
         public class When_serializing_a_datareader_with_multiple_result_sets
         {
             private DataSet dataSet;
