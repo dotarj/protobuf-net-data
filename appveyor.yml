@@ -6,8 +6,8 @@ configuration: Release
 assembly_info:
   patch: true
   file: src\SolutionInfo.cs
-  assembly_version: '{nuget_version}'
-  assembly_file_version: '{nuget_version}'
+  assembly_version: '$(nuget_version)'
+  assembly_file_version: '$(nuget_version)'
   assembly_informational_version: '$(APPVEYOR_REPO_COMMIT)'
 before_build:
  - nuget restore
@@ -23,7 +23,7 @@ test:
     - Integration
 artifacts:
 - path: output\**\*
-  name: protobuf-net-data-{nuget_version}.zip
+  name: 'protobuf-net-data-$(nuget_version).zip'
 nuget:
   account_feed: true
   project_feed: true
