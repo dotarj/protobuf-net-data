@@ -15,6 +15,9 @@ build:
   verbosity: minimal
 test:
   assemblies: src\ProtoBuf.Data.Tests\bin\Release\ProtoBuf.Data.Tests.dll
+  categories:
+    except:
+    - Integration
 artifacts:
 - path: '**\*'
   name: protobuf-net-data-{version}.zip

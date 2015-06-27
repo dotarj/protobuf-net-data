@@ -20,7 +20,7 @@ namespace ProtoBuf.Data.Tests
 {
     public class BigDataSerializerTests
     {
-        [TestFixture]
+        [TestFixture, Category("Integration")]
         public class When_serializing_a_really_big_data_table_to_a_buffer_and_back
         {
             DataTable originalTable;
