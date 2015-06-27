@@ -113,7 +113,6 @@ namespace ProtoBuf.Data.Tests
         public class When_reading_from_a_stream_with_varying_buffer_sizes
         {
             private byte[] expectedBytes;
-            private byte[] actualBytes;
             private DataTable testData;
 
             [TestFixtureSetUp]

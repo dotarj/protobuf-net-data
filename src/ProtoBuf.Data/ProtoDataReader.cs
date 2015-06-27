@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#pragma warning disable 1591
 namespace ProtoBuf.Data
 {
     using System;
@@ -116,8 +117,6 @@ namespace ProtoBuf.Data
                 return GetValue(GetOrdinal(name));
             }
         }
-
-#pragma warning disable 1591 // Missing XML comment
 
         public string GetName(int i)
         {
@@ -355,8 +354,6 @@ namespace ProtoBuf.Data
             }
         }
 
-#pragma warning restore 1591 // Missing XML comment
-
         private void ConsumeAnyRemainingRows()
         {
             // Unfortunately, protocol buffers doesn't let you seek - we have
@@ -536,3 +533,5 @@ namespace ProtoBuf.Data
         }
     }
 }
+
+#pragma warning restore 1591

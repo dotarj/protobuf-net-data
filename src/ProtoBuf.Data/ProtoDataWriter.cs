@@ -39,6 +39,7 @@ namespace ProtoBuf.Data
         /// </summary>
         /// <param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
         /// <param name="dataSet">The <see cref="System.Data.DataSet"/>who's contents to serialize.</param>
+        /// <param name="options">Writer options.</param>
         public void Serialize(Stream stream, DataSet dataSet, ProtoDataWriterOptions options)
         {
             Serialize(stream, dataSet.CreateDataReader(), options);
@@ -59,6 +60,7 @@ namespace ProtoBuf.Data
         /// </summary>
         /// <param name="stream">The <see cref="System.IO.Stream"/> to write to.</param>
         /// <param name="dataTable">The <see cref="System.Data.DataTable"/>who's contents to serialize.</param>
+        /// <param name="options">Writer options.</param>
         public void Serialize(Stream stream, DataTable dataTable, ProtoDataWriterOptions options)
         {
             Serialize(stream, dataTable.CreateDataReader(), options);

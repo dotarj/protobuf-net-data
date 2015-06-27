@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#pragma warning disable 1591
 namespace ProtoBuf.Data
 {
     using System;
@@ -317,3 +318,5 @@ namespace ProtoBuf.Data
         }
     }
 }
+
+#pragma warning restore 1591
