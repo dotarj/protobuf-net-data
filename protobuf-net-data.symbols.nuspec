@@ -11,7 +11,8 @@
     <description>A library for serializing ADO.NET DataTables and DataReaders into an efficient, portable binary format. Uses Marc Gravell's Google Protocol Buffers library, protobuf-net.</description>
     <language>en-US</language>
     <tags>binary serialization protocol buffers protobuf deserialization ADO.NET ado data database</tags>
-    <files>
+  </metadata>
+  <files>
       <file src="output\net20\protobuf-net-data.dll" target="lib\net20\protobuf-net-data.dll" />
       <file src="output\net20\protobuf-net-data.pdb" target="lib\net20\protobuf-net-data.pdb" />
       <file src="output\net20\protobuf-net-data.xml" target="lib\net20\protobuf-net-data.xml" />
@@ -29,5 +30,4 @@
       <file src="output\net45\protobuf-net-data.xml" target="lib\net45\protobuf-net-data.xml" />
       <file src="src\ProtoBuf.Data\**\*.cs" target="src" />
     </files>
-  </metadata>
 </package>
