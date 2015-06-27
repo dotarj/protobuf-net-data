@@ -1,6 +1,8 @@
 Protocol Buffers DataReader Extensions for .NET
 ================================================
 
+[![Join the chat at https://gitter.im/rdingwall/protobuf-net-data](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/rdingwall/protobuf-net-data?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A library for serializing ADO.NET DataTables and DataReaders into an efficient, portable binary format. Uses [Marc Gravell](http://marcgravell.blogspot.com/)'s Google Protocol Buffers library, [protobuf-net](http://code.google.com/p/protobuf-net/). 
 
 
