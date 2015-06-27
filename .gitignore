@@ -29,6 +29,7 @@ obj/
 [Dd]ebug*/
 [Rr]elease*/
 Ankh.NoLoad
+.nuget/nuget.exe
 
 #Tooling
 _ReSharper*/
