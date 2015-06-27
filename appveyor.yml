@@ -1,4 +1,4 @@
-version: 2.0.7.668
+version: 2.1.668.{build}
 skip_tags: true
 platform: Any CPU
 configuration: Release
