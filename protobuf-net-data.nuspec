@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>protobuf-net-data</id>
-    <version>$version</version>
+    <version>$version$</version>
     <authors>Richard Dingwall</authors>
     <owners>Richard Dingwall</owners>
     <licenseUrl>https://raw.github.com/rdingwall/protobuf-net-data/master/protobuf-net-data.license.txt</licenseUrl>
