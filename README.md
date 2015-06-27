@@ -1,9 +1,7 @@
 Protocol Buffers DataReader Extensions for .NET
 ================================================
 
-[![NuGet version](https://img.shields.io/nuget/v/protobuf-net-data.svg)](http://nuget.org/List/Packages/protobuf-net-data)
-[![NuGet downloads](https://img.shields.io/nuget/dt/protobuf-net-data.svg)](http://nuget.org/List/Packages/protobuf-net-data)
-[![Join the chat at https://gitter.im/rdingwall/protobuf-net-data](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/rdingwall/protobuf-net-data?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![NuGet version](https://img.shields.io/nuget/v/protobuf-net-data.svg)](http://nuget.org/List/Packages/protobuf-net-data)  [![NuGet downloads](https://img.shields.io/nuget/dt/protobuf-net-data.svg)](http://nuget.org/List/Packages/protobuf-net-data)  [![Build status](https://ci.appveyor.com/api/projects/status/4cxoi5mavvaa86wm?svg=true)](https://ci.appveyor.com/project/rdingwall/protobuf-net-data) [![Join the chat at https://gitter.im/rdingwall/protobuf-net-data](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/rdingwall/protobuf-net-data?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
 
 A library for serializing ADO.NET DataTables and DataReaders into an efficient, portable binary format. Uses [Marc Gravell](http://marcgravell.blogspot.com/)'s Google Protocol Buffers library, [protobuf-net](http://code.google.com/p/protobuf-net/). 
 
