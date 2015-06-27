@@ -23,8 +23,8 @@ test:
     except:
     - Integration
 artifacts:
-- path: *.zip
-- path: *.nupkg
+- path: '*.zip'
+- path: '*.nupkg'
 nuget:
   account_feed: true
   project_feed: true
