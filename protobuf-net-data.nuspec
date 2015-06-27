@@ -17,5 +17,7 @@
       <file src="output\net35\protobuf-net-data.dll" target="lib\net35\protobuf-net-data.dll" />
       <file src="output\net40\protobuf-net-data.dll" target="lib\net40\protobuf-net-data.dll" />
       <file src="output\net45\protobuf-net-data.dll" target="lib\net45\protobuf-net-data.dll" />
+      <file src="output\net45\protobuf-net-data.dll" target="lib\net45\protobuf-net-data.dll" />
+    </files>
   </metadata>
 </package>

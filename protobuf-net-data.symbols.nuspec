@@ -28,5 +28,6 @@
       <file src="output\net45\protobuf-net-data.pdb" target="lib\net45\protobuf-net-data.pdb" />
       <file src="output\net45\protobuf-net-data.xml" target="lib\net45\protobuf-net-data.xml" />
       <file src="src\ProtoBuf.Data\**\*.cs" target="src" />
+    </files>
   </metadata>
 </package>
