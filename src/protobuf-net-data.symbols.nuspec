@@ -16,21 +16,21 @@
     </dependencies>
   </metadata>
   <files>
-      <file src="..\output\net20\protobuf-net-data.dll" target="lib\net20\protobuf-net-data.dll" />
-      <file src="..\output\net20\protobuf-net-data.pdb" target="lib\net20\protobuf-net-data.pdb" />
-      <file src="..\output\net20\protobuf-net-data.xml" target="lib\net20\protobuf-net-data.xml" />
-      <file src="..\output\net30\protobuf-net-data.dll" target="lib\net30\protobuf-net-data.dll" />
-      <file src="..\output\net30\protobuf-net-data.pdb" target="lib\net30\protobuf-net-data.pdb" />
-      <file src="..\output\net30\protobuf-net-data.xml" target="lib\net30\protobuf-net-data.xml" />
-      <file src="..\output\net35\protobuf-net-data.dll" target="lib\net35\protobuf-net-data.dll" />
-      <file src="..\output\net35\protobuf-net-data.pdb" target="lib\net35\protobuf-net-data.pdb" />
-      <file src="..\output\net35\protobuf-net-data.xml" target="lib\net35\protobuf-net-data.xml" />
-      <file src="..\output\net40\protobuf-net-data.dll" target="lib\net40\protobuf-net-data.dll" />
-      <file src="..\output\net40\protobuf-net-data.pdb" target="lib\net40\protobuf-net-data.pdb" />
-      <file src="..\output\net40\protobuf-net-data.xml" target="lib\net40\protobuf-net-data.xml" />
-      <file src="..\output\net45\protobuf-net-data.dll" target="lib\net45\protobuf-net-data.dll" />
-      <file src="..\output\net45\protobuf-net-data.pdb" target="lib\net45\protobuf-net-data.pdb" />
-      <file src="..\output\net45\protobuf-net-data.xml" target="lib\net45\protobuf-net-data.xml" />
-      <file src="ProtoBuf.Data\**\*.cs" target="src" />
-    </files>
+    <file src="..\output\net20\protobuf-net-data.dll" target="lib\net20\protobuf-net-data.dll" />
+    <file src="..\output\net20\protobuf-net-data.pdb" target="lib\net20\protobuf-net-data.pdb" />
+    <file src="..\output\net20\protobuf-net-data.xml" target="lib\net20\protobuf-net-data.xml" />
+    <file src="..\output\net30\protobuf-net-data.dll" target="lib\net30\protobuf-net-data.dll" />
+    <file src="..\output\net30\protobuf-net-data.pdb" target="lib\net30\protobuf-net-data.pdb" />
+    <file src="..\output\net30\protobuf-net-data.xml" target="lib\net30\protobuf-net-data.xml" />
+    <file src="..\output\net35\protobuf-net-data.dll" target="lib\net35\protobuf-net-data.dll" />
+    <file src="..\output\net35\protobuf-net-data.pdb" target="lib\net35\protobuf-net-data.pdb" />
+    <file src="..\output\net35\protobuf-net-data.xml" target="lib\net35\protobuf-net-data.xml" />
+    <file src="..\output\net40\protobuf-net-data.dll" target="lib\net40\protobuf-net-data.dll" />
+    <file src="..\output\net40\protobuf-net-data.pdb" target="lib\net40\protobuf-net-data.pdb" />
+    <file src="..\output\net40\protobuf-net-data.xml" target="lib\net40\protobuf-net-data.xml" />
+    <file src="..\output\net45\protobuf-net-data.dll" target="lib\net45\protobuf-net-data.dll" />
+    <file src="..\output\net45\protobuf-net-data.pdb" target="lib\net45\protobuf-net-data.pdb" />
+    <file src="..\output\net45\protobuf-net-data.xml" target="lib\net45\protobuf-net-data.xml" />
+    <file src="ProtoBuf.Data\**\*.cs" target="src" />
+  </files>
 </package>
