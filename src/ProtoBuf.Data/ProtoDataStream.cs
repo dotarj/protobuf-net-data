@@ -33,7 +33,12 @@ namespace ProtoBuf.Data
         /// <summary>
         /// Buffer size.
         /// </summary>
+#if NETSTANDARD2_0
+        // cause netcoreapp2.0 use shared buffer they allocate buffer more than requested 80Kb
+        public const int DefaultBufferSize = 256 * 1024;
+#else
         public const int DefaultBufferSize = 128 * 1024;
+#endif
 
         private readonly ProtoDataWriterOptions options;
         private readonly ProtoDataColumnFactory columnFactory;
@@ -127,8 +132,8 @@ namespace ProtoBuf.Data
         /// You should not need to change this unless you have exceptionally
         /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(
-            IDataReader reader, 
-            ProtoDataWriterOptions options, 
+            IDataReader reader,
+            ProtoDataWriterOptions options,
             int bufferSize = DefaultBufferSize)
         {
             if (reader == null)
