@@ -23,13 +23,8 @@ build:
   verbosity: minimal
 # after_build:
 # - msbuild  ProtoBuf.Data.Core.sln /t:pack
-test:
-  assemblies:
-    only:
-      - '**\*.Tests.dll'
-  categories:
-    except:
-    - Integration
+test_script:
+- cmd: dotnet test coreSrc\ProtoBuf.Data.Core.Tests\ProtoBuf.Data.Core.Tests.csproj --configuration Release --no-build --filter "TestCategory!=Integration"
 artifacts:
 - path: '*.nupkg'
 nuget:
