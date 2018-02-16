@@ -30,22 +30,19 @@ namespace ProtoBuf.Data
     /// <remarks>Not guaranteed to be thread safe.</remarks>
     public class ProtoDataStream : Stream
     {
+        private const int ProtoWriterBufferSize = 1024;
+
         /// <summary>
         /// Buffer size.
         /// </summary>
-#if NETSTANDARD2_0
-        // cause netcoreapp2.0 use shared buffer they allocate buffer more than requested 80Kb
-        public const int DefaultBufferSize = 256 * 1024;
-#else
-        public const int DefaultBufferSize = 128 * 1024;
-#endif
+        public const int DefaultBufferSize = 128 * ProtoWriterBufferSize;
 
         private readonly ProtoDataWriterOptions options;
         private readonly ProtoDataColumnFactory columnFactory;
 
         private IDataReader reader;
         private ProtoWriter writer;
-        private Stream bufferStream;
+        private CircularStream bufferStream;
         private bool disposed;
         private int resultIndex;
         private bool isHeaderWritten;
@@ -290,7 +287,9 @@ namespace ProtoBuf.Data
             WriteHeaderIfRequired();
 
             // write the rows
-            while (bufferStream.Length < requestedLength)
+            while (this.bufferStream.Length < requestedLength &&
+                   // protobuf-net not always return 1024 byte, so buffer can owerflow
+                   bufferStream.Capacity - bufferStream.Length >= ProtoWriterBufferSize)
             {
                 // NB protobuf-net only flushes every 1024 bytes. So
                 // it might take a few iterations for bufferStream.Length to
