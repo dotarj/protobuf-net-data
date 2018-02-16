@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net47;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net40;net47;netcoreapp2.0</TargetFrameworks>
 
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <IsPackable>false</IsPackable>
@@ -28,7 +28,6 @@
   <ItemGroup>
     <PackageReference Include="nunit" Version="3.9.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
-    <PackageReference Include="RhinoMocks" Version="3.6.1" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(IncludeTestSdk)' == 'true'">
@@ -40,9 +39,14 @@
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0' or '$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Data.SqlClient">
-      <Version>4.4.2</Version>
-    </PackageReference>
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <PackageReference Include="Moq" Version="4.2.1510.2205" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
+    <PackageReference Include="Moq" Version="4.8.1" />
   </ItemGroup>
   
 </Project>

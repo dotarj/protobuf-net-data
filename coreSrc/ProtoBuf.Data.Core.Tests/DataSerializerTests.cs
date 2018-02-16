@@ -14,8 +14,8 @@
 
 using System.Data;
 using System.IO;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace ProtoBuf.Data.Tests
 {
@@ -66,7 +66,7 @@ namespace ProtoBuf.Data.Tests
         {
             DataTable originalTable;
 
-            class Foo {}
+            class Foo { }
 
             [OneTimeSetUp]
             public void TestFixtureSetUp()
@@ -97,7 +97,7 @@ namespace ProtoBuf.Data.Tests
             public void TestFixtureSetUp()
             {
                 originalTable = new DataTable();
-                originalTable.Columns.Add("ColumnA", typeof (int));
+                originalTable.Columns.Add("ColumnA", typeof(int));
 
                 deserializedTable = TestHelper.SerializeAndDeserialize(originalTable);
             }
@@ -149,7 +149,7 @@ namespace ProtoBuf.Data.Tests
                 originalTable = TestData.FromMatrix(matrix);
 
                 var computed = TestData.FromMatrix(matrix);
-                computed.Columns.Add(new DataColumn("C", typeof (int), "A+B"));
+                computed.Columns.Add(new DataColumn("C", typeof(int), "A+B"));
 
                 deserializedTable = TestHelper.SerializeAndDeserialize(computed);
             }
@@ -180,7 +180,7 @@ namespace ProtoBuf.Data.Tests
                 originalTable = TestData.FromMatrix(matrix);
                 originalTable.Columns.Add(new DataColumn("C", typeof(int), "A+B"));
 
-                deserializedTable = TestHelper.SerializeAndDeserialize(originalTable, 
+                deserializedTable = TestHelper.SerializeAndDeserialize(originalTable,
                     new ProtoDataWriterOptions { IncludeComputedColumns = true });
             }
 
@@ -204,17 +204,19 @@ namespace ProtoBuf.Data.Tests
                                      new object[] {1, 2},
                                      new object[] {10, 20},
                                  };
-                
+
                 using (var table = TestData.FromMatrix(matrix))
                 using (var reader = table.CreateDataReader())
                 using (var schemaTable = reader.GetSchemaTable())
                 {
-                    var originalReader = MockRepository.GenerateMock<IDataReader>();
+                    var originalReader = new Mock<IDataReader>();
+
                     schemaTable.Columns.Remove("Expression");
-                    originalReader.Stub(r => r.GetSchemaTable()).Return(schemaTable);
+
+                    originalReader.Setup(dataReader => dataReader.GetSchemaTable()).Returns(schemaTable);
 
                     using (var stream = Stream.Null)
-                        new ProtoDataWriter().Serialize(stream, originalReader);
+                        new ProtoDataWriter().Serialize(stream, originalReader.Object);
                 }
             }
         }
