@@ -1,0 +1,35 @@
+version: 2.1.668.{build}
+branches:
+  except:
+  - gh-pages
+environment:
+  nuget_version: 2.0.7.668
+skip_tags: true
+platform: Any CPU
+configuration: Release
+dotnet_csproj:
+  patch: true
+  file: coreSrc\Directory.build.props
+  version: '$(nuget_version)'
+  package_version: '$(nuget_version)'
+  assembly_version: '$(nuget_version)'
+  file_version: '$(nuget_version)'
+  informational_version: '$(APPVEYOR_REPO_COMMIT)'
+before_build:
+ - msbuild /t:restore
+build:
+  project: ProtoBuf.Data.Core.sln
+  verbosity: minimal
+after_build:
+ - msbuild /t:pack
+test:
+  assemblies: src\ProtoBuf.Data.Tests\bin\Release\ProtoBuf.Data.Tests.dll
+  categories:
+    except:
+    - Integration
+artifacts:
+- path: '*.nupkg'
+nuget:
+  account_feed: true
+  project_feed: true
+  disable_publish_on_pr: true

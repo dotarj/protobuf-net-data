@@ -1,0 +1,71 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net20;net35;net40;net47;netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\src\ProtoBuf.Data\DataSerializerEngine.cs">
+      <Link>DataSerializerEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\DataSerializer.cs">
+      <Link>DataSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\IDataSerializerEngine.cs">
+      <Link>IDataSerializerEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\Internal\CircularBuffer.cs">
+      <Link>Internal\CircularBuffer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\Internal\CircularStream.cs">
+      <Link>Internal\CircularStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\Internal\ConvertProtoDataType.cs">
+      <Link>Internal\ConvertProtoDataType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\Internal\ExcludeFromCodeCoverageAttribute.cs">
+      <Link>Internal\ExcludeFromCodeCoverageAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\Internal\HeaderWriter.cs">
+      <Link>Internal\HeaderWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\Internal\ProtoDataColumn.cs">
+      <Link>Internal\ProtoDataColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\Internal\ProtoDataColumnFactory.cs">
+      <Link>Internal\ProtoDataColumnFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\Internal\ProtoDataType.cs">
+      <Link>Internal\ProtoDataType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\Internal\ProtoDataTypes.cs">
+      <Link>Internal\ProtoDataTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\Internal\RowWriter.cs">
+      <Link>Internal\RowWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\IProtoDataWriter.cs">
+      <Link>IProtoDataWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\ProtoDataReader.cs">
+      <Link>ProtoDataReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\ProtoDataStream.cs">
+      <Link>ProtoDataStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\ProtoDataWriter.cs">
+      <Link>ProtoDataWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\ProtoDataWriterOptions.cs">
+      <Link>ProtoDataWriterOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ProtoBuf.Data\UnsupportedColumnTypeException.cs">
+      <Link>UnsupportedColumnTypeException.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="protobuf-net" Version="2.3.7" />
+  </ItemGroup>
+</Project>

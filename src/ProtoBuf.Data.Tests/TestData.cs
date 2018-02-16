@@ -33,15 +33,15 @@ namespace ProtoBuf.Data.Tests
             table.Columns.Add("LastName", typeof(string));
             table.Columns.Add("BlobData", typeof(byte[]));
             table.Columns.Add("ClobData", typeof(char[]));
-            table.Columns.Add("SomeFloat", typeof (float));
-            table.Columns.Add("SomeDouble", typeof (double));
-            table.Columns.Add("SomeChar", typeof (char));
-            table.Columns.Add("SomeTimeSpan", typeof (TimeSpan));
-            table.Rows.Add(new DateTime(2011, 04, 05, 12, 16, 41, 300), 42, "Foo", Guid.Parse("6891816b-a4b9-4749-a9f5-9f6deb377a65"), "sdfsdf", new byte[] { 1, 2, 3, 4 }, new[] { 'a' }, 0.1, 0.2, null, TimeSpan.Zero);
-            table.Rows.Add(new DateTime(1920, 04, 03, 12, 48, 31, 210), null, "Bar", Guid.Parse("28545f31-ca0c-40c1-bae0-9b79ca84091b"), "o2389uf", new byte[0], new[] { 'a', 'b', 'c' }, 0.3, 0.4, 'c', TimeSpan.Zero);
+            table.Columns.Add("SomeFloat", typeof(float));
+            table.Columns.Add("SomeDouble", typeof(double));
+            table.Columns.Add("SomeChar", typeof(char));
+            table.Columns.Add("SomeTimeSpan", typeof(TimeSpan));
+            table.Rows.Add(new DateTime(2011, 04, 05, 12, 16, 41, 300), 42, "Foo", new Guid("6891816b-a4b9-4749-a9f5-9f6deb377a65"), "sdfsdf", new byte[] { 1, 2, 3, 4 }, new[] { 'a' }, 0.1, 0.2, null, TimeSpan.Zero);
+            table.Rows.Add(new DateTime(1920, 04, 03, 12, 48, 31, 210), null, "Bar", new Guid("28545f31-ca0c-40c1-bae0-9b79ca84091b"), "o2389uf", new byte[0], new[] { 'a', 'b', 'c' }, 0.3, 0.4, 'c', TimeSpan.Zero);
             table.Rows.Add(null, null, null, null, null, null, null, null, null, 'h', TimeSpan.FromMinutes(2));
             table.Rows.Add(new DateTime(2008, 01, 11, 11, 4, 1, 491), null, "Foo", Guid.Empty, "", null, new char[0], -0.3, -0.4, 'a', TimeSpan.FromDays(1));
-            
+
             return table;
         }
 
@@ -76,7 +76,7 @@ namespace ProtoBuf.Data.Tests
 
         public static IDataReader DataReaderFromSql(string sql)
         {
-            if (String.IsNullOrWhiteSpace(sql)) throw new ArgumentException("String was null or empty.", "sql");
+            if (String.IsNullOrEmpty(sql)) throw new ArgumentException("String was null or empty.", "sql");
 
             var connectionString = new SqlConnectionStringBuilder
             {
@@ -94,7 +94,7 @@ namespace ProtoBuf.Data.Tests
             {
                 throw new Exception("These tests require data from the 'AdventureWorksDW2008R2' SQL Server database to run. You can grab it from here: http://msftdbprodsamples.codeplex.com/", e);
             }
-                
+
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = sql;
@@ -126,13 +126,13 @@ namespace ProtoBuf.Data.Tests
         public static IDataReader ReaderWithMutlipleTables()
         {
             var dataSet = new DataSet
-                {
-                    Tables =
+            {
+                Tables =
                         {
                             SmallDataTable(),
                             DifferentSmallDataTable()
                         }
-                };
+            };
 
             return dataSet.CreateDataReader();
         }
@@ -141,7 +141,7 @@ namespace ProtoBuf.Data.Tests
         {
             var dataTable = new DataTable();
             for (var i = 0; i < numberOfColumns; i++)
-                dataTable.Columns.Add("Column_" + i, typeof (float));
+                dataTable.Columns.Add("Column_" + i, typeof(float));
 
             for (var i = 0; i < numberOfRows; i++)
             {

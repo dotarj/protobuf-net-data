@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net35;net40;net47;netcoreapp2.0</TargetFrameworks>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludeTestSdk>true</IncludeTestSdk>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net20'">
+    <IncludeTestSdk>false</IncludeTestSdk>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
+    <IncludeTestSdk>false</IncludeTestSdk>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
+    <IncludeTestSdk>false</IncludeTestSdk>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\ProtoBuf.Data.Tests\AfterCloseTests.cs" Link="AfterCloseTests.cs" />
+    <Compile Include="..\..\src\ProtoBuf.Data.Tests\BackwardsCompatibilityTests.cs" Link="BackwardsCompatibilityTests.cs" />
+    <Compile Include="..\..\src\ProtoBuf.Data.Tests\BigDataSerializerTests.cs" Link="BigDataSerializerTests.cs" />
+    <Compile Include="..\..\src\ProtoBuf.Data.Tests\DataSerializerTests.cs" Link="DataSerializerTests.cs" />
+    <Compile Include="..\..\src\ProtoBuf.Data.Tests\MemoryStreamExtensions.cs" Link="MemoryStreamExtensions.cs" />
+    <Compile Include="..\..\src\ProtoBuf.Data.Tests\MultipleDataTableTests.cs" Link="MultipleDataTableTests.cs" />
+    <Compile Include="..\..\src\ProtoBuf.Data.Tests\ProtoDataStreamTests.cs" Link="ProtoDataStreamTests.cs" />
+    <Compile Include="..\..\src\ProtoBuf.Data.Tests\TestData.cs" Link="TestData.cs" />
+    <Compile Include="..\..\src\ProtoBuf.Data.Tests\TestHelper.cs" Link="TestHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\ProtoBuf.Data.Tests\BackwardsCompatbilityTest.bin" Link="BackwardsCompatbilityTest.bin" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\ProtoBuf.Data.Tests\OldBackwardsCompatbilityTest.bin" Link="OldBackwardsCompatbilityTest.bin" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <PackageReference Include="nunit" Version="2.6.4" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+    <PackageReference Include="RhinoMocks" Version="3.6.1" />
+    <PackageReference Include="SharpTestsEx" Version="1.1.1" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(IncludeTestSdk)' == 'true'">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\ProtoBuf.Data.Core\ProtoBuf.Data.Core.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
+    <PackageReference Include="System.Data.SqlClient">
+      <Version>4.4.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  
+</Project>

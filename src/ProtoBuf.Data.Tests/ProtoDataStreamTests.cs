@@ -18,6 +18,9 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using SharpTestsEx;
+#if NET35
+using ProtoBuf.Data.Tests.Extensions;
+#endif
 
 namespace ProtoBuf.Data.Tests
 {
