@@ -2,6 +2,7 @@ version: 2.1.668.{build}
 branches:
   except:
   - gh-pages
+image: Visual Studio 2017
 environment:
   nuget_version: 2.0.7.668
 skip_tags: true
