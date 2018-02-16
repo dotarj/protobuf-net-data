@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net47;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net40;net47;netcoreapp2.0</TargetFrameworks>
 
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -37,7 +38,7 @@
  
   <ItemGroup>
     <PackageReference Include="nunit" Version="2.6.4" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+    <PackageReference Include="NUnitTestAdapter" Version="2.1.1" />
     <PackageReference Include="RhinoMocks" Version="3.6.1" />
     <PackageReference Include="SharpTestsEx" Version="1.1.1" />
   </ItemGroup>
