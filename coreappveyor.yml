@@ -24,7 +24,9 @@ build:
 # after_build:
 # - msbuild  ProtoBuf.Data.Core.sln /t:pack
 test:
-  assemblies: coreSrc\ProtoBuf.Data.Core.Tests\bin\Debug\net40\ProtoBuf.Data.Core.Tests.dll
+  assemblies:
+    only:
+      - '**\*.Tests.dll'
   categories:
     except:
     - Integration
