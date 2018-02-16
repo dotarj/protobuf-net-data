@@ -35,6 +35,7 @@
     <PackageReference Include="SourceLink.Embed.AllSourceFiles" Version="2.8.0" PrivateAssets="All" />
     <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.0" PrivateAssets="All" /> 
     <PackageReference Include="SourceLink.Create.GitHub" Version="2.8.0" PrivateAssets="All" /> 
+	<PackageReference Include="SourceLink.Test" Version="2.8.0" PrivateAssets="All" />
     <DotNetCliToolReference Include="dotnet-sourcelink" Version="2.8.0" />
     <DotNetCliToolReference Include="dotnet-sourcelink-git" Version="2.8.0" />
   </ItemGroup>

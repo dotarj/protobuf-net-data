@@ -1,4 +1,7 @@
 version: 2.1.668.{build}
+init:
+  - git config --global core.autocrlf input
+clone_depth: 10
 branches:
   except:
   - gh-pages
@@ -17,7 +20,7 @@ dotnet_csproj:
   file_version: '$(nuget_version)'
   informational_version: '$(APPVEYOR_REPO_COMMIT)'
 before_build:
- - msbuild ProtoBuf.Data.Core.sln /t:restore
+ - cmd: msbuild ProtoBuf.Data.Core.sln /t:restore
 build:
   project: ProtoBuf.Data.Core.sln
   verbosity: minimal
