@@ -10,7 +10,7 @@ skip_tags: true
 configuration: Release
 dotnet_csproj:
   patch: true
-  file: '.\coreSrc\Directory.build.props'
+  file: 'coreSrc\Directory.build.props'
   version: '{version}'
   package_version: '{version}'
   assembly_version: '{version}'
