@@ -19,16 +19,15 @@ dotnet_csproj:
   file_version: '$(nuget_version)'
   informational_version: '$(APPVEYOR_REPO_COMMIT)'
 before_build:
- - cmd: msbuild ProtoBuf.Data.Core.sln /t:restore 
-build:
-  project: ProtoBuf.Data.Core.sln
-  verbosity: minimal
+ - cmd: msbuild ProtoBuf.Data.Core.sln /t:restore /clp:Summary;Verbosity=minimal
+build_script:
+ - cmd: msbuild ProtoBuf.Data.Core.sln /t:build /p:SourceLinkCreate=true /p:SourceLinkTest=true /clp:Summary;Verbosity=minimal
 after_build:
- - cmd: msbuild ProtoBuf.Data.Core.sln /t:pack /p:SourceLinkCreate=true /p:SourceLinkTest=true /clp:PerformanceSummary;Verbosity=minimal
+ - cmd: msbuild ProtoBuf.Data.Core.sln /t:pack /clp:Summary;Verbosity=minimal
 test_script:
-- cmd: dotnet test coreSrc\ProtoBuf.Data.Core.Tests\ProtoBuf.Data.Core.Tests.csproj --no-build --filter "TestCategory!=Integration"
+ - cmd: dotnet test coreSrc\ProtoBuf.Data.Core.Tests\ProtoBuf.Data.Core.Tests.csproj --no-build --filter "TestCategory!=Integration" /logger:Appveyor
 artifacts:
-- path: '*.nupkg'
+ - path: '**\*.nupkg'
 nuget:
   account_feed: true
   project_feed: true
