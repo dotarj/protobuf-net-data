@@ -1,7 +1,7 @@
 version: 2.1.668.{build}
 environment:
   nugetVersionSuffix: beta
-  nugetVersion: '{version}'
+  nugetVersion: '$(APPVEYOR_BUILD_VERSION)'
 init:
   - git config --global core.autocrlf input
   - ps: if($env:nugetVersionSuffix -ne '') {$env:nugetVersion = "$env:nugetVersion-$env:nugetVersionSuffix"}
