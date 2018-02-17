@@ -6,17 +6,15 @@ branches:
   except:
   - gh-pages
 image: Visual Studio 2017
-environment:
-  nuget_version: 2.0.7.668
 skip_tags: true
 configuration: Release
 dotnet_csproj:
   patch: true
-  file: coreSrc\Directory.build.props
-  version: '$(nuget_version)'
-  package_version: '$(nuget_version)'
-  assembly_version: '$(nuget_version)'
-  file_version: '$(nuget_version)'
+  file: '.\coreSrc\Directory.build.props'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
   informational_version: '$(APPVEYOR_REPO_COMMIT)'
 before_build:
  - cmd: msbuild ProtoBuf.Data.Core.sln /t:restore /clp:Summary;Verbosity=minimal

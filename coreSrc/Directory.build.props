@@ -1,25 +1,32 @@
 <Project>
   <PropertyGroup>
     <VersionPrefix>2.1.668</VersionPrefix>
+    <VersionSuffix>beta</VersionSuffix>
+    <Version>$(VersionPrefix)</Version>
+    <PackageVersionPrefix>$(VersionPrefix)</PackageVersionPrefix>
+    <PackageVersionSuffix>$(VersionSuffix)</PackageVersionSuffix>
+    <PackageVersion>$(PackageVersionPrefix)</PackageVersion>
+    <PackageVersion Condition="'$(PackageVersionSuffix)' != ''">$(PackageVersion)-$(PackageVersionSuffix)</PackageVersion>
+
     <RootNamespace>ProtoBuf.Data</RootNamespace>
-    
+
     <Authors>Richard Dingwall</Authors>
-    
+
     <Copyright>See http://rdingwall.github.com/protobuf-net-data/</Copyright>
     <PackageLicenseUrl>https://raw.github.com/rdingwall/protobuf-net-data/master/protobuf-net-data.license.txt</PackageLicenseUrl>
     <PackageProjectUrl>http://rdingwall.github.com/protobuf-net-data/</PackageProjectUrl>
     <RepositoryUrl>http://rdingwall.github.com/protobuf-net-data/</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Product>protobuf-net-data ($(TargetFrameworks))</Product>
-	<Description>A library for serializing ADO.NET DataTables and DataReaders into an efficient, portable binary format. Uses Marc Gravell's Google Protocol Buffers library, protobuf-net.</Description>
-    
+    <Description>A library for serializing ADO.NET DataTables and DataReaders into an efficient, portable binary format. Uses Marc Gravell's Google Protocol Buffers library, protobuf-net.</Description>
+
     <PackageTags>binary;serialization;protocol buffers;protobuf;deserialization;ADO.NET;ado data database</PackageTags>
-    
-	<OutputType>Library</OutputType>
+
+    <OutputType>Library</OutputType>
     <SignAssembly>true</SignAssembly>
     <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyFile>../ProtoBuf.Data.snk</AssemblyOriginatorKeyFile>
-	
+
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -30,12 +37,12 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Optimize>true</Optimize>
   </PropertyGroup>
-  
+
   <ItemGroup Condition="'$(IsTestProject)' != 'true' and '$(SourceLinkEnabled)' != 'false'">
     <PackageReference Include="SourceLink.Embed.AllSourceFiles" Version="2.8.0" PrivateAssets="All" />
-    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.0" PrivateAssets="All" /> 
-    <PackageReference Include="SourceLink.Create.GitHub" Version="2.8.0" PrivateAssets="All" /> 
-	<PackageReference Include="SourceLink.Test" Version="2.8.0" PrivateAssets="All" />
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.0" PrivateAssets="All" />
+    <PackageReference Include="SourceLink.Create.GitHub" Version="2.8.0" PrivateAssets="All" />
+    <PackageReference Include="SourceLink.Test" Version="2.8.0" PrivateAssets="All" />
     <DotNetCliToolReference Include="dotnet-sourcelink" Version="2.8.0" />
     <DotNetCliToolReference Include="dotnet-sourcelink-git" Version="2.8.0" />
   </ItemGroup>
