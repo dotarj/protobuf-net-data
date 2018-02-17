@@ -1,6 +1,7 @@
 version: 2.1.668.{build}
 environment:
   nugetVersionSuffix: beta
+  nugetVersion: {version}
 init:
   - git config --global core.autocrlf input
   - ps: if($env:nugetVersionSuffix -ne '') {$env:nugetVersion = "{version}-$env:nugetVersionSuffix"}
@@ -15,7 +16,7 @@ dotnet_csproj:
   patch: true
   file: 'coreSrc\Directory.build.props'
   version: '{version}'
-  package_version: '{nugetVersion}'
+  package_version: '$(nugetVersion)'
   assembly_version: '{version}'
   file_version: '{version}'
   informational_version: '$(APPVEYOR_REPO_COMMIT)'
