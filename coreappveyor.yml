@@ -9,7 +9,6 @@ image: Visual Studio 2017
 environment:
   nuget_version: 2.0.7.668
 skip_tags: true
-platform: Any CPU
 configuration: Release
 dotnet_csproj:
   patch: true
@@ -20,14 +19,14 @@ dotnet_csproj:
   file_version: '$(nuget_version)'
   informational_version: '$(APPVEYOR_REPO_COMMIT)'
 before_build:
- - cmd: msbuild ProtoBuf.Data.Core.sln /t:restore
+ - cmd: msbuild ProtoBuf.Data.Core.sln /t:restore 
 build:
   project: ProtoBuf.Data.Core.sln
   verbosity: minimal
-# after_build:
-# - msbuild  ProtoBuf.Data.Core.sln /t:pack
+after_build:
+ - cmd: msbuild ProtoBuf.Data.Core.sln /t:pack /p:SourceLinkCreate=true /p:SourceLinkTest=true /clp:PerformanceSummary;Verbosity=minimal
 test_script:
-- cmd: dotnet test coreSrc\ProtoBuf.Data.Core.Tests\ProtoBuf.Data.Core.Tests.csproj --configuration Release --no-build --filter "TestCategory!=Integration"
+- cmd: dotnet test coreSrc\ProtoBuf.Data.Core.Tests\ProtoBuf.Data.Core.Tests.csproj --no-build --filter "TestCategory!=Integration"
 artifacts:
 - path: '*.nupkg'
 nuget:

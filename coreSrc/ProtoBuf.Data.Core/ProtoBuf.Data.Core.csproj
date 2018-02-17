@@ -4,7 +4,6 @@
     <TargetFrameworks>net20;net35;net40;net47;netstandard2.0</TargetFrameworks>
 
     <PackageId>protobuf-net-data</PackageId>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
