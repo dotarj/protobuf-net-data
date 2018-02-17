@@ -4,7 +4,7 @@ environment:
   nugetVersion: '{version}'
 init:
   - git config --global core.autocrlf input
-  - ps: if($env:nugetVersionSuffix -ne '') {$env:nugetVersion = "{version}-$env:nugetVersionSuffix"}
+  - ps: if($env:nugetVersionSuffix -ne '') {$env:nugetVersion = "$env:nugetVersion-$env:nugetVersionSuffix"}
 clone_depth: 10
 branches:
   except:
