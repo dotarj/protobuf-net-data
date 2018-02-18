@@ -14,7 +14,7 @@ skip_tags: true
 configuration: Release
 dotnet_csproj:
   patch: true
-  file: 'coreSrc\Directory.build.props'
+  file: 'src\Directory.build.props'
   version: '{version}'
   package_version: '$(nugetVersion)'
   assembly_version: '{version}'
@@ -27,7 +27,7 @@ build_script:
 after_build:
  - cmd: msbuild ProtoBuf.Data.Core.sln /t:pack /clp:Summary;Verbosity=minimal
 test_script:
- - cmd: dotnet test coreSrc\ProtoBuf.Data.Core.Tests\ProtoBuf.Data.Core.Tests.csproj --no-build --filter "TestCategory!=Integration"
+ - cmd: dotnet test src\ProtoBuf.Data.Tests\ProtoBuf.Data.Tests.csproj --no-build --filter "TestCategory!=Integration"
 artifacts:
  - path: '**\*.nupkg'
 nuget:
