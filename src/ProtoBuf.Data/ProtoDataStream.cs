@@ -159,7 +159,7 @@ namespace ProtoBuf.Data
 
         public override bool CanRead
         {
-            get { return !readerIsClosed; }
+            get { return !disposed; }
         }
 
         public override bool CanSeek

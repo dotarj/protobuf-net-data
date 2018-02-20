@@ -16,6 +16,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 #if NET35
 using ProtoBuf.Data.Tests.Extensions;
@@ -66,6 +67,73 @@ namespace ProtoBuf.Data.Tests
             public void It_should_dispose_the_reader()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.Read());
+            }
+        }
+
+        [TestFixture]
+        public class When_copies_from_proto_stream_with_variuos_buffers_sizes
+        {
+            private byte[] expectedBytes;
+            private DataTable testData;
+
+            [OneTimeSetUp]
+            public void SetUp()
+            {
+                testData = TestData.SmallDataTable();
+
+                using (var r = testData.CreateDataReader())
+                using (var memoryStream = new MemoryStream())
+                {
+                    DataSerializer.Serialize(memoryStream, r);
+                    expectedBytes = memoryStream.GetTrimmedBuffer();
+                }
+            }
+
+            [OneTimeTearDown]
+            public void TearDown()
+            {
+                testData.Dispose();
+                testData = null;
+                expectedBytes = null;
+            }
+
+#if !NET40
+
+            [Test]
+            public async Task It_should_copy_async_with_various_buffers([Values(128, 137, 1024)]int protoBufferSize, [Values(64, 75, 128, 512)]int copyBufferSize)
+            {
+
+                byte[] actualBytes_;
+                using (var reader = testData.CreateDataReader())
+                using (var stream = new ProtoDataStream(reader, protoBufferSize * 1024))
+                using (var memoryStream = new MemoryStream())
+                {
+
+                    await stream.CopyToAsync(memoryStream, copyBufferSize * 1024);
+                    actualBytes_ = memoryStream.GetTrimmedBuffer();
+                }
+
+                Assert.AreEqual(expectedBytes.LongLength, actualBytes_.LongLength);
+                CollectionAssert.AreEqual(expectedBytes, actualBytes_);
+            }
+#endif
+
+
+            [Test]
+            public void It_should_copy_with_various_buffers([Values(128, 137, 1024)]int protoBufferSize, [Values(64, 75, 128, 512)]int copyBufferSize)
+            {
+                byte[] actualBytes_;
+                using (var reader = testData.CreateDataReader())
+                using (var stream = new ProtoDataStream(reader, protoBufferSize * 1024))
+                using (var memoryStream = new MemoryStream())
+                {
+
+                    stream.CopyTo(memoryStream, copyBufferSize * 1024);
+                    actualBytes_ = memoryStream.GetTrimmedBuffer();
+                }
+
+                Assert.AreEqual(expectedBytes.LongLength, actualBytes_.LongLength);
+                CollectionAssert.AreEqual(expectedBytes, actualBytes_);
             }
         }
 
@@ -244,7 +312,7 @@ namespace ProtoBuf.Data.Tests
             {
                 var testData = new DataSet
                 {
-                        Tables =
+                    Tables =
                         {
                                 TestData.GenerateRandomDataTable(10, 50),
                                 TestData.GenerateRandomDataTable(5, 100),
@@ -260,7 +328,7 @@ namespace ProtoBuf.Data.Tests
                 }
 
                 reader = testData.CreateDataReader();
-                using (var stream = new ProtoDataStream(reader, 50*1024*1024))//50 Mb buffer which 
+                using (var stream = new ProtoDataStream(reader, 50 * 1024 * 1024))//50 Mb buffer which 
                 using (var memoryStream = new MemoryStream())
                 {
                     stream.CopyTo(memoryStream);
