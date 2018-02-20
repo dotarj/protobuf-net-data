@@ -231,5 +231,55 @@ namespace ProtoBuf.Data.Tests
                 Assert.Throws<InvalidOperationException>(() => reader.Read());
             }
         }
+
+        [TestFixture()]
+        public class When_reading_from_a_stream_containing_multiple_data_tables_with_big_buffer
+        {
+            private byte[] expectedBytes;
+            private byte[] actualBytes;
+            private IDataReader reader;
+
+            [OneTimeSetUp]
+            public void SetUp()
+            {
+                var testData = new DataSet
+                {
+                        Tables =
+                        {
+                                TestData.GenerateRandomDataTable(10, 50),
+                                TestData.GenerateRandomDataTable(5, 100),
+                                TestData.GenerateRandomDataTable(20, 10000)
+                        }
+                };
+
+                using (var r = testData.CreateDataReader())
+                using (var memoryStream = new MemoryStream())
+                {
+                    DataSerializer.Serialize(memoryStream, r);
+                    expectedBytes = memoryStream.GetTrimmedBuffer();
+                }
+
+                reader = testData.CreateDataReader();
+                using (var stream = new ProtoDataStream(reader, 50*1024*1024))//50 Mb buffer which 
+                using (var memoryStream = new MemoryStream())
+                {
+                    stream.CopyTo(memoryStream);
+                    actualBytes = memoryStream.GetTrimmedBuffer();
+                }
+            }
+
+            [Test]
+            public void It_should_be_binary_equal_to_the_data_serializer_version()
+            {
+                Assert.AreEqual(this.expectedBytes.LongLength, this.actualBytes.LongLength);
+                CollectionAssert.AreEqual(this.expectedBytes, this.actualBytes);
+            }
+
+            [Test]
+            public void It_should_dispose_the_reader()
+            {
+                Assert.Throws<InvalidOperationException>(() => reader.Read());
+            }
+        }
     }
 }

@@ -159,7 +159,7 @@ namespace ProtoBuf.Data
 
         public override bool CanRead
         {
-            get { return true; }
+            get { return !readerIsClosed; }
         }
 
         public override bool CanSeek
@@ -181,6 +181,10 @@ namespace ProtoBuf.Data
         {
             get
             {
+                if (readerIsClosed)
+                {
+                    throw new InvalidOperationException("Reader is closed.");
+                }
                 return bufferStream.Position;
             }
 
@@ -224,31 +228,18 @@ namespace ProtoBuf.Data
             throw new InvalidOperationException("This is a stream for reading serialized bytes. Writing is not supported.");
         }
 
-        public override void Close()
-        {
-            readerIsClosed = true;
-            if (reader != null)
-            {
-                reader.Close();
-            }
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (!disposed)
             {
                 if (disposing)
                 {
+                    CloseReader();
+
                     if (writer != null)
                     {
                         ((IDisposable)writer).Dispose();
                         writer = null;
-                    }
-
-                    if (reader != null)
-                    {
-                        reader.Dispose();
-                        reader = null;
                     }
 
                     if (bufferStream != null)
@@ -260,6 +251,17 @@ namespace ProtoBuf.Data
 
                 disposed = true;
             }
+        }
+
+        private void CloseReader()
+        {
+            if (this.reader != null)
+            {
+                this.reader.Dispose();
+                this.reader = null;
+            }
+
+            this.readerIsClosed = true;
         }
 
         private void WriteHeaderIfRequired()
@@ -312,8 +314,9 @@ namespace ProtoBuf.Data
                     else
                     {
                         // All done, no more results.
+                        // little optimization
                         writer.Close();
-                        Close();
+                        CloseReader();
                     }
 
                     break;

@@ -205,5 +205,107 @@ namespace ProtoBuf.Data.Tests
                 Assert.IsFalse(this.streamRef.IsAlive);
             }
         }
+
+        [TestFixture]
+        public class When_the_proto_stream_has_been_closed
+        {
+            ProtoDataStream protoStream;
+
+            [OneTimeSetUp]
+            public void TestFixtureSetUp()
+            {
+                using (var table = TestData.SmallDataTable())
+                using (var tableReader = table.CreateDataReader())
+                {
+                    protoStream = new ProtoDataStream(tableReader);
+                }
+
+                protoStream.Close();
+            }
+
+            [Test]
+            public void CanRead_should_be_false()
+            {
+                Assert.IsFalse(protoStream.CanRead);
+            }
+
+            [Test]
+            public void Should_not_throw_an_exception_if_you_try_to_close_it_twice()
+            {
+                protoStream.Close();
+                protoStream.Close();
+            }
+
+            [Test]
+            public void Position_should_throw_exception()
+            {
+                Assert.Throws<InvalidOperationException>(() =>
+                {
+                    var p = protoStream.Position;
+                });
+            }
+
+            [Test]
+            public void Should_clean_underlaying_stream()
+            {
+                var field = this.protoStream.GetType().GetField("bufferStream", BindingFlags.NonPublic | BindingFlags.Instance);
+                Assert.NotNull(field);
+
+                var streamValue = field.GetValue(this.protoStream);
+                Assert.Null(streamValue);
+            }
+
+            [Test]
+            public void Should_clean_underlaying_reader()
+            {
+                var field = this.protoStream.GetType().GetField("reader", BindingFlags.NonPublic | BindingFlags.Instance);
+                Assert.NotNull(field);
+
+                var readerValue = field.GetValue(this.protoStream);
+                Assert.Null(readerValue);
+            }
+
+            [Test]
+            public void Should_clean_underlaying_writer()
+            {
+                var field = this.protoStream.GetType().GetField("writer", BindingFlags.NonPublic | BindingFlags.Instance);
+                Assert.NotNull(field);
+
+                var writerValue = field.GetValue(this.protoStream);
+                Assert.Null(writerValue);
+            }
+        }
+
+        [TestFixture]
+        public class When_the_proto_stream_has_been_disposed
+        {
+            private WeakReference weakRef;
+
+            [OneTimeSetUp]
+            public void TestFixtureSetUp()
+            {
+                Stream stream;
+                using (var table = TestData.SmallDataTable())
+                using (var tableReader = table.CreateDataReader())
+                {
+                    stream = new ProtoDataStream(tableReader);
+                }
+
+                Assert.IsTrue(stream.CanRead);
+
+                weakRef = new WeakReference(stream);
+
+                stream.Dispose();
+            }
+
+            [Test]
+            public void Proto_stream_should_collected_by_GC()
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                Assert.IsFalse(weakRef.IsAlive);
+            }
+        }
     }
 }
