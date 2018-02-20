@@ -30,6 +30,7 @@ obj/
 [Rr]elease*/
 Ankh.NoLoad
 .nuget/nuget.exe
+.vs/
 
 #Tooling
 _ReSharper*/

@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net40;net47;netcoreapp2.0</TargetFrameworks>
+
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludeTestSdk>true</IncludeTestSdk>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net20'">
+    <IncludeTestSdk>false</IncludeTestSdk>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
+    <IncludeTestSdk>false</IncludeTestSdk>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
+    <IncludeTestSdk>false</IncludeTestSdk>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="BackwardsCompatbilityTest.bin" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="OldBackwardsCompatbilityTest.bin" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <PackageReference Include="nunit" Version="3.9.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(IncludeTestSdk)' == 'true'">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\ProtoBuf.Data\ProtoBuf.Data.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0' or '$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <PackageReference Include="Moq" Version="4.2.1510.2205" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
+    <PackageReference Include="Moq" Version="4.8.1" />
+  </ItemGroup>
+  
+</Project>

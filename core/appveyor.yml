@@ -1,0 +1,36 @@
+version: 2.1.668.{build}
+environment:
+  nugetVersionSuffix: beta
+  nugetVersion: '$(APPVEYOR_BUILD_VERSION)'
+init:
+  - git config --global core.autocrlf input
+  - ps: if($env:nugetVersionSuffix -ne '') {$env:nugetVersion = "$env:nugetVersion-$env:nugetVersionSuffix"}
+clone_depth: 10
+branches:
+  except:
+  - gh-pages
+image: Visual Studio 2017
+skip_tags: true
+configuration: Release
+dotnet_csproj:
+  patch: true
+  file: 'src\Directory.build.props'
+  version: '{version}'
+  package_version: '$(nugetVersion)'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '$(APPVEYOR_REPO_COMMIT)'
+before_build:
+ - cmd: msbuild core\ProtoBuf.Data.Core.sln /t:restore /clp:Summary;Verbosity=minimal
+build_script:
+ - cmd: msbuild core\ProtoBuf.Data.Core.sln /t:build /p:SourceLinkCreate=true /p:SourceLinkTest=true /clp:Summary;Verbosity=minimal
+after_build:
+ - cmd: msbuild core\ProtoBuf.Data.Core.sln /t:pack /clp:Summary;Verbosity=minimal
+test_script:
+ - cmd: dotnet test core\src\ProtoBuf.Data.Tests\ProtoBuf.Data.Tests.csproj --no-build --filter "TestCategory!=Integration"
+artifacts:
+ - path: '**\*.nupkg'
+nuget:
+  account_feed: true
+  project_feed: true
+  disable_publish_on_pr: true

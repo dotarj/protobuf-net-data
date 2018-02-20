@@ -17,7 +17,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using SharpTestsEx;
 
 namespace ProtoBuf.Data.Tests
 {
@@ -34,7 +33,7 @@ namespace ProtoBuf.Data.Tests
             tableA.Columns.Add("LastName", typeof(string));
             tableA.Columns.Add("BlobData", typeof(byte[]));
             tableA.Columns.Add("ClobData", typeof(char[]));
-            tableA.Rows.Add(new DateTime(2011, 04, 05, 12, 16, 41, 300), 42, "Foo",new Guid("6891816b-a4b9-4749-a9f5-9f6deb377a65"), "sdfsdf", new byte[] { 1, 2, 3, 4 }, new[] { 'a' });
+            tableA.Rows.Add(new DateTime(2011, 04, 05, 12, 16, 41, 300), 42, "Foo", new Guid("6891816b-a4b9-4749-a9f5-9f6deb377a65"), "sdfsdf", new byte[] { 1, 2, 3, 4 }, new[] { 'a' });
             tableA.Rows.Add(new DateTime(1920, 04, 03, 12, 48, 31, 210), null, "Bar", new Guid("28545f31-ca0c-40c1-bae0-9b79ca84091b"), "o2389uf", new byte[0], new[] { 'a', 'b', 'c' });
             tableA.Rows.Add(null, null, null, null, null, null, null);
             tableA.Rows.Add(new DateTime(2008, 01, 11, 11, 4, 1, 491), null, "Foo", Guid.Empty, "", null, new char[0]);
@@ -61,9 +60,9 @@ namespace ProtoBuf.Data.Tests
         /// <summary>
         /// Version with zero-length arrays serialized as null.
         /// </summary>
-        const string PreviousVersionTestFile = "OldBackwardsCompatbilityTest.bin";
+        private static readonly string PreviousVersionTestFile = Path.Combine(TestContext.CurrentContext.TestDirectory, "OldBackwardsCompatbilityTest.bin");
 
-        const string TestFile = "BackwardsCompatbilityTest.bin";
+        private static readonly string TestFile = Path.Combine(TestContext.CurrentContext.TestDirectory, "BackwardsCompatbilityTest.bin");
 
         [TestFixture]
         public class When_reading
@@ -78,7 +77,7 @@ namespace ProtoBuf.Data.Tests
                     using (IDataReader reader = DataSerializer.Deserialize(stream))
                         actual.Load(reader, LoadOption.PreserveChanges, "A", "B", "C", "D");
 
-                    actual.HasErrors.Should().Be.False();
+                    Assert.IsFalse(actual.HasErrors);
 
                     TestHelper.AssertContentsEqual(expected, actual);
                 }
@@ -103,7 +102,7 @@ namespace ProtoBuf.Data.Tests
 
                     stream.Seek(0, SeekOrigin.Begin);
 
-                    stream.GetBuffer().Take(expected.Length).Should().Have.SameSequenceAs(expected);
+                    CollectionAssert.AreEqual(expected, stream.GetBuffer().Take(expected.Length));
                 }
             }
 
@@ -123,7 +122,7 @@ namespace ProtoBuf.Data.Tests
 
                     stream.Seek(0, SeekOrigin.Begin);
 
-                    stream.GetBuffer().Take(expected.Length).Should().Have.SameSequenceAs(expected);
+                    CollectionAssert.AreEqual(expected, stream.GetBuffer().Take(expected.Length));
                 }
             }
 
