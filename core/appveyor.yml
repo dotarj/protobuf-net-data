@@ -21,13 +21,13 @@ dotnet_csproj:
   file_version: '{version}'
   informational_version: '$(APPVEYOR_REPO_COMMIT)'
 before_build:
- - cmd: msbuild ProtoBuf.Data.Core.sln /t:restore /clp:Summary;Verbosity=minimal
+ - cmd: msbuild core\ProtoBuf.Data.Core.sln /t:restore /clp:Summary;Verbosity=minimal
 build_script:
- - cmd: msbuild ProtoBuf.Data.Core.sln /t:build /p:SourceLinkCreate=true /p:SourceLinkTest=true /clp:Summary;Verbosity=minimal
+ - cmd: msbuild core\ProtoBuf.Data.Core.sln /t:build /p:SourceLinkCreate=true /p:SourceLinkTest=true /clp:Summary;Verbosity=minimal
 after_build:
- - cmd: msbuild ProtoBuf.Data.Core.sln /t:pack /clp:Summary;Verbosity=minimal
+ - cmd: msbuild core\ProtoBuf.Data.Core.sln /t:pack /clp:Summary;Verbosity=minimal
 test_script:
- - cmd: dotnet test src\ProtoBuf.Data.Tests\ProtoBuf.Data.Tests.csproj --no-build --filter "TestCategory!=Integration"
+ - cmd: dotnet test core\src\ProtoBuf.Data.Tests\ProtoBuf.Data.Tests.csproj --no-build --filter "TestCategory!=Integration"
 artifacts:
  - path: '**\*.nupkg'
 nuget:

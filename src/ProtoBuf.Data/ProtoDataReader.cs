@@ -89,7 +89,7 @@ namespace ProtoBuf.Data
             }
         }
 
-        public bool IsClosed { get; private set; }
+        public bool IsClosed { get { return disposed; } }
 
         /// <summary>
         /// Gets the number of rows changed, inserted, or deleted. 
@@ -261,12 +261,6 @@ namespace ProtoBuf.Data
             return currentRow[i] == null || currentRow[i] is DBNull;
         }
 
-        public void Close()
-        {
-            stream.Close();
-            IsClosed = true;
-        }
-
         public bool NextResult()
         {
             ErrorIfClosed();
@@ -277,7 +271,7 @@ namespace ProtoBuf.Data
 
             if (currentField == 0)
             {
-                IsClosed = true;
+                this.Close();
                 return false;
             }
 
@@ -319,10 +313,15 @@ namespace ProtoBuf.Data
             return true;
         }
 
-        public void Dispose()
+        public void Close()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public void Dispose()
+        {
+            Close();
         }
 
         private void Dispose(bool disposing)

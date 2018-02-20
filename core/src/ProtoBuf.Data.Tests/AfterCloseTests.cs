@@ -15,6 +15,7 @@
 using System;
 using System.Data;
 using System.IO;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace ProtoBuf.Data.Tests
@@ -136,6 +137,72 @@ namespace ProtoBuf.Data.Tests
             public void Should_throw_an_exception_if_you_try_to_get_a_columns_data_type_name()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.GetDataTypeName(0));
+            }
+
+            [Test]
+            public void Should_clean_underlaying_stream()
+            {
+                var field = this.reader.GetType().GetField("stream", BindingFlags.NonPublic | BindingFlags.Instance);
+                Assert.NotNull(field);
+
+                var streamValue = field.GetValue(this.reader);
+                Assert.Null(streamValue);
+            }
+
+            [Test]
+            public void Should_clean_underlaying_reader()
+            {
+                var field = this.reader.GetType().GetField("reader", BindingFlags.NonPublic | BindingFlags.Instance);
+                Assert.NotNull(field);
+
+                var readerValue = field.GetValue(this.reader);
+                Assert.Null(readerValue);
+            }
+
+            [Test]
+            public void Should_clean_underlaying_dataTable()
+            {
+                var field = this.reader.GetType().GetField("dataTable", BindingFlags.NonPublic | BindingFlags.Instance);
+                Assert.NotNull(field);
+
+                var dataTableValue = field.GetValue(this.reader);
+                Assert.Null(dataTableValue);
+            }
+        }
+
+        [TestFixture]
+        public class When_the_reader_has_been_disposed
+        {
+            private WeakReference streamRef;
+            private WeakReference readerRef;
+
+            [OneTimeSetUp]
+            public void TestFixtureSetUp()
+            {
+                var stream = new MemoryStream();
+                using (var table = TestData.SmallDataTable())
+                using (var tableReader = table.CreateDataReader())
+                {
+                    DataSerializer.Serialize(stream, tableReader);
+                }
+
+                stream.Seek(0, SeekOrigin.Begin);
+                var reader = DataSerializer.Deserialize(stream);
+
+                streamRef = new WeakReference(stream);
+                readerRef = new WeakReference(reader);
+
+                reader.Dispose();
+            }
+
+            [Test]
+            public void Reader_should_collected_by_GC()
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                Assert.IsFalse(this.readerRef.IsAlive);
+                Assert.IsFalse(this.streamRef.IsAlive);
             }
         }
     }
