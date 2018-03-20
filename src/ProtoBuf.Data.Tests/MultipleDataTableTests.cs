@@ -15,21 +15,20 @@
 using System;
 using System.Data;
 using System.IO;
-using NUnit.Framework;
 using SharpTestsEx;
+using Xunit;
 
 namespace ProtoBuf.Data.Tests
 {
     public class MultipleDataTableTests
     {
-        [TestFixture, Category("Integration")]
+        [Trait("Category", "Integration")]
         public class When_serializing_a_datareader_with_multiple_result_sets
         {
             private DataSet dataSet;
             private DataSet deserializedDataSet;
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_serializing_a_datareader_with_multiple_result_sets()
             {
                 dataSet = TestData.DataSetFromSql("SELECT TOP 25 * FROM DimCustomer; SELECT TOP 42 * FROM DimProduct;",
                                                   "DimCustomer", "DimProduct");
@@ -37,22 +36,20 @@ namespace ProtoBuf.Data.Tests
                 deserializedDataSet = TestHelper.SerializeAndDeserialize(dataSet, "DimCustomer", "DimProduct");
             }
 
-            [Test]
+            [Fact]
             public void All_tables_should_have_the_same_contents()
             {
                 TestHelper.AssertContentsEqual(dataSet, deserializedDataSet);
             }
         }
 
-        [TestFixture]
-        public class When_advancing_to_the_next_result_set_but_still_in_the_middle_of_the_current_one
+        public class When_advancing_to_the_next_result_set_but_still_in_the_middle_of_the_current_one : IDisposable
         {
             private DataSet dataSet;
             private IDataReader reader;
             private Stream stream;
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_advancing_to_the_next_result_set_but_still_in_the_middle_of_the_current_one()
             {
                 var a = new[]
                             {
@@ -109,14 +106,13 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            [OneTimeTearDown]
-            public void TestFixtureTearDown()
+            public void Dispose()
             {
                 reader.Dispose();
                 stream.Dispose();
             }
 
-            [Test]
+            [Fact]
             public void Should_produce_the_same_number_of_tables()
             {
                 reader.GetSchemaTable().Rows.Count.Should().Be(1);
@@ -160,15 +156,13 @@ namespace ProtoBuf.Data.Tests
             }
         }
 
-        [TestFixture]
-        public class When_a_table_with_no_columns_is_immediately_followed_by_a_non_empty_one
+        public class When_a_table_with_no_columns_is_immediately_followed_by_a_non_empty_one : IDisposable
         {
             private DataSet dataSet;
             private IDataReader reader;
             private Stream stream;
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_a_table_with_no_columns_is_immediately_followed_by_a_non_empty_one()
             {
                 dataSet = new DataSet();
 
@@ -194,14 +188,13 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            [OneTimeTearDown]
-            public void TestFixtureTearDown()
+            public void Dispose()
             {
                 reader.Dispose();
                 stream.Dispose();
             }
 
-            [Test]
+            [Fact]
             public void Should_produce_the_same_number_of_tables()
             {
                 reader.GetSchemaTable().Rows.Count.Should().Be(0);
@@ -220,15 +213,13 @@ namespace ProtoBuf.Data.Tests
             }
         }
 
-        [TestFixture]
-        public class When_a_table_with_no_rows_is_immediately_followed_by_a_non_empty_one
+        public class When_a_table_with_no_rows_is_immediately_followed_by_a_non_empty_one : IDisposable
         {
             private DataSet dataSet;
             private IDataReader reader;
             private Stream stream;
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_a_table_with_no_rows_is_immediately_followed_by_a_non_empty_one()
             {
                 dataSet = new DataSet();
 
@@ -255,14 +246,13 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            [OneTimeTearDown]
-            public void TestFixtureTearDown()
+            public void Dispose()
             {
                 reader.Dispose();
                 stream.Dispose();
             }
 
-            [Test]
+            [Fact]
             public void Should_produce_the_same_number_of_tables()
             {
                 reader.GetSchemaTable().Rows.Count.Should().Be(1);

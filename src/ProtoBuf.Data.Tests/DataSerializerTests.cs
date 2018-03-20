@@ -14,69 +14,63 @@
 
 using System.Data;
 using System.IO;
-using NUnit.Framework;
 using Rhino.Mocks;
+using Xunit;
 
 namespace ProtoBuf.Data.Tests
 {
     public class DataSerializerTests
     {
-        [TestFixture]
         public class When_serializing_a_data_table_to_a_buffer_and_back
         {
             DataTable originalTable;
             DataTable deserializedTable;
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_serializing_a_data_table_to_a_buffer_and_back()
             {
                 originalTable = TestData.SmallDataTable();
                 deserializedTable = TestHelper.SerializeAndDeserialize(originalTable);
             }
 
-            [Test]
+            [Fact]
             public void Should_have_the_same_contents_as_the_original()
             {
                 TestHelper.AssertContentsEqual(originalTable, deserializedTable);
             }
         }
 
-        [TestFixture]
         public class When_serializing_a_data_table_with_null_options
         {
             DataTable originalTable;
             DataTable deserializedTable;
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_serializing_a_data_table_with_null_options()
             {
                 originalTable = TestData.SmallDataTable();
                 deserializedTable = TestHelper.SerializeAndDeserialize(originalTable, null);
             }
 
-            [Test]
+            [Fact]
             public void Should_have_the_same_contents_as_the_original_and_not_throw_any_exception()
             {
                 TestHelper.AssertContentsEqual(originalTable, deserializedTable);
             }
         }
 
-        [TestFixture]
         public class When_serializing_an_unsupported_type
         {
             DataTable originalTable;
 
             class Foo {}
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_serializing_an_unsupported_type()
             {
                 originalTable = new DataTable();
                 originalTable.Columns.Add("Foo", typeof(Foo));
                 originalTable.Rows.Add(new Foo());
             }
 
-            [Test]
+            [Fact]
             public void Should_throw_an_exception()
             {
                 using (var originalReader = originalTable.CreateDataReader())
@@ -84,14 +78,12 @@ namespace ProtoBuf.Data.Tests
             }
         }
 
-        [TestFixture]
         public class When_serializing_a_data_table_with_no_rows
         {
             DataTable originalTable;
             DataTable deserializedTable;
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_serializing_a_data_table_with_no_rows()
             {
                 originalTable = new DataTable();
                 originalTable.Columns.Add("ColumnA", typeof (int));
@@ -99,42 +91,38 @@ namespace ProtoBuf.Data.Tests
                 deserializedTable = TestHelper.SerializeAndDeserialize(originalTable);
             }
 
-            [Test]
+            [Fact]
             public void Should_have_the_same_contents_as_the_original()
             {
                 TestHelper.AssertContentsEqual(originalTable, deserializedTable);
             }
         }
 
-        [TestFixture]
         public class When_serializing_a_data_table_with_no_columns_or_rows
         {
             DataTable originalTable;
             DataTable deserializedTable;
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_serializing_a_data_table_with_no_columns_or_rows()
             {
                 originalTable = new DataTable();
 
                 deserializedTable = TestHelper.SerializeAndDeserialize(originalTable);
             }
 
-            [Test]
+            [Fact]
             public void Should_have_the_same_contents_as_the_original()
             {
                 TestHelper.AssertContentsEqual(originalTable, deserializedTable);
             }
         }
 
-        [TestFixture]
         public class When_serializing_a_data_table_with_a_computed_column
         {
             private DataTable originalTable;
             private DataTable deserializedTable;
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_serializing_a_data_table_with_a_computed_column()
             {
                 var matrix = new[]
                                  {
@@ -151,21 +139,19 @@ namespace ProtoBuf.Data.Tests
                 deserializedTable = TestHelper.SerializeAndDeserialize(computed);
             }
 
-            [Test]
+            [Fact]
             public void Should_ignore_the_computed_column_by_default()
             {
                 TestHelper.AssertContentsEqual(originalTable, deserializedTable);
             }
         }
 
-        [TestFixture]
         public class When_serializing_a_data_table_including_computed_columns
         {
             private DataTable originalTable;
             private DataTable deserializedTable;
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_serializing_a_data_table_including_computed_columns()
             {
                 var matrix = new[]
                                  {
@@ -181,17 +167,16 @@ namespace ProtoBuf.Data.Tests
                     new ProtoDataWriterOptions { IncludeComputedColumns = true });
             }
 
-            [Test]
+            [Fact]
             public void Should_ignore_the_computed_column()
             {
                 TestHelper.AssertContentsEqual(originalTable, deserializedTable);
             }
         }
 
-        [TestFixture]
         public class When_serializing_a_data_reader_with_no_expression_column_in_its_schema_table
         {
-            [Test]
+            [Fact]
             public void Should_not_throw_any_exception()
             {
                 // Fix for issue #12 https://github.com/rdingwall/protobuf-net-data/issues/12
@@ -216,14 +201,12 @@ namespace ProtoBuf.Data.Tests
             }
         }
 
-        [TestFixture]
         public class When_serializing_a_data_table_with_zero_length_arrays
         {
             private DataTable originalTable;
             private DataTable deserializedTable;
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_serializing_a_data_table_with_zero_length_arrays()
             {
                 var matrix = new[]
                                  {
@@ -237,7 +220,7 @@ namespace ProtoBuf.Data.Tests
                 deserializedTable = TestHelper.SerializeAndDeserialize(originalTable);
             }
 
-            [Test]
+            [Fact]
             public void Should_ignore_the_computed_column()
             {
                 TestHelper.AssertContentsEqual(originalTable, deserializedTable);

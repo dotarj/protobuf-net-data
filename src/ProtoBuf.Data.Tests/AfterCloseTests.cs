@@ -15,21 +15,19 @@
 using System;
 using System.Data;
 using System.IO;
-using NUnit.Framework;
 using SharpTestsEx;
+using Xunit;
 
 namespace ProtoBuf.Data.Tests
 {
     public class AfterCloseTests
     {
-        [TestFixture]
-        public class When_the_reader_has_been_closed
+        public class When_the_reader_has_been_closed : IDisposable
         {
             private IDataReader reader;
             private MemoryStream stream;
-
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            
+            public When_the_reader_has_been_closed()
             {
                 stream = new MemoryStream();
                 using (var table = TestData.SmallDataTable())
@@ -44,96 +42,95 @@ namespace ProtoBuf.Data.Tests
                 reader.Close();
             }
 
-            [OneTimeTearDown]
-            public void TestFixtureTearDown()
+            public void Dispose()
             {
                 reader.Dispose();
                 stream.Dispose();
             }
 
-            [Test]
+            [Fact]
             public void IsClosed_should_be_set()
             {
                 reader.IsClosed.Should().Be.True();
             }
 
-            [Test]
+            [Fact]
             public void Should_not_throw_an_exception_if_you_try_to_close_it_twice()
             {
                 reader.Close();
                 reader.Close();
             }
 
-            [Test]
+            [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_the_schema_table()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.GetSchemaTable());
             }
 
-            [Test]
+            [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_the_field_count()
             {
                 int dummy;
                 Assert.Throws<InvalidOperationException>(() => dummy = reader.FieldCount);
             }
 
-            [Test]
+            [Fact]
             public void Should_not_throw_an_exception_if_you_try_to_get_the_number_of_records_affected()
             {
                 int dummy = reader.RecordsAffected;
             }
 
-            [Test]
+            [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_the_depth()
             {
                 int dummy;
                 Assert.Throws<InvalidOperationException>(() => dummy = reader.Depth);
             }
 
-            [Test]
+            [Fact]
             public void Should_throw_an_exception_if_you_try_to_read()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.Read());
             }
 
-            [Test]
+            [Fact]
             public void Should_throw_an_exception_if_you_try_to_move_to_the_next_result()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.NextResult());
             }
 
-            [Test]
+            [Fact]
             public void Should_throw_an_exception_if_you_try_to_move_to_get_the_row()
             {
                 var dummy = new object[10];
                 Assert.Throws<InvalidOperationException>(() => reader.GetValues(dummy));
             }
 
-            [Test]
+            [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_a_column_name()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.GetName(0));
             }
 
-            [Test]
+            [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_a_columns_ordinal_position()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.GetOrdinal("foo"));
             }
 
-            [Test]
+            [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_a_columns_value()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.GetValue(0));
             }
 
-            [Test]
+            [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_a_columns_type()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.GetFieldType(0));
             }
 
-            [Test]
+            [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_a_columns_data_type_name()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.GetDataTypeName(0));

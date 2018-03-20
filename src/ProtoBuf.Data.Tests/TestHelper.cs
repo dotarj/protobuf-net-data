@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
+using Xunit;
 
 namespace ProtoBuf.Data.Tests
 {
@@ -25,8 +25,7 @@ namespace ProtoBuf.Data.Tests
     {
         public static void AssertContentsEqual(DataSet expected, DataSet actual)
         {
-            Assert.That(actual.Tables.Count, Is.EqualTo(expected.Tables.Count), 
-                "DataSets had a different number of tables.");
+            Assert.Equal(actual.Tables.Count, expected.Tables.Count);
 
             for (var i = 0; i < expected.Tables.Count; i++)
                 AssertContentsEqual(expected.Tables[i], actual.Tables[i]);
@@ -36,10 +35,9 @@ namespace ProtoBuf.Data.Tests
         {
             if (expected == null) throw new ArgumentNullException("expected");
 
-            Assert.That(actual, Is.Not.Null);
+            Assert.NotNull(actual);
 
-            Assert.That(actual.Columns.Count, Is.EqualTo(expected.Columns.Count),
-                        "Table {0} had a different number of columns.", GetTableNumber(actual));
+            Assert.Equal(actual.Columns.Count, expected.Columns.Count);
 
             AssertColumnNamesEqual(expected, actual);
             AssertColumnTypesEqual(expected, actual);
@@ -56,8 +54,7 @@ namespace ProtoBuf.Data.Tests
 
         static void AssertRowValuesEqual(DataTable expected, DataTable actual)
         {
-            Assert.That(actual.Rows.Count, Is.EqualTo(expected.Rows.Count), 
-                "Table {0} had a different number of rows.", GetTableNumber(actual));
+            Assert.Equal(actual.Rows.Count, expected.Rows.Count);
 
             for (var i = 0; i < expected.Rows.Count; i++)
             {
@@ -85,15 +82,14 @@ namespace ProtoBuf.Data.Tests
                         AssertArraysEqual(expectedClob, actualClob);
                     }
                     else
-                        Assert.That(actualItemArray[j], Is.EqualTo(expectedItemArray[j]), 
-                            "Table {0} values at row {1}, column {2} don't match.", GetTableNumber(actual), i, j);
+                        Assert.Equal(actualItemArray[j], expectedItemArray[j]);
                 }
             }
         }
 
         static void AssertArraysEqual<T>(ICollection<T> sourceArray, object destArray)
         {
-            Assert.That(destArray, Is.EquivalentTo(sourceArray), "Array fields contents didn't match.");
+            Assert.Equal(destArray, sourceArray);
         }
 
         static void AssertColumnNamesEqual(DataTable expected, DataTable actual)
@@ -101,8 +97,7 @@ namespace ProtoBuf.Data.Tests
             var expectedNames = GetColumnNames(expected);
             var actualNames = GetColumnNames(actual);
 
-            Assert.That(actualNames, Is.EquivalentTo(expectedNames), 
-                "Table {0} column names didn't match.", GetTableNumber(actual));
+            Assert.Equal(actualNames, expectedNames);
         }
 
         static string[] GetColumnNames(DataTable dataTable)
@@ -120,8 +115,7 @@ namespace ProtoBuf.Data.Tests
             var expectedTypes = GetColumnTypes(expected);
             var actualTypes = GetColumnTypes(actual);
 
-            Assert.That(actualTypes, Is.EquivalentTo(expectedTypes), 
-                "Table {0} column types didn't match.", GetTableNumber(actual));
+            Assert.Equal(actualTypes, expectedTypes);
         }
 
         public static DataTable SerializeAndDeserialize(DataTable dataTable)

@@ -14,26 +14,25 @@
 
 using System.Data;
 using System.IO;
-using NUnit.Framework;
+using Xunit;
 
 namespace ProtoBuf.Data.Tests
 {
     public class BigDataSerializerTests
     {
-        [TestFixture, Category("Integration")]
+        [Trait("Category", "Integration")]
         public class When_serializing_a_really_big_data_table_to_a_buffer_and_back
         {
             DataTable originalTable;
             DataTable deserializedTable;
 
-            [OneTimeSetUp]
-            public void TestFixtureSetUp()
+            public When_serializing_a_really_big_data_table_to_a_buffer_and_back()
             {
                 originalTable = TestData.DataTableFromSql("SELECT * FROM DimCustomer");
                 deserializedTable = TestHelper.SerializeAndDeserialize(originalTable);
             }
 
-            [Test]
+            [Fact]
             public void Should_have_the_same_contents_as_the_original()
             {
                 TestHelper.AssertContentsEqual(originalTable, deserializedTable);

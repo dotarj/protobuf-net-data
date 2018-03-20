@@ -18,8 +18,8 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using NUnit.Framework;
 using SharpTestsEx;
+using Xunit;
 
 namespace ProtoBuf.Data.Tests
 {
@@ -67,10 +67,9 @@ namespace ProtoBuf.Data.Tests
 
         const string TestFile = "BackwardsCompatbilityTest.bin";
 
-        [TestFixture]
         public class When_reading
         {
-            [Test]
+            [Fact]
             public void Should_retain_binary_compatibility_when_reading()
             {
                 using (DataSet expected = CreateTablesForBackwardsCompatibilityTest())
@@ -89,10 +88,9 @@ namespace ProtoBuf.Data.Tests
             }
         }
 
-        [TestFixture]
         public class When_writing
         {
-            [Test]
+            [Fact]
             public void Should_retain_binary_compatibility_when_writing()
             {
                 using (DataSet dataSet = CreateTablesForBackwardsCompatibilityTest())
@@ -111,7 +109,7 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            [Test]
+            [Fact]
             public void Should_retain_binary_compatibility_with_previous_versions_when_writing()
             {
                 using (DataSet dataSet = CreateTablesForBackwardsCompatibilityTest())
@@ -131,9 +129,9 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            //[Test]
-            [Ignore("Only when our binary format changes (and we don't care about breaking old versions).")]
-            public void RegenerateTestFile()
+            //[Fact]
+            //[Ignore("Only when our binary format changes (and we don't care about breaking old versions).")]
+            private void RegenerateTestFile()
             {
                 using (DataSet dataSet = CreateTablesForBackwardsCompatibilityTest())
                 using (FileStream stream = new FileStream(Path.Combine(@"..\..\", TestFile), FileMode.Create))

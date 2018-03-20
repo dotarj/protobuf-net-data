@@ -16,8 +16,8 @@ using System;
 using System.Data;
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
 using SharpTestsEx;
+using Xunit;
 
 namespace ProtoBuf.Data.Tests
 {
@@ -25,15 +25,13 @@ namespace ProtoBuf.Data.Tests
     {
         // Protobuf-net only flushes every 1024 bytes. So check we can
         // successfully write a stream smaller than that.
-        [TestFixture]
         public class When_reading_from_a_stream_less_than_protobuf_nets_flush_size
         {
             private byte[] expectedBytes;
             private byte[] actualBytes;
             private DataTableReader reader;
-
-            [OneTimeSetUp]
-            public void SetUp()
+            
+            public When_reading_from_a_stream_less_than_protobuf_nets_flush_size()
             {
                 var testData = TestData.SmallDataTable();
 
@@ -53,29 +51,27 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            [Test]
+            [Fact]
             public void It_should_be_binary_equal_to_the_data_serializer_version()
             {
                 actualBytes.Length.Should().Be.EqualTo(expectedBytes.Length);
                 actualBytes.Should().Have.SameSequenceAs(expectedBytes);
             }
 
-            [Test]
+            [Fact]
             public void It_should_dispose_the_reader()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.Read());
             }
         }
 
-        [TestFixture]
         public class When_reading_from_a_stream
         {
             private byte[] expectedBytes;
             private byte[] actualBytes;
             private IDataReader reader;
 
-            [OneTimeSetUp]
-            public void SetUp()
+            public When_reading_from_a_stream()
             {
                 var testData = TestData.GenerateRandomDataTable(10, 10000);
 
@@ -95,28 +91,26 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            [Test]
+            [Fact]
             public void It_should_be_binary_equal_to_the_data_serializer_version()
             {
                 //actualBytes.Length.Should().Be.EqualTo(expectedBytes.Length);
                 actualBytes.Should().Have.SameSequenceAs(expectedBytes);
             }
 
-            [Test]
+            [Fact]
             public void It_should_dispose_the_reader()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.Read());
             }
         }
 
-        [TestFixture]
         public class When_reading_from_a_stream_with_varying_buffer_sizes
         {
             private byte[] expectedBytes;
             private DataTable testData;
 
-            [OneTimeSetUp]
-            public void SetUp()
+            public When_reading_from_a_stream_with_varying_buffer_sizes()
             {
                 testData = TestData.GenerateRandomDataTable(10, 10000);
 
@@ -128,7 +122,7 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            [Test]
+            [Fact]
             public void It_should_populate_the_buffer_correctly()
             {
                 using (var reader = testData.CreateDataReader())
@@ -147,14 +141,12 @@ namespace ProtoBuf.Data.Tests
             }
         }
 
-        [TestFixture]
         public class When_disposing_the_read_before_all_the_data_has_been_read
         {
             private Stream stream;
             private IDataReader reader;
 
-            [OneTimeSetUp]
-            public void SetUp()
+            public When_disposing_the_read_before_all_the_data_has_been_read()
             {
                 var testData = TestData.GenerateRandomDataTable(10, 10000);
 
@@ -169,22 +161,20 @@ namespace ProtoBuf.Data.Tests
                 stream.Dispose();
             }
 
-            [Test]
+            [Fact]
             public void It_should_dispose_the_reader()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.Read());
             }
         }
 
-        [TestFixture]
         public class When_reading_from_a_stream_containing_multiple_data_tables
         {
             private byte[] expectedBytes;
             private byte[] actualBytes;
             private IDataReader reader;
 
-            [OneTimeSetUp]
-            public void SetUp()
+            public When_reading_from_a_stream_containing_multiple_data_tables()
             {
                 var testData = new DataSet
                     {
@@ -212,14 +202,14 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            [Test]
+            [Fact]
             public void It_should_be_binary_equal_to_the_data_serializer_version()
             {
                 actualBytes.Length.Should().Be.EqualTo(expectedBytes.Length);
                 actualBytes.Should().Have.SameSequenceAs(expectedBytes);
             }
 
-            [Test]
+            [Fact]
             public void It_should_dispose_the_reader()
             {
                 Assert.Throws<InvalidOperationException>(() => reader.Read());
