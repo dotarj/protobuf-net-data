@@ -26,7 +26,7 @@ namespace ProtoBuf.Data.Tests
             DataTable originalTable;
             DataTable deserializedTable;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 originalTable = TestData.DataTableFromSql("SELECT * FROM DimCustomer");

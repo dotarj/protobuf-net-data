@@ -27,7 +27,7 @@ namespace ProtoBuf.Data.Tests
             DataTable originalTable;
             DataTable deserializedTable;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 originalTable = TestData.SmallDataTable();
@@ -47,7 +47,7 @@ namespace ProtoBuf.Data.Tests
             DataTable originalTable;
             DataTable deserializedTable;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 originalTable = TestData.SmallDataTable();
@@ -68,7 +68,7 @@ namespace ProtoBuf.Data.Tests
 
             class Foo {}
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 originalTable = new DataTable();
@@ -76,11 +76,11 @@ namespace ProtoBuf.Data.Tests
                 originalTable.Rows.Add(new Foo());
             }
 
-            [Test, ExpectedException(typeof(UnsupportedColumnTypeException))]
+            [Test]
             public void Should_throw_an_exception()
             {
                 using (var originalReader = originalTable.CreateDataReader())
-                    DataSerializer.Serialize(Stream.Null, originalReader);
+                    Assert.Throws<UnsupportedColumnTypeException>(() => DataSerializer.Serialize(Stream.Null, originalReader));
             }
         }
 
@@ -90,7 +90,7 @@ namespace ProtoBuf.Data.Tests
             DataTable originalTable;
             DataTable deserializedTable;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 originalTable = new DataTable();
@@ -112,7 +112,7 @@ namespace ProtoBuf.Data.Tests
             DataTable originalTable;
             DataTable deserializedTable;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 originalTable = new DataTable();
@@ -133,7 +133,7 @@ namespace ProtoBuf.Data.Tests
             private DataTable originalTable;
             private DataTable deserializedTable;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 var matrix = new[]
@@ -164,7 +164,7 @@ namespace ProtoBuf.Data.Tests
             private DataTable originalTable;
             private DataTable deserializedTable;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 var matrix = new[]
@@ -222,7 +222,7 @@ namespace ProtoBuf.Data.Tests
             private DataTable originalTable;
             private DataTable deserializedTable;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 var matrix = new[]

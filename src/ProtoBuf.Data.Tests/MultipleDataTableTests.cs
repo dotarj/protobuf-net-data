@@ -28,7 +28,7 @@ namespace ProtoBuf.Data.Tests
             private DataSet dataSet;
             private DataSet deserializedDataSet;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 dataSet = TestData.DataSetFromSql("SELECT TOP 25 * FROM DimCustomer; SELECT TOP 42 * FROM DimProduct;",
@@ -51,7 +51,7 @@ namespace ProtoBuf.Data.Tests
             private IDataReader reader;
             private Stream stream;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 var a = new[]
@@ -109,7 +109,7 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            [TestFixtureTearDown]
+            [OneTimeTearDown]
             public void TestFixtureTearDown()
             {
                 reader.Dispose();
@@ -167,7 +167,7 @@ namespace ProtoBuf.Data.Tests
             private IDataReader reader;
             private Stream stream;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 dataSet = new DataSet();
@@ -194,7 +194,7 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            [TestFixtureTearDown]
+            [OneTimeTearDown]
             public void TestFixtureTearDown()
             {
                 reader.Dispose();
@@ -227,7 +227,7 @@ namespace ProtoBuf.Data.Tests
             private IDataReader reader;
             private Stream stream;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 dataSet = new DataSet();
@@ -255,7 +255,7 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            [TestFixtureTearDown]
+            [OneTimeTearDown]
             public void TestFixtureTearDown()
             {
                 reader.Dispose();
