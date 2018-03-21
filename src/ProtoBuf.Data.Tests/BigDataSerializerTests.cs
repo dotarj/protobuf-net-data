@@ -32,7 +32,7 @@ namespace ProtoBuf.Data.Tests
                 deserializedTable = TestHelper.SerializeAndDeserialize(originalTable);
             }
 
-            [Fact]
+            [Fact(Skip = "Integration")]
             public void Should_have_the_same_contents_as_the_original()
             {
                 TestHelper.AssertContentsEqual(originalTable, deserializedTable);

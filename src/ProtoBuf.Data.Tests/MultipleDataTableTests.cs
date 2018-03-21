@@ -36,7 +36,7 @@ namespace ProtoBuf.Data.Tests
                 deserializedDataSet = TestHelper.SerializeAndDeserialize(dataSet, "DimCustomer", "DimProduct");
             }
 
-            [Fact]
+            [Fact(Skip = "Integration")]
             public void All_tables_should_have_the_same_contents()
             {
                 TestHelper.AssertContentsEqual(dataSet, deserializedDataSet);
