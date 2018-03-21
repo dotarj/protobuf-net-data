@@ -32,7 +32,7 @@ namespace ProtoBuf.Data.Tests
             private byte[] actualBytes;
             private DataTableReader reader;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void SetUp()
             {
                 var testData = TestData.SmallDataTable();
@@ -74,7 +74,7 @@ namespace ProtoBuf.Data.Tests
             private byte[] actualBytes;
             private IDataReader reader;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void SetUp()
             {
                 var testData = TestData.GenerateRandomDataTable(10, 10000);
@@ -115,7 +115,7 @@ namespace ProtoBuf.Data.Tests
             private byte[] expectedBytes;
             private DataTable testData;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void SetUp()
             {
                 testData = TestData.GenerateRandomDataTable(10, 10000);
@@ -153,7 +153,7 @@ namespace ProtoBuf.Data.Tests
             private Stream stream;
             private IDataReader reader;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void SetUp()
             {
                 var testData = TestData.GenerateRandomDataTable(10, 10000);
@@ -183,7 +183,7 @@ namespace ProtoBuf.Data.Tests
             private byte[] actualBytes;
             private IDataReader reader;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void SetUp()
             {
                 var testData = new DataSet

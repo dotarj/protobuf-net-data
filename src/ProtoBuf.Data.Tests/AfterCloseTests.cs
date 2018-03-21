@@ -28,7 +28,7 @@ namespace ProtoBuf.Data.Tests
             private IDataReader reader;
             private MemoryStream stream;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 stream = new MemoryStream();
@@ -44,7 +44,7 @@ namespace ProtoBuf.Data.Tests
                 reader.Close();
             }
 
-            [TestFixtureTearDown]
+            [OneTimeTearDown]
             public void TestFixtureTearDown()
             {
                 reader.Dispose();

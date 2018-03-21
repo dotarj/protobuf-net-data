@@ -13,9 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 using SharpTestsEx;
 
@@ -74,7 +76,9 @@ namespace ProtoBuf.Data.Tests
                 using (DataSet expected = CreateTablesForBackwardsCompatibilityTest())
                 using (DataSet actual = new DataSet())
                 {
-                    using (FileStream stream = File.OpenRead(TestFile))
+                    var assembly = Assembly.GetExecutingAssembly();
+
+                    using (var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.{TestFile}"))
                     using (IDataReader reader = DataSerializer.Deserialize(stream))
                         actual.Load(reader, LoadOption.PreserveChanges, "A", "B", "C", "D");
 
@@ -99,7 +103,7 @@ namespace ProtoBuf.Data.Tests
                         DataSerializer.Serialize(stream, reader);
                     }
 
-                    byte[] expected = File.ReadAllBytes(TestFile);
+                    byte[] expected = GetFile(TestFile);
 
                     stream.Seek(0, SeekOrigin.Begin);
 
@@ -119,7 +123,7 @@ namespace ProtoBuf.Data.Tests
                         DataSerializer.Serialize(stream, reader, options);
                     }
 
-                    byte[] expected = File.ReadAllBytes(PreviousVersionTestFile);
+                    byte[] expected = GetFile(PreviousVersionTestFile);
 
                     stream.Seek(0, SeekOrigin.Begin);
 
@@ -136,6 +140,24 @@ namespace ProtoBuf.Data.Tests
                 {
                     using (DataTableReader reader = dataSet.CreateDataReader())
                         DataSerializer.Serialize(stream, reader);
+                }
+            }
+
+            private byte[] GetFile(string fileName)
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+
+                using (var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.{fileName}"))
+                {
+                    var bytes = new List<byte>();
+
+                    int b;
+                    while ((b = stream.ReadByte()) != -1)
+                    {
+                        bytes.Add((byte)b);
+                    }
+
+                    return bytes.ToArray();
                 }
             }
         }
