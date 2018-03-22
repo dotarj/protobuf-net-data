@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>ProtoBuf.Data.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>protobuf-net-data.snk</AssemblyOriginatorKeyFile>
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
