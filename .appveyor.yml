@@ -84,7 +84,7 @@ before_build:
 build_script:
 - ps: |
       Execute-Action "building project" {
-          dotnet build -c $env:CONFIGURATION --no-restore -v m
+          msbuild -p:Configuration=$env:CONFIGURATION -v:m
       }
 
 after_build:
@@ -101,7 +101,7 @@ after_build:
 
 - ps: |
       Execute-Action "creating NuGet package" {
-          dotnet pack src/$env:APPVEYOR_PROJECT_NAME -c $env:CONFIGURATION --no-restore --no-build --include-symbols --output ../../artifacts -v m
+          msbuild -t:pack -p:Configuration=$env:CONFIGURATION -p:NoBuild=true -p:IncludeSymbols=true -p:PackageOutputPath=../../artifacts -v:m ./src/$env:APPVEYOR_PROJECT_NAME
       }
 
 test_script:
@@ -113,7 +113,7 @@ test_script:
 after_test:
 - ps: |
       Execute-Action "generating code coverage report" {
-          dotnet build -c $env:CONFIGURATION --no-restore -v m /p:codecov=true
+          msbuild -p:Configuration=$env:CONFIGURATION -v:m -p:codecov=true
 
           OpenCover.Console.exe -target:"$env:XUNIT20/xunit.console.x86.exe" -targetargs:"test/$env:APPVEYOR_PROJECT_NAME.Tests/bin/$env:CONFIGURATION/net471/$env:APPVEYOR_PROJECT_NAME.Tests.dll -noshadow" -register:user -filter:"+[*]* -[$env:APPVEYOR_PROJECT_NAME.Tests]* -[$env:APPVEYOR_PROJECT_NAME.Samples]*" -hideskipped:All -output:"./coverage.xml"
       }
