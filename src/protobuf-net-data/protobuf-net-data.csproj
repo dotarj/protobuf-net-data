@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <DebugType Condition="$(codecov) == 'true'">full</DebugType>
+    <DebugType Condition="$(codecov) != 'true'">pdbonly</DebugType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TargetFrameworks>net20;net30;net35;net40;net45;netstandard2.0</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

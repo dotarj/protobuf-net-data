@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <DebugType Condition="$(codecov) == 'true'">full</DebugType>
     <IsPackable>false</IsPackable>
     <TargetFramework>net471</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
