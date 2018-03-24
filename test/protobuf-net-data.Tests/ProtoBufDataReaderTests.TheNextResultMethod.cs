@@ -111,7 +111,7 @@ namespace ProtoBuf.Data.Tests
                 // Assert
                 dataReader.Read();
 
-                Assert.Contains(dataSet.Tables[1].Columns[0].ColumnName, dataReader.GetName(0));
+                Assert.Equal(dataSet.Tables[1].Columns[0].ColumnName, dataReader.GetName(0));
             }
         }
     }

@@ -128,9 +128,9 @@ namespace ProtoBuf.Data.Tests
 
                 Assert.Equal(2, reader.GetSchemaTable().Rows.Count);
                 Assert.True(reader.Read());
-                Assert.Contains("A", reader.GetString(0));
+                Assert.Equal("A", reader.GetString(0));
                 Assert.True(reader.Read());
-                Assert.Contains("B", reader.GetString(0));
+                Assert.Equal("B", reader.GetString(0));
                 Assert.Equal(2, reader.GetSchemaTable().Rows.Count);
 
                 Assert.True(reader.NextResult());

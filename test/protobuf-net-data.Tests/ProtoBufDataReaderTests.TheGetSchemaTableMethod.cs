@@ -32,7 +32,7 @@ namespace ProtoBuf.Data.Tests
                 var schemaTable = dataReader.GetSchemaTable();
 
                 // Assert
-                Assert.Contains("SchemaTable", schemaTable.TableName);
+                Assert.Equal("SchemaTable", schemaTable.TableName);
             }
 
             [Fact]

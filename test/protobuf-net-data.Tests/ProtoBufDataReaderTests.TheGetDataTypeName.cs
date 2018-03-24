@@ -32,7 +32,7 @@ namespace ProtoBuf.Data.Tests
                 var result = dataReader.GetDataTypeName(0);
 
                 // Assert
-                Assert.Contains(value.GetType().Name, result);
+                Assert.Equal(value.GetType().Name, result);
             }
         }
     }

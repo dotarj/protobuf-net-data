@@ -56,7 +56,7 @@ namespace ProtoBuf.Data.Tests
                 var result = dataReader.GetValue(0);
 
                 // Assert
-                Assert.Contains(value, Convert.ToString(result));
+                Assert.Equal(value, Convert.ToString(result));
             }
         }
     }
