@@ -3,29 +3,15 @@
   <PropertyGroup>
     <DebugType Condition="$(codecov) == 'true'">full</DebugType>
     <IsPackable>false</IsPackable>
-    <TargetFrameworks>net40;net47;net471;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net40;net471;netcoreapp2.0</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <IncludeTestSdk>true</IncludeTestSdk>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net20'">
-    <IncludeTestSdk>false</IncludeTestSdk>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
-    <IncludeTestSdk>false</IncludeTestSdk>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
-    <IncludeTestSdk>false</IncludeTestSdk>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\protobuf-net-data\protobuf-net-data.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(IncludeTestSdk)' == 'true'">
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
   </ItemGroup>
 
@@ -33,7 +19,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0' or '$(TargetFramework)' == 'netstandard2.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
     <PackageReference Include="System.Data.SqlClient" Version="4.4.2" />
   </ItemGroup>
 
