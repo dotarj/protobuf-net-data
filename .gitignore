@@ -98,13 +98,6 @@ ipch/
 *.cachefile
 *.VC.db
 *.VC.VC.opendb
-obj/
-[Bb]in
-[Dd]ebug*/
-[Rr]elease*/
-Ankh.NoLoad
-.nuget/nuget.exe
-.vs/
 
 # Visual Studio profiler
 *.psess
