@@ -20,6 +20,7 @@ namespace ProtoBuf.Data
     using System.Data;
     using System.IO;
     using ProtoBuf.Data.Internal;
+    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// A custom <see cref="System.Data.IDataReader"/> for de-serializing a protocol-buffer binary stream back
@@ -75,7 +76,8 @@ namespace ProtoBuf.Data
         {
             get
             {
-                ErrorIfClosed();
+                ThrowIfClosed();
+
                 return dataTable.Columns.Count;
             }
         }
@@ -84,7 +86,8 @@ namespace ProtoBuf.Data
         {
             get
             {
-                ErrorIfClosed();
+                ThrowIfClosed();
+
                 return 1;
             }
         }
@@ -104,7 +107,6 @@ namespace ProtoBuf.Data
         {
             get
             {
-                ErrorIfClosed();
                 return GetValue(i);
             }
         }
@@ -113,38 +115,49 @@ namespace ProtoBuf.Data
         {
             get
             {
-                ErrorIfClosed();
                 return GetValue(GetOrdinal(name));
             }
         }
 
         public string GetName(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfIndexOutOfRange(i);
+
             return dataTable.Columns[i].ColumnName;
         }
 
         public string GetDataTypeName(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfIndexOutOfRange(i);
+
             return dataTable.Columns[i].DataType.Name;
         }
 
         public Type GetFieldType(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfIndexOutOfRange(i);
+
             return dataTable.Columns[i].DataType;
         }
 
         public object GetValue(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+
             return currentRow[i];
         }
 
         public int GetValues(object[] values)
         {
-            ErrorIfClosed();
+            Throw.IfNull(values, nameof(values));
+
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
 
             int length = Math.Min(values.Length, dataTable.Columns.Count);
 
@@ -155,109 +168,174 @@ namespace ProtoBuf.Data
 
         public int GetOrdinal(string name)
         {
-            ErrorIfClosed();
-            return dataTable.Columns[name].Ordinal;
+            ThrowIfClosed();
+
+            var column = dataTable.Columns[name];
+
+            if (column == null)
+            {
+                throw new IndexOutOfRangeException(name);
+            }
+
+            return column.Ordinal;
         }
 
         public bool GetBoolean(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return (bool)currentRow[i];
         }
 
         public byte GetByte(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return (byte)currentRow[i];
         }
 
-        public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
+        public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferOffset, int length)
         {
-            ErrorIfClosed();
-            var sourceBuffer = (byte[])currentRow[i];
-            length = Math.Min(length, currentRow.Length - (int)fieldOffset);
-            Array.Copy(sourceBuffer, fieldOffset, buffer, bufferoffset, length);
-            return length;
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
+            return this.CopyArray((byte[])currentRow[i], fieldOffset, buffer, bufferOffset, length);
         }
 
         public char GetChar(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return (char)currentRow[i];
         }
 
-        public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
+        public long GetChars(int i, long fieldOffset, char[] buffer, int bufferOffset, int length)
         {
-            ErrorIfClosed();
-            var sourceBuffer = (char[])currentRow[i];
-            length = Math.Min(length, currentRow.Length - (int)fieldoffset);
-            Array.Copy(sourceBuffer, fieldoffset, buffer, bufferoffset, length);
-            return length;
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
+            return this.CopyArray((char[])currentRow[i], fieldOffset, buffer, bufferOffset, length);
         }
 
         public Guid GetGuid(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return (Guid)currentRow[i];
         }
 
         public short GetInt16(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return (short)currentRow[i];
         }
 
         public int GetInt32(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return (int)currentRow[i];
         }
 
         public long GetInt64(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return (long)currentRow[i];
         }
 
         public float GetFloat(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return (float)currentRow[i];
         }
 
         public double GetDouble(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return (double)currentRow[i];
         }
 
         public string GetString(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return (string)currentRow[i];
         }
 
         public decimal GetDecimal(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return (decimal)currentRow[i];
         }
 
         public DateTime GetDateTime(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return (DateTime)currentRow[i];
         }
 
         public IDataReader GetData(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+            this.ThrowIfNoValueIsNull(i);
+
             return ((DataTable)currentRow[i]).CreateDataReader();
         }
 
         public bool IsDBNull(int i)
         {
-            ErrorIfClosed();
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+
             return currentRow[i] == null || currentRow[i] is DBNull;
         }
 
@@ -269,7 +347,7 @@ namespace ProtoBuf.Data
 
         public bool NextResult()
         {
-            ErrorIfClosed();
+            ThrowIfClosed();
 
             ConsumeAnyRemainingRows();
 
@@ -277,7 +355,6 @@ namespace ProtoBuf.Data
 
             if (currentField == 0)
             {
-                IsClosed = true;
                 return false;
             }
 
@@ -290,7 +367,8 @@ namespace ProtoBuf.Data
 
         public DataTable GetSchemaTable()
         {
-            ErrorIfClosed();
+            ThrowIfClosed();
+
             using (var schemaReader = dataTable.CreateDataReader())
             {
                 return schemaReader.GetSchemaTable();
@@ -299,7 +377,7 @@ namespace ProtoBuf.Data
 
         public bool Read()
         {
-            ErrorIfClosed();
+            ThrowIfClosed();
 
             if (reachedEndOfCurrentTable)
             {
@@ -524,11 +602,94 @@ namespace ProtoBuf.Data
             ProtoReader.EndSubItem(token, reader);
         }
 
-        private void ErrorIfClosed()
+        private long CopyArray(Array source, long fieldOffset, Array buffer, int bufferOffset, int length)
         {
-            if (IsClosed)
+            // Partial implementation of SqlDataReader.GetBytes.
+            if (fieldOffset < 0)
             {
-                throw new InvalidOperationException("Attempt to access ProtoDataReader which was already closed.");
+                throw new InvalidOperationException("Invalid value for argument 'fieldOffset'. The value must be greater than or equal to 0.");
+            }
+
+            if (length < 0)
+            {
+                throw new IndexOutOfRangeException($"Data length '{length}' is less than 0.");
+            }
+
+            var copyLength = source.LongLength;
+
+            if (buffer == null)
+            {
+                return copyLength;
+            }
+
+            if (bufferOffset < 0 || bufferOffset >= buffer.Length)
+            {
+                throw new ArgumentOutOfRangeException("bufferOffset", $"Invalid destination buffer (size of {buffer.Length}) offset: {bufferOffset}.");
+            }
+
+            if (copyLength + bufferOffset > buffer.Length)
+            {
+                throw new IndexOutOfRangeException($"Buffer offset '{bufferOffset}' plus the elements available '{copyLength}' is greater than the length of the passed in buffer.");
+            }
+
+            if (fieldOffset >= copyLength)
+            {
+                return 0;
+            }
+
+            if (fieldOffset + length > copyLength)
+            {
+                copyLength = copyLength - fieldOffset;
+            }
+            else
+            {
+                copyLength = length;
+            }
+
+            Array.Copy(source, fieldOffset, buffer, bufferOffset, copyLength);
+
+            return copyLength;
+        }
+
+#if NET45 || NETSTANDARD20
+        private void ThrowIfClosed([CallerMemberName]string memberName = "")
+        {
+            if (this.IsClosed)
+            {
+                throw new InvalidOperationException($"Invalid attempt to call {memberName} when reader is closed.");
+            }
+        }
+#else
+        private void ThrowIfClosed()
+        {
+            if (this.IsClosed)
+            {
+                throw new InvalidOperationException("Invalid attempt to call method when reader is closed.");
+            }
+        }
+#endif
+
+        private void ThrowIfIndexOutOfRange(int i)
+        {
+            if (i < 0 || i >= this.dataTable.Columns.Count)
+            {
+                throw new IndexOutOfRangeException();
+            }
+        }
+
+        private void ThrowIfNoData()
+        {
+            if (reachedEndOfCurrentTable || this.currentRow == null)
+            {
+                throw new InvalidOperationException("Invalid attempt to read when no data is present.");
+            }
+        }
+
+        private void ThrowIfNoValueIsNull(int i)
+        {
+            if (this.currentRow[i] == null)
+            {
+                throw new InvalidOperationException("Invalid attempt to read when no data is present.");
             }
         }
     }
