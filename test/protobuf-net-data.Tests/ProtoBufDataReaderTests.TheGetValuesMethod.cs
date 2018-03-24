@@ -19,7 +19,7 @@ namespace ProtoBuf.Data.Tests
                 dataReader.Close();
 
                 // Assert
-                Assert.Throws<ArgumentNullException>("values", () => dataReader.GetValues(null));
+                Assert.Throws<ArgumentNullException>(() => dataReader.GetValues(null));
             }
 
             [Fact]
@@ -59,7 +59,7 @@ namespace ProtoBuf.Data.Tests
                 dataReader.GetValues(result);
 
                 // Assert
-                Assert.Equal(new[] { value }, result);
+                Assert.Equal(new object[] { value }, result);
             }
 
             [Fact]

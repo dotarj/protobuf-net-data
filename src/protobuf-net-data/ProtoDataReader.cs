@@ -92,7 +92,7 @@ namespace ProtoBuf.Data
             }
         }
 
-        public bool IsClosed { get; private set; }
+        public bool IsClosed => this.disposed;
 
         /// <summary>
         /// Gets the number of rows changed, inserted, or deleted. 
@@ -341,8 +341,7 @@ namespace ProtoBuf.Data
 
         public void Close()
         {
-            stream.Close();
-            IsClosed = true;
+            this.Dispose();
         }
 
         public bool NextResult()

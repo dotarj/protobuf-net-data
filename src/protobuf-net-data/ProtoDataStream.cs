@@ -30,17 +30,19 @@ namespace ProtoBuf.Data
     /// <remarks>Not guaranteed to be thread safe.</remarks>
     public class ProtoDataStream : Stream
     {
+        private const int ProtoWriterBufferSize = 1024;
+
         /// <summary>
         /// Buffer size.
         /// </summary>
-        public const int DefaultBufferSize = 128 * 1024;
+        public const int DefaultBufferSize = 128 * ProtoWriterBufferSize;
 
         private readonly ProtoDataWriterOptions options;
         private readonly ProtoDataColumnFactory columnFactory;
 
         private IDataReader reader;
         private ProtoWriter writer;
-        private Stream bufferStream;
+        private CircularStream bufferStream;
         private bool disposed;
         private int resultIndex;
         private bool isHeaderWritten;
@@ -127,8 +129,8 @@ namespace ProtoBuf.Data
         /// You should not need to change this unless you have exceptionally
         /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(
-            IDataReader reader, 
-            ProtoDataWriterOptions options, 
+            IDataReader reader,
+            ProtoDataWriterOptions options,
             int bufferSize = DefaultBufferSize)
         {
             if (reader == null)
@@ -157,7 +159,7 @@ namespace ProtoBuf.Data
 
         public override bool CanRead
         {
-            get { return true; }
+            get { return !disposed; }
         }
 
         public override bool CanSeek
@@ -179,6 +181,10 @@ namespace ProtoBuf.Data
         {
             get
             {
+                if (readerIsClosed)
+                {
+                    throw new InvalidOperationException("Reader is closed.");
+                }
                 return bufferStream.Position;
             }
 
@@ -222,31 +228,18 @@ namespace ProtoBuf.Data
             throw new InvalidOperationException("This is a stream for reading serialized bytes. Writing is not supported.");
         }
 
-        public override void Close()
-        {
-            readerIsClosed = true;
-            if (reader != null)
-            {
-                reader.Close();
-            }
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (!disposed)
             {
                 if (disposing)
                 {
+                    CloseReader();
+
                     if (writer != null)
                     {
                         ((IDisposable)writer).Dispose();
                         writer = null;
-                    }
-
-                    if (reader != null)
-                    {
-                        reader.Dispose();
-                        reader = null;
                     }
 
                     if (bufferStream != null)
@@ -258,6 +251,17 @@ namespace ProtoBuf.Data
 
                 disposed = true;
             }
+        }
+
+        private void CloseReader()
+        {
+            if (this.reader != null)
+            {
+                this.reader.Dispose();
+                this.reader = null;
+            }
+
+            this.readerIsClosed = true;
         }
 
         private void WriteHeaderIfRequired()
@@ -285,7 +289,9 @@ namespace ProtoBuf.Data
             WriteHeaderIfRequired();
 
             // write the rows
-            while (bufferStream.Length < requestedLength)
+            while (this.bufferStream.Length < requestedLength &&
+                   // protobuf-net not always return 1024 byte, so buffer can owerflow
+                   bufferStream.Capacity - bufferStream.Length >= ProtoWriterBufferSize)
             {
                 // NB protobuf-net only flushes every 1024 bytes. So
                 // it might take a few iterations for bufferStream.Length to
@@ -308,8 +314,9 @@ namespace ProtoBuf.Data
                     else
                     {
                         // All done, no more results.
+                        // little optimization
                         writer.Close();
-                        Close();
+                        CloseReader();
                     }
 
                     break;

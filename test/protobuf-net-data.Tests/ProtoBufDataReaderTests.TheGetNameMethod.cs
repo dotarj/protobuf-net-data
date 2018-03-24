@@ -48,7 +48,7 @@ namespace ProtoBuf.Data.Tests
                 var result = dataReader.GetName(0);
 
                 // Assert
-                Assert.Equal(dataTable.Columns[0].ColumnName, result);
+                Assert.Contains(dataTable.Columns[0].ColumnName, result);
             }
         }
     }
