@@ -20,7 +20,9 @@ namespace ProtoBuf.Data
     using System.Data;
     using System.IO;
     using ProtoBuf.Data.Internal;
+#if NET45 || NETSTANDARD20
     using System.Runtime.CompilerServices;
+#endif
 
     /// <summary>
     /// A custom <see cref="System.Data.IDataReader"/> for de-serializing a protocol-buffer binary stream back
@@ -33,11 +35,11 @@ namespace ProtoBuf.Data
         private Stream stream;
         private object[] currentRow;
         private DataTable dataTable;
-        private bool disposed;
         private ProtoReader reader;
         private int currentField;
         private SubItemToken currentTableToken;
         private bool reachedEndOfCurrentTable;
+        private bool isClosed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProtoDataReader"/> class. 
@@ -92,7 +94,7 @@ namespace ProtoBuf.Data
             }
         }
 
-        public bool IsClosed => this.disposed;
+        public bool IsClosed => this.isClosed;
 
         /// <summary>
         /// Gets the number of rows changed, inserted, or deleted. 
@@ -341,7 +343,25 @@ namespace ProtoBuf.Data
 
         public void Close()
         {
-            this.Dispose();
+            if (this.reader != null)
+            {
+                this.reader.Dispose();
+                this.reader = null;
+            }
+
+            if (this.stream != null)
+            {
+                this.stream.Dispose();
+                this.stream = null;
+            }
+
+            if (this.dataTable != null)
+            {
+                this.dataTable.Dispose();
+                this.dataTable = null;
+            }
+
+            this.isClosed = true;
         }
 
         public bool NextResult()
@@ -398,36 +418,15 @@ namespace ProtoBuf.Data
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         private void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (disposing)
             {
-                if (disposing)
-                {
-                    if (reader != null)
-                    {
-                        reader.Dispose();
-                        reader = null;
-                    }
-
-                    if (stream != null)
-                    {
-                        stream.Dispose();
-                        stream = null;
-                    }
-
-                    if (dataTable != null)
-                    {
-                        dataTable.Dispose();
-                        dataTable = null;
-                    }
-                }
-
-                disposed = true;
+                this.Close();
             }
         }
 
