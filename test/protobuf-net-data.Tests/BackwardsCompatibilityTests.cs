@@ -18,7 +18,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using SharpTestsEx;
 using Xunit;
 
 namespace ProtoBuf.Data.Tests
@@ -81,7 +80,7 @@ namespace ProtoBuf.Data.Tests
                     using (IDataReader reader = DataSerializer.Deserialize(stream))
                         actual.Load(reader, LoadOption.PreserveChanges, "A", "B", "C", "D");
 
-                    actual.HasErrors.Should().Be.False();
+                    Assert.False(actual.HasErrors);
 
                     TestHelper.AssertContentsEqual(expected, actual);
                 }
@@ -105,7 +104,7 @@ namespace ProtoBuf.Data.Tests
 
                     stream.Seek(0, SeekOrigin.Begin);
 
-                    stream.GetBuffer().Take(expected.Length).Should().Have.SameSequenceAs(expected);
+                    Assert.Equal(expected, stream.GetBuffer().Take(expected.Length));
                 }
             }
 
@@ -125,11 +124,11 @@ namespace ProtoBuf.Data.Tests
 
                     stream.Seek(0, SeekOrigin.Begin);
 
-                    stream.GetBuffer().Take(expected.Length).Should().Have.SameSequenceAs(expected);
+                    Assert.Equal(expected, stream.GetBuffer().Take(expected.Length));
                 }
             }
 
-            //[Fact]
+            [Fact]
             //[Ignore("Only when our binary format changes (and we don't care about breaking old versions).")]
             private void RegenerateTestFile()
             {

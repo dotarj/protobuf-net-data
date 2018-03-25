@@ -88,7 +88,7 @@ namespace ProtoBuf.Data.Tests
                 dataReader.Read();
 
                 // Assert
-                Assert.Throws<ArgumentOutOfRangeException>("bufferOffset", () => dataReader.GetChars(0, 0, new char[1], -1, 1));
+                Assert.Throws<ArgumentOutOfRangeException>(() => dataReader.GetChars(0, 0, new char[1], -1, 1));
             }
 
             [Fact]
@@ -100,7 +100,7 @@ namespace ProtoBuf.Data.Tests
                 dataReader.Read();
 
                 // Assert
-                Assert.Throws<ArgumentOutOfRangeException>("bufferOffset", () => dataReader.GetChars(0, 0, new char[1], 10, 1));
+                Assert.Throws<ArgumentOutOfRangeException>(() => dataReader.GetChars(0, 0, new char[1], 10, 1));
             }
 
             [Fact]
@@ -112,7 +112,7 @@ namespace ProtoBuf.Data.Tests
                 dataReader.Read();
 
                 // Assert
-                Assert.Throws<ArgumentOutOfRangeException>("bufferOffset", () => dataReader.GetChars(0, 0, new char[1], 1, 1));
+                Assert.Throws<ArgumentOutOfRangeException>(() => dataReader.GetChars(0, 0, new char[1], 1, 1));
             }
 
             [Fact]

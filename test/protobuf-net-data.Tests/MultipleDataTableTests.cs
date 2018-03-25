@@ -15,7 +15,6 @@
 using System;
 using System.Data;
 using System.IO;
-using SharpTestsEx;
 using Xunit;
 
 namespace ProtoBuf.Data.Tests
@@ -79,7 +78,7 @@ namespace ProtoBuf.Data.Tests
                 dataSet = new DataSet();
 
                 var tableWithNoRows = new DataTable();
-                tableWithNoRows.Columns.Add("ColumnA", typeof (Guid));
+                tableWithNoRows.Columns.Add("ColumnA", typeof(Guid));
 
                 var c = new[]
                             {
@@ -87,7 +86,7 @@ namespace ProtoBuf.Data.Tests
                                 new object[] {9},
                                 new object[] {8}
                             };
-                
+
                 dataSet.Tables.Add(TestData.FromMatrix(a));
                 dataSet.Tables.Add(TestData.FromMatrix(b));
                 dataSet.Tables.Add(tableWithNoRows);
@@ -115,44 +114,44 @@ namespace ProtoBuf.Data.Tests
             [Fact]
             public void Should_produce_the_same_number_of_tables()
             {
-                reader.GetSchemaTable().Rows.Count.Should().Be(1);
-                reader.Read().Should().Be.True();
-                reader.GetInt32(0).Should().Be(0);
-                reader.Read().Should().Be.True();
-                reader.GetInt32(0).Should().Be(1);
-                reader.Read().Should().Be.True();
-                reader.GetInt32(0).Should().Be(2);
-                reader.GetSchemaTable().Rows.Count.Should().Be(1);
+                Assert.Equal(1, reader.GetSchemaTable().Rows.Count);
+                Assert.True(reader.Read());
+                Assert.Equal(0, reader.GetInt32(0));
+                Assert.True(reader.Read());
+                Assert.Equal(1, reader.GetInt32(0));
+                Assert.True(reader.Read());
+                Assert.Equal(2, reader.GetInt32(0));
+                Assert.Equal(1, reader.GetSchemaTable().Rows.Count);
 
-                reader.NextResult().Should().Be.True();
+                Assert.True(reader.NextResult());
 
 
-                reader.GetSchemaTable().Rows.Count.Should().Be(2);
-                reader.Read().Should().Be.True();
-                reader.GetString(0).Should().Be("A");
-                reader.Read().Should().Be.True();
-                reader.GetString(0).Should().Be("B");
-                reader.GetSchemaTable().Rows.Count.Should().Be(2);
+                Assert.Equal(2, reader.GetSchemaTable().Rows.Count);
+                Assert.True(reader.Read());
+                Assert.Equal("A", reader.GetString(0));
+                Assert.True(reader.Read());
+                Assert.Equal("B", reader.GetString(0));
+                Assert.Equal(2, reader.GetSchemaTable().Rows.Count);
 
-                reader.NextResult().Should().Be.True();
-                reader.GetSchemaTable().Rows.Count.Should().Be(1);
-                reader.Read().Should().Be.False();
-                reader.GetSchemaTable().Rows.Count.Should().Be(1);
+                Assert.True(reader.NextResult());
+                Assert.Equal(1, reader.GetSchemaTable().Rows.Count);
+                Assert.False(reader.Read());
+                Assert.Equal(1, reader.GetSchemaTable().Rows.Count);
 
-                reader.NextResult().Should().Be.True();
-                reader.GetSchemaTable().Rows.Count.Should().Be(0);
-                reader.Read().Should().Be.False();
-                reader.GetSchemaTable().Rows.Count.Should().Be(0);
-                reader.NextResult().Should().Be.True();
+                Assert.True(reader.NextResult());
+                Assert.Equal(0, reader.GetSchemaTable().Rows.Count);
+                Assert.False(reader.Read());
+                Assert.Equal(0, reader.GetSchemaTable().Rows.Count);
+                Assert.True(reader.NextResult());
 
-                reader.GetSchemaTable().Rows.Count.Should().Be(1);
-                reader.Read().Should().Be.True();
-                reader.GetInt32(0).Should().Be(9);
-                reader.Read().Should().Be.True();
-                reader.GetInt32(0).Should().Be(8);
-                reader.Read().Should().Be.False();
-                reader.GetSchemaTable().Rows.Count.Should().Be(1);
-                reader.NextResult().Should().Be.False();
+                Assert.Equal(1, reader.GetSchemaTable().Rows.Count);
+                Assert.True(reader.Read());
+                Assert.Equal(9, reader.GetInt32(0));
+                Assert.True(reader.Read());
+                Assert.Equal(8, reader.GetInt32(0));
+                Assert.False(reader.Read());
+                Assert.Equal(1, reader.GetSchemaTable().Rows.Count);
+                Assert.False(reader.NextResult());
             }
         }
 
@@ -197,19 +196,19 @@ namespace ProtoBuf.Data.Tests
             [Fact]
             public void Should_produce_the_same_number_of_tables()
             {
-                reader.GetSchemaTable().Rows.Count.Should().Be(0);
-                reader.Read().Should().Be.False();
-                reader.GetSchemaTable().Rows.Count.Should().Be(0);
-                reader.NextResult().Should().Be.True();
+                Assert.Equal(0, reader.GetSchemaTable().Rows.Count);
+                Assert.False(reader.Read());
+                Assert.Equal(0, reader.GetSchemaTable().Rows.Count);
+                Assert.True(reader.NextResult());
 
-                reader.GetSchemaTable().Rows.Count.Should().Be(2);
-                reader.Read().Should().Be.True();
-                reader.GetInt32(0).Should().Be(9);
-                reader.Read().Should().Be.True();
-                reader.GetInt32(0).Should().Be(8);
-                reader.Read().Should().Be.False();
-                reader.GetSchemaTable().Rows.Count.Should().Be(2);
-                reader.NextResult().Should().Be.False();
+                Assert.Equal(2, reader.GetSchemaTable().Rows.Count);
+                Assert.True(reader.Read());
+                Assert.Equal(9, reader.GetInt32(0));
+                Assert.True(reader.Read());
+                Assert.Equal(8, reader.GetInt32(0));
+                Assert.False(reader.Read());
+                Assert.Equal(2, reader.GetSchemaTable().Rows.Count);
+                Assert.False(reader.NextResult());
             }
         }
 
@@ -224,7 +223,7 @@ namespace ProtoBuf.Data.Tests
                 dataSet = new DataSet();
 
                 var tableWithNoRows = new DataTable();
-                tableWithNoRows.Columns.Add("Something", typeof (DateTime));
+                tableWithNoRows.Columns.Add("Something", typeof(DateTime));
                 var c = new[]
                             {
                                 new object[] {"Number", "Letter"},
@@ -255,19 +254,19 @@ namespace ProtoBuf.Data.Tests
             [Fact]
             public void Should_produce_the_same_number_of_tables()
             {
-                reader.GetSchemaTable().Rows.Count.Should().Be(1);
-                reader.Read().Should().Be.False();
-                reader.GetSchemaTable().Rows.Count.Should().Be(1);
-                reader.NextResult().Should().Be.True();
+                Assert.Equal(1, reader.GetSchemaTable().Rows.Count);
+                Assert.False(reader.Read());
+                Assert.Equal(1, reader.GetSchemaTable().Rows.Count);
+                Assert.True(reader.NextResult());
 
-                reader.GetSchemaTable().Rows.Count.Should().Be(2);
-                reader.Read().Should().Be.True();
-                reader.GetInt32(0).Should().Be(9);
-                reader.Read().Should().Be.True();
-                reader.GetInt32(0).Should().Be(8);
-                reader.Read().Should().Be.False();
-                reader.GetSchemaTable().Rows.Count.Should().Be(2);
-                reader.NextResult().Should().Be.False();
+                Assert.Equal(2, reader.GetSchemaTable().Rows.Count);
+                Assert.True(reader.Read());
+                Assert.Equal(9, reader.GetInt32(0));
+                Assert.True(reader.Read());
+                Assert.Equal(8, reader.GetInt32(0));
+                Assert.False(reader.Read());
+                Assert.Equal(2, reader.GetSchemaTable().Rows.Count);
+                Assert.False(reader.NextResult());
             }
         }
     }

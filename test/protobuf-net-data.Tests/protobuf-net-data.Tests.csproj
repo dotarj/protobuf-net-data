@@ -3,7 +3,7 @@
   <PropertyGroup>
     <DebugType Condition="$(codecov) == 'true'">full</DebugType>
     <IsPackable>false</IsPackable>
-    <TargetFramework>net471</TargetFramework>
+    <TargetFrameworks>net40;net471;netcoreapp2.0</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
@@ -11,13 +11,26 @@
     <ProjectReference Include="..\..\src\protobuf-net-data\protobuf-net-data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
-    <PackageReference Include="Moq" Version="4.8.1" />
-    <PackageReference Include="xunit" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
-    <PackageReference Include="RhinoMocks" Version="3.6.1" />
-    <PackageReference Include="SharpTestsEx" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <PackageReference Include="Moq" Version="4.2.1510.2205" />
+    <PackageReference Include="xunit" Version="1.9.2" />
+    <PackageReference Include="xunit.extensions" Version="1.9.2" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
+    <PackageReference Include="Moq" Version="4.8.*" />
+    <PackageReference Include="xunit" Version="2.3.1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -14,7 +14,7 @@
 
 using System.Data;
 using System.IO;
-using Rhino.Mocks;
+using Moq;
 using Xunit;
 
 namespace ProtoBuf.Data.Tests
@@ -61,7 +61,7 @@ namespace ProtoBuf.Data.Tests
         {
             DataTable originalTable;
 
-            class Foo {}
+            class Foo { }
 
             public When_serializing_an_unsupported_type()
             {
@@ -86,7 +86,7 @@ namespace ProtoBuf.Data.Tests
             public When_serializing_a_data_table_with_no_rows()
             {
                 originalTable = new DataTable();
-                originalTable.Columns.Add("ColumnA", typeof (int));
+                originalTable.Columns.Add("ColumnA", typeof(int));
 
                 deserializedTable = TestHelper.SerializeAndDeserialize(originalTable);
             }
@@ -134,7 +134,7 @@ namespace ProtoBuf.Data.Tests
                 originalTable = TestData.FromMatrix(matrix);
 
                 var computed = TestData.FromMatrix(matrix);
-                computed.Columns.Add(new DataColumn("C", typeof (int), "A+B"));
+                computed.Columns.Add(new DataColumn("C", typeof(int), "A+B"));
 
                 deserializedTable = TestHelper.SerializeAndDeserialize(computed);
             }
@@ -163,7 +163,7 @@ namespace ProtoBuf.Data.Tests
                 originalTable = TestData.FromMatrix(matrix);
                 originalTable.Columns.Add(new DataColumn("C", typeof(int), "A+B"));
 
-                deserializedTable = TestHelper.SerializeAndDeserialize(originalTable, 
+                deserializedTable = TestHelper.SerializeAndDeserialize(originalTable,
                     new ProtoDataWriterOptions { IncludeComputedColumns = true });
             }
 
@@ -186,17 +186,20 @@ namespace ProtoBuf.Data.Tests
                                      new object[] {1, 2},
                                      new object[] {10, 20},
                                  };
-                
+
                 using (var table = TestData.FromMatrix(matrix))
                 using (var reader = table.CreateDataReader())
                 using (var schemaTable = reader.GetSchemaTable())
                 {
-                    var originalReader = MockRepository.GenerateMock<IDataReader>();
+                    var moqReader = new Mock<IDataReader>();
+                    moqReader.Setup(r => r.GetSchemaTable()).Returns(schemaTable).Verifiable();
+                    var originalReader = moqReader.Object;
                     schemaTable.Columns.Remove("Expression");
-                    originalReader.Stub(r => r.GetSchemaTable()).Return(schemaTable);
 
                     using (var stream = Stream.Null)
                         new ProtoDataWriter().Serialize(stream, originalReader);
+
+                    moqReader.Verify();
                 }
             }
         }
