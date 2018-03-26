@@ -1,26 +1,13 @@
-﻿// Copyright 2012 Richard Dingwall - http://richarddingwall.name
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+﻿// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
-#pragma warning disable 1591
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using ProtoBuf.Data.Internal;
+
 namespace ProtoBuf.Data
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using ProtoBuf.Data.Internal;
-
     /// <summary>
     /// Serializes an <see cref="System.Data.IDataReader"/> to a binary stream
     /// which can be read (it serializes additional rows with subsequent calls
@@ -30,12 +17,12 @@ namespace ProtoBuf.Data
     /// <remarks>Not guaranteed to be thread safe.</remarks>
     public class ProtoDataStream : Stream
     {
-        private const int ProtoWriterBufferSize = 1024;
-
         /// <summary>
         /// Buffer size.
         /// </summary>
         public const int DefaultBufferSize = 128 * ProtoWriterBufferSize;
+
+        private const int ProtoWriterBufferSize = 1024;
 
         private readonly ProtoDataWriterOptions options;
         private readonly ProtoDataColumnFactory columnFactory;
@@ -54,7 +41,7 @@ namespace ProtoBuf.Data
         /// Initializes a new instance of the <see cref="ProtoDataStream"/> class.
         /// </summary>
         /// <param name="dataSet">The <see cref="DataSet"/>who's contents to serialize.</param>
-        /// <param name="bufferSize">Buffer size to use when serializing rows. 
+        /// <param name="bufferSize">Buffer size to use when serializing rows.
         /// You should not need to change this unless you have exceptionally
         /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(
@@ -68,7 +55,7 @@ namespace ProtoBuf.Data
         /// </summary>
         /// <param name="dataSet">The <see cref="DataSet"/>who's contents to serialize.</param>
         /// <param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
-        /// <param name="bufferSize">Buffer size to use when serializing rows. 
+        /// <param name="bufferSize">Buffer size to use when serializing rows.
         /// You should not need to change this unless you have exceptionally
         /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(
@@ -83,7 +70,7 @@ namespace ProtoBuf.Data
         /// Initializes a new instance of the <see cref="ProtoDataStream"/> class.
         /// </summary>
         /// <param name="dataTable">The <see cref="DataTable"/>who's contents to serialize.</param>
-        /// <param name="bufferSize">Buffer size to use when serializing rows. 
+        /// <param name="bufferSize">Buffer size to use when serializing rows.
         /// You should not need to change this unless you have exceptionally
         /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(
@@ -97,7 +84,7 @@ namespace ProtoBuf.Data
         /// </summary>
         /// <param name="dataTable">The <see cref="DataTable"/>who's contents to serialize.</param>
         /// <param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
-        /// <param name="bufferSize">Buffer size to use when serializing rows. 
+        /// <param name="bufferSize">Buffer size to use when serializing rows.
         /// You should not need to change this unless you have exceptionally
         /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(
@@ -112,7 +99,7 @@ namespace ProtoBuf.Data
         /// Initializes a new instance of the <see cref="ProtoDataStream"/> class.
         /// </summary>
         /// <param name="reader">The <see cref="IDataReader"/>who's contents to serialize.</param>
-        /// <param name="bufferSize">Buffer size to use when serializing rows. 
+        /// <param name="bufferSize">Buffer size to use when serializing rows.
         /// You should not need to change this unless you have exceptionally
         /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(IDataReader reader, int bufferSize = DefaultBufferSize)
@@ -125,7 +112,7 @@ namespace ProtoBuf.Data
         /// </summary>
         /// <param name="reader">The <see cref="IDataReader"/>who's contents to serialize.</param>
         /// <param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
-        /// <param name="bufferSize">Buffer size to use when serializing rows. 
+        /// <param name="bufferSize">Buffer size to use when serializing rows.
         /// You should not need to change this unless you have exceptionally
         /// large rows or an exceptionally high number of columns.</param>
         public ProtoDataStream(
@@ -146,20 +133,20 @@ namespace ProtoBuf.Data
             this.reader = reader;
             this.options = options;
 
-            resultIndex = 0;
-            columnFactory = new ProtoDataColumnFactory();
-            bufferStream = new CircularStream(bufferSize);
-            writer = new ProtoWriter(bufferStream, null, null);
+            this.resultIndex = 0;
+            this.columnFactory = new ProtoDataColumnFactory();
+            this.bufferStream = new CircularStream(bufferSize);
+            this.writer = new ProtoWriter(this.bufferStream, null, null);
         }
 
         ~ProtoDataStream()
         {
-            Dispose(false);
+            this.Dispose(false);
         }
 
         public override bool CanRead
         {
-            get { return !disposed; }
+            get { return !this.disposed; }
         }
 
         public override bool CanSeek
@@ -181,11 +168,12 @@ namespace ProtoBuf.Data
         {
             get
             {
-                if (readerIsClosed)
+                if (this.readerIsClosed)
                 {
                     throw new InvalidOperationException("Reader is closed.");
                 }
-                return bufferStream.Position;
+
+                return this.bufferStream.Position;
             }
 
             set
@@ -210,17 +198,17 @@ namespace ProtoBuf.Data
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (bufferStream.Length == 0 && readerIsClosed)
+            if (this.bufferStream.Length == 0 && this.readerIsClosed)
             {
                 return 0;
             }
 
-            if (!readerIsClosed)
+            if (!this.readerIsClosed)
             {
-                FillBuffer(count);
+                this.FillBuffer(count);
             }
 
-            return bufferStream.Read(buffer, offset, count);
+            return this.bufferStream.Read(buffer, offset, count);
         }
 
         public override void Write(byte[] buffer, int offset, int count)
@@ -230,26 +218,26 @@ namespace ProtoBuf.Data
 
         protected override void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (!this.disposed)
             {
                 if (disposing)
                 {
-                    CloseReader();
+                    this.CloseReader();
 
-                    if (writer != null)
+                    if (this.writer != null)
                     {
-                        ((IDisposable)writer).Dispose();
-                        writer = null;
+                        ((IDisposable)this.writer).Dispose();
+                        this.writer = null;
                     }
 
-                    if (bufferStream != null)
+                    if (this.bufferStream != null)
                     {
-                        bufferStream.Dispose();
-                        bufferStream = null;
+                        this.bufferStream.Dispose();
+                        this.bufferStream = null;
                     }
                 }
 
-                disposed = true;
+                this.disposed = true;
             }
         }
 
@@ -266,57 +254,56 @@ namespace ProtoBuf.Data
 
         private void WriteHeaderIfRequired()
         {
-            if (isHeaderWritten)
+            if (this.isHeaderWritten)
             {
                 return;
             }
 
-            ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);
+            ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, this.writer);
 
-            currentResultToken = ProtoWriter.StartSubItem(resultIndex, writer);
+            this.currentResultToken = ProtoWriter.StartSubItem(this.resultIndex, this.writer);
 
-            IList<ProtoDataColumn> columns = columnFactory.GetColumns(reader, options);
-            new HeaderWriter(writer).WriteHeader(columns);
+            IList<ProtoDataColumn> columns = this.columnFactory.GetColumns(this.reader, this.options);
+            new HeaderWriter(this.writer).WriteHeader(columns);
 
-            rowWriter = new RowWriter(writer, columns, options);
+            this.rowWriter = new RowWriter(this.writer, columns, this.options);
 
-            isHeaderWritten = true;
+            this.isHeaderWritten = true;
         }
 
         private void FillBuffer(int requestedLength)
         {
             // Only supports 1 data table currently.
-            WriteHeaderIfRequired();
+            this.WriteHeaderIfRequired();
 
             // write the rows
-            while (this.bufferStream.Length < requestedLength &&
-                   // protobuf-net not always return 1024 byte, so buffer can owerflow
-                   bufferStream.Capacity - bufferStream.Length >= ProtoWriterBufferSize)
+            // protobuf-net not always return 1024 byte, so buffer can owerflow
+            while (this.bufferStream.Length < requestedLength && this.bufferStream.Capacity - this.bufferStream.Length >= ProtoWriterBufferSize)
             {
                 // NB protobuf-net only flushes every 1024 bytes. So
                 // it might take a few iterations for bufferStream.Length to
                 // see any change.
-                if (reader.Read())
+                if (this.reader.Read())
                 {
-                    rowWriter.WriteRow(reader);
+                    this.rowWriter.WriteRow(this.reader);
                 }
                 else
                 {
-                    resultIndex++;
-                    ProtoWriter.EndSubItem(currentResultToken, writer);
+                    this.resultIndex++;
+                    ProtoWriter.EndSubItem(this.currentResultToken, this.writer);
 
-                    if (reader.NextResult())
+                    if (this.reader.NextResult())
                     {
                         // Start next data table.
-                        isHeaderWritten = false;
-                        FillBuffer(requestedLength);
+                        this.isHeaderWritten = false;
+                        this.FillBuffer(requestedLength);
                     }
                     else
                     {
                         // All done, no more results.
                         // little optimization
-                        writer.Close();
-                        CloseReader();
+                        this.writer.Close();
+                        this.CloseReader();
                     }
 
                     break;
@@ -325,5 +312,3 @@ namespace ProtoBuf.Data
         }
     }
 }
-
-#pragma warning restore 1591

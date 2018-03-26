@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+  "settings": {
+    "documentationRules": {
+      "copyrightText": "Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.",
+      "documentInternalElements": false,
+      "fileNamingConvention": "metadata",
+      "xmlHeader": false
+    },
+    "indentation": {
+      "indentationSize": 4
+    },
+    "orderingRules": {
+      "usingDirectivesPlacement": "outsideNamespace"
+    }
+  }
+}

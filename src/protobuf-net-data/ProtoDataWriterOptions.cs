@@ -1,21 +1,9 @@
-// Copyright 2012 Richard Dingwall - http://richarddingwall.name
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
+
+using System;
 
 namespace ProtoBuf.Data
 {
-    using System;
-
     /// <summary>
     /// Sets custom serialization options for the <see cref="ProtoDataWriter"/>.
     /// </summary>
@@ -57,7 +45,7 @@ namespace ProtoBuf.Data
                 return true;
             }
 
-            return other.SerializeEmptyArraysAsNull.Equals(SerializeEmptyArraysAsNull) && other.IncludeComputedColumns.Equals(IncludeComputedColumns);
+            return other.SerializeEmptyArraysAsNull.Equals(this.SerializeEmptyArraysAsNull) && other.IncludeComputedColumns.Equals(this.IncludeComputedColumns);
         }
 
         /// <summary>
@@ -66,7 +54,7 @@ namespace ProtoBuf.Data
         /// <returns>
         /// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
         /// </returns>
-        /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>. 
+        /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.
         /// </param><exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.
         /// </exception><filterpriority>2</filterpriority>
         public override bool Equals(object obj)
@@ -86,11 +74,11 @@ namespace ProtoBuf.Data
                 return false;
             }
 
-            return Equals((ProtoDataWriterOptions)obj);
+            return this.Equals((ProtoDataWriterOptions)obj);
         }
 
         /// <summary>
-        /// Serves as a hash function for a particular type. 
+        /// Serves as a hash function for a particular type.
         /// </summary>
         /// <returns>
         /// A hash code for the current <see cref="T:System.Object"/>.
@@ -100,7 +88,7 @@ namespace ProtoBuf.Data
         {
             unchecked
             {
-                return (SerializeEmptyArraysAsNull.GetHashCode() * 397) ^ IncludeComputedColumns.GetHashCode();
+                return (this.SerializeEmptyArraysAsNull.GetHashCode() * 397) ^ this.IncludeComputedColumns.GetHashCode();
             }
         }
     }
