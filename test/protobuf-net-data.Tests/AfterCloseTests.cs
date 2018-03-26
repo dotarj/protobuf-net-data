@@ -1,16 +1,4 @@
-// Copyright 2012 Richard Dingwall - http://richarddingwall.name
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
 using System;
 using System.Data;
@@ -29,112 +17,113 @@ namespace ProtoBuf.Data.Tests
 
             public When_the_reader_has_been_closed()
             {
-                stream = new MemoryStream();
+                this.stream = new MemoryStream();
                 using (var table = TestData.SmallDataTable())
                 using (var tableReader = table.CreateDataReader())
                 {
-                    DataSerializer.Serialize(stream, tableReader);
-                    stream.Seek(0, SeekOrigin.Begin);
+                    DataSerializer.Serialize(this.stream, tableReader);
+                    this.stream.Seek(0, SeekOrigin.Begin);
 
-                    reader = DataSerializer.Deserialize(stream);
+                    this.reader = DataSerializer.Deserialize(this.stream);
                 }
 
-                reader.Close();
+                this.reader.Close();
             }
 
             public void Dispose()
             {
-                reader.Dispose();
-                stream.Dispose();
+                this.reader.Dispose();
+                this.stream.Dispose();
             }
 
             [Fact]
             public void IsClosed_should_be_set()
             {
-                Assert.True(reader.IsClosed);
+                Assert.True(this.reader.IsClosed);
             }
 
             [Fact]
             public void Should_not_throw_an_exception_if_you_try_to_close_it_twice()
             {
-                reader.Close();
-                reader.Close();
+                this.reader.Close();
+                this.reader.Close();
             }
 
             [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_the_schema_table()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.GetSchemaTable());
+                Assert.Throws<InvalidOperationException>(() => this.reader.GetSchemaTable());
             }
 
             [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_the_field_count()
             {
                 int dummy;
-                Assert.Throws<InvalidOperationException>(() => dummy = reader.FieldCount);
+                Assert.Throws<InvalidOperationException>(() => dummy = this.reader.FieldCount);
             }
 
             [Fact]
             public void Should_not_throw_an_exception_if_you_try_to_get_the_number_of_records_affected()
             {
-                int dummy = reader.RecordsAffected;
+                int dummy = this.reader.RecordsAffected;
             }
 
             [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_the_depth()
             {
                 int dummy;
-                Assert.Throws<InvalidOperationException>(() => dummy = reader.Depth);
+                Assert.Throws<InvalidOperationException>(() => dummy = this.reader.Depth);
             }
 
             [Fact]
             public void Should_throw_an_exception_if_you_try_to_read()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.Read());
+                Assert.Throws<InvalidOperationException>(() => this.reader.Read());
             }
 
             [Fact]
             public void Should_throw_an_exception_if_you_try_to_move_to_the_next_result()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.NextResult());
+                Assert.Throws<InvalidOperationException>(() => this.reader.NextResult());
             }
 
             [Fact]
             public void Should_throw_an_exception_if_you_try_to_move_to_get_the_row()
             {
                 var dummy = new object[10];
-                Assert.Throws<InvalidOperationException>(() => reader.GetValues(dummy));
+                Assert.Throws<InvalidOperationException>(() => this.reader.GetValues(dummy));
             }
 
             [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_a_column_name()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.GetName(0));
+                Assert.Throws<InvalidOperationException>(() => this.reader.GetName(0));
             }
 
             [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_a_columns_ordinal_position()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.GetOrdinal("foo"));
+                Assert.Throws<InvalidOperationException>(() => this.reader.GetOrdinal("foo"));
             }
 
             [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_a_columns_value()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.GetValue(0));
+                Assert.Throws<InvalidOperationException>(() => this.reader.GetValue(0));
             }
 
             [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_a_columns_type()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.GetFieldType(0));
+                Assert.Throws<InvalidOperationException>(() => this.reader.GetFieldType(0));
             }
 
             [Fact]
             public void Should_throw_an_exception_if_you_try_to_get_a_columns_data_type_name()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.GetDataTypeName(0));
+                Assert.Throws<InvalidOperationException>(() => this.reader.GetDataTypeName(0));
             }
+
             [Fact]
             public void Should_clean_underlaying_stream()
             {
@@ -183,8 +172,8 @@ namespace ProtoBuf.Data.Tests
                 stream.Seek(0, SeekOrigin.Begin);
                 var reader = DataSerializer.Deserialize(stream);
 
-                streamRef = new WeakReference(stream);
-                readerRef = new WeakReference(reader);
+                this.streamRef = new WeakReference(stream);
+                this.readerRef = new WeakReference(reader);
 
                 reader.Dispose();
             }
@@ -202,30 +191,30 @@ namespace ProtoBuf.Data.Tests
 
         public class When_the_proto_stream_has_been_closed
         {
-            ProtoDataStream protoStream;
+            private ProtoDataStream protoStream;
 
             public When_the_proto_stream_has_been_closed()
             {
                 using (var table = TestData.SmallDataTable())
                 using (var tableReader = table.CreateDataReader())
                 {
-                    protoStream = new ProtoDataStream(tableReader);
+                    this.protoStream = new ProtoDataStream(tableReader);
                 }
 
-                protoStream.Close();
+                this.protoStream.Close();
             }
 
             [Fact]
             public void CanRead_should_be_false()
             {
-                Assert.False(protoStream.CanRead);
+                Assert.False(this.protoStream.CanRead);
             }
 
             [Fact]
             public void Should_not_throw_an_exception_if_you_try_to_close_it_twice()
             {
-                protoStream.Close();
-                protoStream.Close();
+                this.protoStream.Close();
+                this.protoStream.Close();
             }
 
             [Fact]
@@ -233,7 +222,7 @@ namespace ProtoBuf.Data.Tests
             {
                 Assert.Throws<InvalidOperationException>(() =>
                 {
-                    var p = protoStream.Position;
+                    var p = this.protoStream.Position;
                 });
             }
 
@@ -283,7 +272,7 @@ namespace ProtoBuf.Data.Tests
 
                 Assert.True(stream.CanRead);
 
-                weakRef = new WeakReference(stream);
+                this.weakRef = new WeakReference(stream);
 
                 stream.Dispose();
             }
@@ -294,7 +283,7 @@ namespace ProtoBuf.Data.Tests
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                Assert.False(weakRef.IsAlive);
+                Assert.False(this.weakRef.IsAlive);
             }
         }
     }
