@@ -143,16 +143,6 @@ namespace ProtoBuf.Data.Tests
                 var readerValue = field.GetValue(this.reader);
                 Assert.Null(readerValue);
             }
-
-            [Fact]
-            public void Should_clean_underlaying_dataTable()
-            {
-                var field = this.reader.GetType().GetField("dataTable", BindingFlags.NonPublic | BindingFlags.Instance);
-                Assert.NotNull(field);
-
-                var dataTableValue = field.GetValue(this.reader);
-                Assert.Null(dataTableValue);
-            }
         }
 
         public class When_the_reader_has_been_disposed

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using ProtoBuf.Data.Internal;
 #if NET45 || NETSTANDARD20
@@ -18,16 +19,11 @@ namespace ProtoBuf.Data
     /// </summary>
     public sealed class ProtoDataReader : IDataReader
     {
-        private readonly List<ColReader> colReaders;
-
+        private readonly ProtoReaderContext context;
         private Stream stream;
-        private object[] currentRow;
-        private DataTable dataTable;
         private ProtoReader reader;
-        private int currentField;
-        private SubItemToken currentTableToken;
-        private bool reachedEndOfCurrentTable;
         private bool isClosed;
+        private DataTable schemaTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProtoDataReader"/> class.
@@ -44,15 +40,9 @@ namespace ProtoBuf.Data
 
             this.stream = stream;
             this.reader = new ProtoReader(stream, null, null);
-            this.colReaders = new List<ColReader>();
+            this.context = new ProtoReaderContext(this.reader);
 
-            this.AdvanceToNextField();
-            if (this.currentField != 1)
-            {
-                throw new InvalidOperationException("No results found! Invalid/corrupt stream.");
-            }
-
-            this.ReadNextTableHeader();
+            ResultReader.ReadResult(this.context);
         }
 
         ~ProtoDataReader()
@@ -60,15 +50,13 @@ namespace ProtoBuf.Data
             this.Dispose(false);
         }
 
-        private delegate object ColReader();
-
         public int FieldCount
         {
             get
             {
                 this.ThrowIfClosed();
 
-                return this.dataTable.Columns.Count;
+                return this.context.Columns.Count;
             }
         }
 
@@ -114,7 +102,7 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfIndexOutOfRange(i);
 
-            return this.dataTable.Columns[i].ColumnName;
+            return this.context.Columns[i].Name;
         }
 
         public string GetDataTypeName(int i)
@@ -122,7 +110,7 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfIndexOutOfRange(i);
 
-            return this.dataTable.Columns[i].DataType.Name;
+            return this.context.Columns[i].DataType.Name;
         }
 
         public Type GetFieldType(int i)
@@ -130,7 +118,7 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfIndexOutOfRange(i);
 
-            return this.dataTable.Columns[i].DataType;
+            return this.context.Columns[i].DataType;
         }
 
         public object GetValue(int i)
@@ -139,7 +127,7 @@ namespace ProtoBuf.Data
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
 
-            return this.currentRow[i];
+            return this.context.Buffers[i].Value;
         }
 
         public int GetValues(object[] values)
@@ -149,25 +137,28 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
 
-            int length = Math.Min(values.Length, this.dataTable.Columns.Count);
+            var valuesCount = values.Length < this.context.Columns.Count ? values.Length : this.context.Columns.Count;
 
-            Array.Copy(this.currentRow, values, length);
+            for (var i = 0; i < valuesCount; i++)
+            {
+                values[i] = this.context.Buffers[i].Value;
+            }
 
-            return length;
+            return valuesCount;
         }
 
         public int GetOrdinal(string name)
         {
             this.ThrowIfClosed();
 
-            var column = this.dataTable.Columns[name];
+            var ordinal = this.GetColumnOrdinalByName(name);
 
-            if (column == null)
+            if (!ordinal.HasValue)
             {
                 throw new IndexOutOfRangeException(name);
             }
 
-            return column.Ordinal;
+            return ordinal.Value;
         }
 
         public bool GetBoolean(int i)
@@ -177,7 +168,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return (bool)this.currentRow[i];
+            return this.context.Buffers[i].Bool;
         }
 
         public byte GetByte(int i)
@@ -187,7 +178,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return (byte)this.currentRow[i];
+            return this.context.Buffers[i].Byte;
         }
 
         public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferOffset, int length)
@@ -197,7 +188,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return this.CopyArray((byte[])this.currentRow[i], fieldOffset, buffer, bufferOffset, length);
+            return this.CopyArray(this.context.Buffers[i].ByteArray, fieldOffset, buffer, bufferOffset, length);
         }
 
         public char GetChar(int i)
@@ -207,7 +198,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return (char)this.currentRow[i];
+            return this.context.Buffers[i].Char;
         }
 
         public long GetChars(int i, long fieldOffset, char[] buffer, int bufferOffset, int length)
@@ -217,7 +208,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return this.CopyArray((char[])this.currentRow[i], fieldOffset, buffer, bufferOffset, length);
+            return this.CopyArray(this.context.Buffers[i].CharArray, fieldOffset, buffer, bufferOffset, length);
         }
 
         public Guid GetGuid(int i)
@@ -227,7 +218,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return (Guid)this.currentRow[i];
+            return this.context.Buffers[i].Guid;
         }
 
         public short GetInt16(int i)
@@ -237,7 +228,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return (short)this.currentRow[i];
+            return this.context.Buffers[i].Short;
         }
 
         public int GetInt32(int i)
@@ -247,7 +238,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return (int)this.currentRow[i];
+            return this.context.Buffers[i].Int;
         }
 
         public long GetInt64(int i)
@@ -257,7 +248,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return (long)this.currentRow[i];
+            return this.context.Buffers[i].Long;
         }
 
         public float GetFloat(int i)
@@ -267,7 +258,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return (float)this.currentRow[i];
+            return this.context.Buffers[i].Float;
         }
 
         public double GetDouble(int i)
@@ -277,7 +268,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return (double)this.currentRow[i];
+            return this.context.Buffers[i].Double;
         }
 
         public string GetString(int i)
@@ -287,7 +278,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return (string)this.currentRow[i];
+            return this.context.Buffers[i].String;
         }
 
         public decimal GetDecimal(int i)
@@ -297,7 +288,7 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return (decimal)this.currentRow[i];
+            return this.context.Buffers[i].Decimal;
         }
 
         public DateTime GetDateTime(int i)
@@ -307,17 +298,12 @@ namespace ProtoBuf.Data
             this.ThrowIfIndexOutOfRange(i);
             this.ThrowIfNoValueIsNull(i);
 
-            return (DateTime)this.currentRow[i];
+            return this.context.Buffers[i].DateTime;
         }
 
-        public IDataReader GetData(int i)
+        IDataReader IDataRecord.GetData(int i)
         {
-            this.ThrowIfClosed();
-            this.ThrowIfNoData();
-            this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
-
-            return ((DataTable)this.currentRow[i]).CreateDataReader();
+            throw new NotSupportedException();
         }
 
         public bool IsDBNull(int i)
@@ -326,7 +312,7 @@ namespace ProtoBuf.Data
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
 
-            return this.currentRow[i] == null || this.currentRow[i] is DBNull;
+            return this.context.Buffers[i].IsNull;
         }
 
         public void Close()
@@ -343,12 +329,6 @@ namespace ProtoBuf.Data
                 this.stream = null;
             }
 
-            if (this.dataTable != null)
-            {
-                this.dataTable.Dispose();
-                this.dataTable = null;
-            }
-
             this.isClosed = true;
         }
 
@@ -358,50 +338,29 @@ namespace ProtoBuf.Data
 
             this.ConsumeAnyRemainingRows();
 
-            this.AdvanceToNextField();
+            this.schemaTable = null;
+            this.context.Columns = new List<ProtoBufDataColumn>();
 
-            if (this.currentField == 0)
-            {
-                return false;
-            }
-
-            this.reachedEndOfCurrentTable = false;
-
-            this.ReadNextTableHeader();
-
-            return true;
+            return ResultReader.ReadResult(this.context);
         }
 
         public DataTable GetSchemaTable()
         {
             this.ThrowIfClosed();
 
-            using (var schemaReader = this.dataTable.CreateDataReader())
+            if (this.schemaTable == null)
             {
-                return schemaReader.GetSchemaTable();
+                this.schemaTable = this.BuildSchemaTable();
             }
+
+            return this.schemaTable;
         }
 
         public bool Read()
         {
             this.ThrowIfClosed();
 
-            if (this.reachedEndOfCurrentTable)
-            {
-                return false;
-            }
-
-            if (this.currentField == 0)
-            {
-                ProtoReader.EndSubItem(this.currentTableToken, this.reader);
-                this.reachedEndOfCurrentTable = true;
-                return false;
-            }
-
-            this.ReadCurrentRow();
-            this.AdvanceToNextField();
-
-            return true;
+            return RecordReader.ReadRecord(this.context);
         }
 
         public void Dispose()
@@ -418,6 +377,59 @@ namespace ProtoBuf.Data
             }
         }
 
+        private int? GetColumnOrdinalByName(string name)
+        {
+            for (var ordinal = 0; ordinal < this.context.Columns.Count; ordinal++)
+            {
+                if (name == this.context.Columns[ordinal].Name)
+                {
+                    return ordinal;
+                }
+            }
+
+            return null;
+        }
+
+        private DataTable BuildSchemaTable()
+        {
+            var schemaTable = new DataTable("SchemaTable")
+            {
+                Locale = CultureInfo.InvariantCulture,
+                MinimumCapacity = this.context.Columns.Count
+            };
+
+            var columnName = new DataColumn("ColumnName", typeof(string));
+            var columnOrdinal = new DataColumn("ColumnOrdinal", typeof(int)) { DefaultValue = 0 };
+            var columnSize = new DataColumn("ColumnSize", typeof(int)) { DefaultValue = -1 };
+            var dataType = new DataColumn("DataType", typeof(Type));
+            var dataTypeName = new DataColumn("DataTypeName", typeof(string));
+
+            schemaTable.Columns.Add(columnName);
+            schemaTable.Columns.Add(columnOrdinal);
+            schemaTable.Columns.Add(columnSize);
+            schemaTable.Columns.Add(dataType);
+            schemaTable.Columns.Add(dataTypeName);
+
+            for (var ordinal = 0; ordinal < this.context.Columns.Count; ordinal++)
+            {
+                var schemaRow = schemaTable.NewRow();
+
+                schemaRow[columnName] = this.context.Columns[ordinal].Name;
+                schemaRow[columnOrdinal] = ordinal;
+                schemaRow[dataType] = this.context.Columns[ordinal].DataType;
+                schemaRow[dataTypeName] = this.context.Columns[ordinal].DataType.Name;
+
+                schemaTable.Rows.Add(schemaRow);
+            }
+
+            foreach (DataColumn column in schemaTable.Columns)
+            {
+                column.ReadOnly = true;
+            }
+
+            return schemaTable;
+        }
+
         private void ConsumeAnyRemainingRows()
         {
             // Unfortunately, protocol buffers doesn't let you seek - we have
@@ -425,167 +437,6 @@ namespace ProtoBuf.Data
             while (this.Read())
             {
             }
-        }
-
-        private void ReadNextTableHeader()
-        {
-            this.ResetSchemaTable();
-            this.currentRow = null;
-
-            this.currentTableToken = ProtoReader.StartSubItem(this.reader);
-
-            this.AdvanceToNextField();
-
-            if (this.currentField == 0)
-            {
-                this.reachedEndOfCurrentTable = true;
-                ProtoReader.EndSubItem(this.currentTableToken, this.reader);
-                return;
-            }
-
-            if (this.currentField != 2)
-            {
-                throw new InvalidOperationException("No header found! Invalid/corrupt stream.");
-            }
-
-            this.ReadHeader();
-        }
-
-        private void AdvanceToNextField()
-        {
-            this.currentField = this.reader.ReadFieldHeader();
-        }
-
-        private void ResetSchemaTable()
-        {
-            this.dataTable = new DataTable();
-            this.colReaders.Clear();
-        }
-
-        private void ReadHeader()
-        {
-            do
-            {
-                this.ReadColumn();
-                this.AdvanceToNextField();
-            }
-            while (this.currentField == 2);
-        }
-
-        private void ReadColumn()
-        {
-            var token = ProtoReader.StartSubItem(this.reader);
-            int field;
-            string name = null;
-            var protoDataType = (ProtoDataType)(-1);
-            while ((field = this.reader.ReadFieldHeader()) != 0)
-            {
-                switch (field)
-                {
-                    case 1:
-                        name = this.reader.ReadString();
-                        break;
-                    case 2:
-                        protoDataType = (ProtoDataType)this.reader.ReadInt32();
-                        break;
-                    default:
-                        this.reader.SkipField();
-                        break;
-                }
-            }
-
-            switch (protoDataType)
-            {
-                case ProtoDataType.Int:
-                    this.colReaders.Add(() => this.reader.ReadInt32());
-                    break;
-                case ProtoDataType.Short:
-                    this.colReaders.Add(() => this.reader.ReadInt16());
-                    break;
-                case ProtoDataType.Decimal:
-                    this.colReaders.Add(() => BclHelpers.ReadDecimal(this.reader));
-                    break;
-                case ProtoDataType.String:
-                    this.colReaders.Add(() => this.reader.ReadString());
-                    break;
-                case ProtoDataType.Guid:
-                    this.colReaders.Add(() => BclHelpers.ReadGuid(this.reader));
-                    break;
-                case ProtoDataType.DateTime:
-                    this.colReaders.Add(() => BclHelpers.ReadDateTime(this.reader));
-                    break;
-                case ProtoDataType.Bool:
-                    this.colReaders.Add(() => this.reader.ReadBoolean());
-                    break;
-
-                case ProtoDataType.Byte:
-                    this.colReaders.Add(() => this.reader.ReadByte());
-                    break;
-
-                case ProtoDataType.Char:
-                    this.colReaders.Add(() => (char)this.reader.ReadInt16());
-                    break;
-
-                case ProtoDataType.Double:
-                    this.colReaders.Add(() => this.reader.ReadDouble());
-                    break;
-
-                case ProtoDataType.Float:
-                    this.colReaders.Add(() => this.reader.ReadSingle());
-                    break;
-
-                case ProtoDataType.Long:
-                    this.colReaders.Add(() => this.reader.ReadInt64());
-                    break;
-
-                case ProtoDataType.ByteArray:
-                    this.colReaders.Add(() => ProtoReader.AppendBytes(null, this.reader));
-                    break;
-
-                case ProtoDataType.CharArray:
-                    this.colReaders.Add(() => this.reader.ReadString().ToCharArray());
-                    break;
-
-                case ProtoDataType.TimeSpan:
-                    this.colReaders.Add(() => BclHelpers.ReadTimeSpan(this.reader));
-                    break;
-
-                default:
-                    throw new NotSupportedException(protoDataType.ToString());
-            }
-
-            ProtoReader.EndSubItem(token, this.reader);
-            this.dataTable.Columns.Add(name, ConvertProtoDataType.ToClrType(protoDataType));
-        }
-
-        private void ReadCurrentRow()
-        {
-            int field;
-
-            if (this.currentRow == null)
-            {
-                this.currentRow = new object[this.colReaders.Count];
-            }
-            else
-            {
-                Array.Clear(this.currentRow, 0, this.currentRow.Length);
-            }
-
-            SubItemToken token = ProtoReader.StartSubItem(this.reader);
-            while ((field = this.reader.ReadFieldHeader()) != 0)
-            {
-                if (field > this.currentRow.Length)
-                {
-                    this.reader.SkipField();
-                }
-                else
-                {
-                    int i = field - 1;
-                    this.currentRow[i] = this.colReaders[i]();
-                }
-            }
-
-            ProtoReader.EndSubItem(token, this.reader);
         }
 
         private long CopyArray(Array source, long fieldOffset, Array buffer, int bufferOffset, int length)
@@ -657,7 +508,7 @@ namespace ProtoBuf.Data
 
         private void ThrowIfIndexOutOfRange(int i)
         {
-            if (i < 0 || i >= this.dataTable.Columns.Count)
+            if (i < 0 || i >= this.context.Columns.Count)
             {
                 throw new IndexOutOfRangeException();
             }
@@ -665,7 +516,7 @@ namespace ProtoBuf.Data
 
         private void ThrowIfNoData()
         {
-            if (this.reachedEndOfCurrentTable || this.currentRow == null)
+            if (this.context.ReachedEndOfCurrentResult || this.context.Buffers == null)
             {
                 throw new InvalidOperationException("Invalid attempt to read when no data is present.");
             }
@@ -673,7 +524,7 @@ namespace ProtoBuf.Data
 
         private void ThrowIfNoValueIsNull(int i)
         {
-            if (this.currentRow[i] == null)
+            if (this.context.Buffers[i] == null)
             {
                 throw new InvalidOperationException("Invalid attempt to read when no data is present.");
             }
