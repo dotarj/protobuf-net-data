@@ -1,23 +1,11 @@
-// Copyright 2012 Richard Dingwall - http://richarddingwall.name
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
+
+using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace ProtoBuf.Data.Internal
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-
     internal sealed class RowWriter
     {
         private readonly ProtoWriter writer;
@@ -48,19 +36,19 @@ namespace ProtoBuf.Data.Internal
             this.writer = writer;
             this.columns = columns;
             this.options = options;
-            rowIndex = 0;
+            this.rowIndex = 0;
         }
 
         public void WriteRow(IDataRecord row)
         {
             int fieldIndex = 1;
-            ProtoWriter.WriteFieldHeader(3, WireType.StartGroup, writer);
-            SubItemToken token = ProtoWriter.StartSubItem(rowIndex, writer);
+            ProtoWriter.WriteFieldHeader(3, WireType.StartGroup, this.writer);
+            SubItemToken token = ProtoWriter.StartSubItem(this.rowIndex, this.writer);
 
-            foreach (ProtoDataColumn column in columns)
+            foreach (ProtoDataColumn column in this.columns)
             {
                 object value = row[column.ColumnIndex];
-                if (value == null || value is DBNull || (options.SerializeEmptyArraysAsNull && IsZeroLengthArray(value)))
+                if (value == null || value is DBNull || (this.options.SerializeEmptyArraysAsNull && IsZeroLengthArray(value)))
                 {
                     // don't write anything
                 }
@@ -69,78 +57,78 @@ namespace ProtoBuf.Data.Internal
                     switch (column.ProtoDataType)
                     {
                         case ProtoDataType.String:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.String, writer);
-                            ProtoWriter.WriteString((string)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.String, this.writer);
+                            ProtoWriter.WriteString((string)value, this.writer);
                             break;
 
                         case ProtoDataType.Short:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, writer);
-                            ProtoWriter.WriteInt16((short)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, this.writer);
+                            ProtoWriter.WriteInt16((short)value, this.writer);
                             break;
 
                         case ProtoDataType.Decimal:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.StartGroup, writer);
-                            BclHelpers.WriteDecimal((decimal)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.StartGroup, this.writer);
+                            BclHelpers.WriteDecimal((decimal)value, this.writer);
                             break;
 
                         case ProtoDataType.Int:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, writer);
-                            ProtoWriter.WriteInt32((int)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, this.writer);
+                            ProtoWriter.WriteInt32((int)value, this.writer);
                             break;
 
                         case ProtoDataType.Guid:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.StartGroup, writer);
-                            BclHelpers.WriteGuid((Guid)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.StartGroup, this.writer);
+                            BclHelpers.WriteGuid((Guid)value, this.writer);
                             break;
 
                         case ProtoDataType.DateTime:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.StartGroup, writer);
-                            BclHelpers.WriteDateTime((DateTime)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.StartGroup, this.writer);
+                            BclHelpers.WriteDateTime((DateTime)value, this.writer);
                             break;
 
                         case ProtoDataType.Bool:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, writer);
-                            ProtoWriter.WriteBoolean((bool)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, this.writer);
+                            ProtoWriter.WriteBoolean((bool)value, this.writer);
                             break;
 
                         case ProtoDataType.Byte:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, writer);
-                            ProtoWriter.WriteByte((byte)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, this.writer);
+                            ProtoWriter.WriteByte((byte)value, this.writer);
                             break;
 
                         case ProtoDataType.Char:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, writer);
-                            ProtoWriter.WriteInt16((short)(char)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, this.writer);
+                            ProtoWriter.WriteInt16((short)(char)value, this.writer);
                             break;
 
                         case ProtoDataType.Double:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Fixed64, writer);
-                            ProtoWriter.WriteDouble((double)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Fixed64, this.writer);
+                            ProtoWriter.WriteDouble((double)value, this.writer);
                             break;
 
                         case ProtoDataType.Float:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Fixed32, writer);
-                            ProtoWriter.WriteSingle((float)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Fixed32, this.writer);
+                            ProtoWriter.WriteSingle((float)value, this.writer);
                             break;
 
                         case ProtoDataType.Long:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, writer);
-                            ProtoWriter.WriteInt64((long)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.Variant, this.writer);
+                            ProtoWriter.WriteInt64((long)value, this.writer);
                             break;
 
                         case ProtoDataType.ByteArray:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.String, writer);
-                            ProtoWriter.WriteBytes((byte[])value, 0, ((byte[])value).Length, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.String, this.writer);
+                            ProtoWriter.WriteBytes((byte[])value, 0, ((byte[])value).Length, this.writer);
                             break;
 
                         case ProtoDataType.CharArray:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.String, writer);
-                            ProtoWriter.WriteString(new string((char[])value), writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.String, this.writer);
+                            ProtoWriter.WriteString(new string((char[])value), this.writer);
                             break;
 
                         case ProtoDataType.TimeSpan:
-                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.StartGroup, writer);
-                            BclHelpers.WriteTimeSpan((TimeSpan)value, writer);
+                            ProtoWriter.WriteFieldHeader(fieldIndex, WireType.StartGroup, this.writer);
+                            BclHelpers.WriteTimeSpan((TimeSpan)value, this.writer);
                             break;
 
                         default:
@@ -152,8 +140,8 @@ namespace ProtoBuf.Data.Internal
                 fieldIndex++;
             }
 
-            ProtoWriter.EndSubItem(token, writer);
-            rowIndex++;
+            ProtoWriter.EndSubItem(token, this.writer);
+            this.rowIndex++;
         }
 
         private static bool IsZeroLengthArray(object value)

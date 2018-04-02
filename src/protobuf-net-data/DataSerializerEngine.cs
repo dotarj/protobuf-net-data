@@ -1,24 +1,12 @@
-// Copyright 2012 Richard Dingwall - http://richarddingwall.name
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
+
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
 
 namespace ProtoBuf.Data
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-
     /// <summary>
     /// Provides protocol-buffer serialization for <see cref="System.Data.IDataReader"/>s.
     /// </summary>
@@ -33,7 +21,7 @@ namespace ProtoBuf.Data
         /// <param name="reader">The <see cref="System.Data.IDataReader"/> who's contents to serialize.</param>
         public void Serialize(Stream stream, IDataReader reader)
         {
-            Serialize(stream, reader, new ProtoDataWriterOptions());
+            this.Serialize(stream, reader, new ProtoDataWriterOptions());
         }
 
         /// <summary>
@@ -43,7 +31,7 @@ namespace ProtoBuf.Data
         /// <param name="dataTable">The <see cref="System.Data.DataTable"/> who's contents to serialize.</param>
         public void Serialize(Stream stream, DataTable dataTable)
         {
-            Serialize(stream, dataTable, new ProtoDataWriterOptions());
+            this.Serialize(stream, dataTable, new ProtoDataWriterOptions());
         }
 
         /// <summary>
@@ -53,7 +41,7 @@ namespace ProtoBuf.Data
         /// <param name="dataSet">The <see cref="System.Data.DataSet"/> who's contents to serialize.</param>
         public void Serialize(Stream stream, DataSet dataSet)
         {
-            Serialize(stream, dataSet, new ProtoDataWriterOptions());
+            this.Serialize(stream, dataSet, new ProtoDataWriterOptions());
         }
 
         /// <summary>
@@ -97,7 +85,7 @@ namespace ProtoBuf.Data
 
             using (DataTableReader reader = dataTable.CreateDataReader())
             {
-                Serialize(stream, reader, options);
+                this.Serialize(stream, reader, options);
             }
         }
 
@@ -121,7 +109,7 @@ namespace ProtoBuf.Data
 
             using (DataTableReader reader = dataSet.CreateDataReader())
             {
-                Serialize(stream, reader, options);
+                this.Serialize(stream, reader, options);
             }
         }
 
@@ -151,7 +139,7 @@ namespace ProtoBuf.Data
             }
 
             var dataTable = new DataTable();
-            using (IDataReader reader = Deserialize(stream))
+            using (IDataReader reader = this.Deserialize(stream))
             {
                 dataTable.Load(reader);
             }
@@ -176,7 +164,7 @@ namespace ProtoBuf.Data
                 throw new ArgumentNullException("tables");
             }
 
-            return DeserializeDataSet(stream, new List<string>(tables).ToArray());
+            return this.DeserializeDataSet(stream, new List<string>(tables).ToArray());
         }
 
         /// <summary>
@@ -197,7 +185,7 @@ namespace ProtoBuf.Data
             }
 
             var dataSet = new DataSet();
-            using (IDataReader reader = Deserialize(stream))
+            using (IDataReader reader = this.Deserialize(stream))
             {
                 dataSet.Load(reader, LoadOption.OverwriteChanges, tables);
             }

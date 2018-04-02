@@ -1,16 +1,4 @@
-// Copyright 2012 Richard Dingwall - http://richarddingwall.name
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -25,7 +13,14 @@ namespace ProtoBuf.Data.Tests
     // For coverage, these tests should exercise all features of this library.
     public class BackwardsCompatibilityTests
     {
-        static DataSet CreateTablesForBackwardsCompatibilityTest()
+        /// <summary>
+        /// Version with zero-length arrays serialized as null.
+        /// </summary>
+        private const string PreviousVersionTestFile = "OldBackwardsCompatbilityTest.bin";
+
+        private const string TestFile = "BackwardsCompatbilityTest.bin";
+
+        private static DataSet CreateTablesForBackwardsCompatibilityTest()
         {
             var tableA = new DataTable("A");
             tableA.Columns.Add("Birthday", typeof(DateTime));
@@ -38,7 +33,7 @@ namespace ProtoBuf.Data.Tests
             tableA.Rows.Add(new DateTime(2011, 04, 05, 12, 16, 41, 300), 42, "Foo", Guid.Parse("6891816b-a4b9-4749-a9f5-9f6deb377a65"), "sdfsdf", new byte[] { 1, 2, 3, 4 }, new[] { 'a' });
             tableA.Rows.Add(new DateTime(1920, 04, 03, 12, 48, 31, 210), null, "Bar", Guid.Parse("28545f31-ca0c-40c1-bae0-9b79ca84091b"), "o2389uf", new byte[0], new[] { 'a', 'b', 'c' });
             tableA.Rows.Add(null, null, null, null, null, null, null);
-            tableA.Rows.Add(new DateTime(2008, 01, 11, 11, 4, 1, 491), null, "Foo", Guid.Empty, "", null, new char[0]);
+            tableA.Rows.Add(new DateTime(2008, 01, 11, 11, 4, 1, 491), null, "Foo", Guid.Empty, string.Empty, null, new char[0]);
 
             var tableB = new DataTable("B");
             tableB.Columns.Add("Name", typeof(string));
@@ -59,13 +54,6 @@ namespace ProtoBuf.Data.Tests
             return dataSet;
         }
 
-        /// <summary>
-        /// Version with zero-length arrays serialized as null.
-        /// </summary>
-        const string PreviousVersionTestFile = "OldBackwardsCompatbilityTest.bin";
-
-        const string TestFile = "BackwardsCompatbilityTest.bin";
-
         public class When_reading
         {
             [Fact]
@@ -78,7 +66,9 @@ namespace ProtoBuf.Data.Tests
 
                     using (var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.{TestFile}"))
                     using (IDataReader reader = DataSerializer.Deserialize(stream))
+                    {
                         actual.Load(reader, LoadOption.PreserveChanges, "A", "B", "C", "D");
+                    }
 
                     Assert.False(actual.HasErrors);
 
@@ -100,7 +90,7 @@ namespace ProtoBuf.Data.Tests
                         DataSerializer.Serialize(stream, reader);
                     }
 
-                    byte[] expected = GetFile(TestFile);
+                    byte[] expected = this.GetFile(TestFile);
 
                     stream.Seek(0, SeekOrigin.Begin);
 
@@ -120,7 +110,7 @@ namespace ProtoBuf.Data.Tests
                         DataSerializer.Serialize(stream, reader, options);
                     }
 
-                    byte[] expected = GetFile(PreviousVersionTestFile);
+                    byte[] expected = this.GetFile(PreviousVersionTestFile);
 
                     stream.Seek(0, SeekOrigin.Begin);
 
@@ -128,15 +118,17 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
+            // [Ignore("Only when our binary format changes (and we don't care about breaking old versions).")]
             [Fact]
-            //[Ignore("Only when our binary format changes (and we don't care about breaking old versions).")]
             private void RegenerateTestFile()
             {
                 using (DataSet dataSet = CreateTablesForBackwardsCompatibilityTest())
                 using (FileStream stream = new FileStream(Path.Combine(@"..\..\", TestFile), FileMode.Create))
                 {
                     using (DataTableReader reader = dataSet.CreateDataReader())
+                    {
                         DataSerializer.Serialize(stream, reader);
+                    }
                 }
             }
 

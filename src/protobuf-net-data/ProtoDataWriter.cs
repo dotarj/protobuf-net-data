@@ -1,24 +1,12 @@
-// Copyright 2012 Richard Dingwall - http://richarddingwall.name
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
+
+using System;
+using System.Data;
+using System.IO;
+using ProtoBuf.Data.Internal;
 
 namespace ProtoBuf.Data
 {
-    using System;
-    using System.Data;
-    using System.IO;
-    using ProtoBuf.Data.Internal;
-
     /// <summary>
     /// Serializes an <see cref="System.Data.IDataReader"/> to a binary stream.
     /// </summary>
@@ -31,7 +19,7 @@ namespace ProtoBuf.Data
         /// <param name="dataSet">The <see cref="System.Data.DataSet"/>who's contents to serialize.</param>
         public void Serialize(Stream stream, DataSet dataSet)
         {
-            Serialize(stream, dataSet.CreateDataReader(), new ProtoDataWriterOptions());
+            this.Serialize(stream, dataSet.CreateDataReader(), new ProtoDataWriterOptions());
         }
 
         /// <summary>
@@ -42,7 +30,7 @@ namespace ProtoBuf.Data
         /// <param name="options">Writer options.</param>
         public void Serialize(Stream stream, DataSet dataSet, ProtoDataWriterOptions options)
         {
-            Serialize(stream, dataSet.CreateDataReader(), options);
+            this.Serialize(stream, dataSet.CreateDataReader(), options);
         }
 
         /// <summary>
@@ -52,7 +40,7 @@ namespace ProtoBuf.Data
         /// <param name="dataTable">The <see cref="System.Data.DataTable"/>who's contents to serialize.</param>
         public void Serialize(Stream stream, DataTable dataTable)
         {
-            Serialize(stream, dataTable.CreateDataReader(), new ProtoDataWriterOptions());
+            this.Serialize(stream, dataTable.CreateDataReader(), new ProtoDataWriterOptions());
         }
 
         /// <summary>
@@ -63,7 +51,7 @@ namespace ProtoBuf.Data
         /// <param name="options">Writer options.</param>
         public void Serialize(Stream stream, DataTable dataTable, ProtoDataWriterOptions options)
         {
-            Serialize(stream, dataTable.CreateDataReader(), options);
+            this.Serialize(stream, dataTable.CreateDataReader(), options);
         }
 
         /// <summary>
@@ -73,7 +61,7 @@ namespace ProtoBuf.Data
         /// <param name="reader">The <see cref="System.Data.IDataReader"/>who's contents to serialize.</param>
         public void Serialize(Stream stream, IDataReader reader)
         {
-            Serialize(stream, reader, new ProtoDataWriterOptions());
+            this.Serialize(stream, reader, new ProtoDataWriterOptions());
         }
 
         /// <summary>
@@ -120,7 +108,7 @@ namespace ProtoBuf.Data
                     //     </SubItem>
                     // </SubItem>
                     //
-                    // NB if Field Value is a DataTable, the whole DataTable is 
+                    // NB if Field Value is a DataTable, the whole DataTable is
 
                     // write the table
                     ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);

@@ -1,22 +1,10 @@
-// Copyright 2012 Richard Dingwall - http://richarddingwall.name
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
+
+using System;
+using System.Collections.Generic;
 
 namespace ProtoBuf.Data.Internal
 {
-    using System;
-    using System.Collections.Generic;
-
     internal sealed class HeaderWriter
     {
         private readonly ProtoWriter writer;
@@ -41,13 +29,13 @@ namespace ProtoBuf.Data.Internal
             foreach (ProtoDataColumn column in columns)
             {
                 // for each, write the name and data type
-                ProtoWriter.WriteFieldHeader(2, WireType.StartGroup, writer);
-                SubItemToken columnToken = ProtoWriter.StartSubItem(column, writer);
-                ProtoWriter.WriteFieldHeader(1, WireType.String, writer);
-                ProtoWriter.WriteString(column.ColumnName, writer);
-                ProtoWriter.WriteFieldHeader(2, WireType.Variant, writer);
-                ProtoWriter.WriteInt32((int)column.ProtoDataType, writer);
-                ProtoWriter.EndSubItem(columnToken, writer);
+                ProtoWriter.WriteFieldHeader(2, WireType.StartGroup, this.writer);
+                SubItemToken columnToken = ProtoWriter.StartSubItem(column, this.writer);
+                ProtoWriter.WriteFieldHeader(1, WireType.String, this.writer);
+                ProtoWriter.WriteString(column.ColumnName, this.writer);
+                ProtoWriter.WriteFieldHeader(2, WireType.Variant, this.writer);
+                ProtoWriter.WriteInt32((int)column.ProtoDataType, this.writer);
+                ProtoWriter.EndSubItem(columnToken, this.writer);
             }
         }
     }

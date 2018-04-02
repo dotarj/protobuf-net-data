@@ -1,16 +1,4 @@
-﻿// Copyright 2012 Richard Dingwall - http://richarddingwall.name
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+﻿// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
 using System;
 using System.Data;
@@ -21,7 +9,7 @@ namespace ProtoBuf.Data.Tests
 {
     public static class TestData
     {
-        private static readonly Random random = new Random();
+        private static readonly Random Random = new Random();
 
         public static DataTable SmallDataTable()
         {
@@ -33,15 +21,15 @@ namespace ProtoBuf.Data.Tests
             table.Columns.Add("LastName", typeof(string));
             table.Columns.Add("BlobData", typeof(byte[]));
             table.Columns.Add("ClobData", typeof(char[]));
-            table.Columns.Add("SomeFloat", typeof (float));
-            table.Columns.Add("SomeDouble", typeof (double));
-            table.Columns.Add("SomeChar", typeof (char));
-            table.Columns.Add("SomeTimeSpan", typeof (TimeSpan));
+            table.Columns.Add("SomeFloat", typeof(float));
+            table.Columns.Add("SomeDouble", typeof(double));
+            table.Columns.Add("SomeChar", typeof(char));
+            table.Columns.Add("SomeTimeSpan", typeof(TimeSpan));
             table.Rows.Add(new DateTime(2011, 04, 05, 12, 16, 41, 300), 42, "Foo", Guid.Parse("6891816b-a4b9-4749-a9f5-9f6deb377a65"), "sdfsdf", new byte[] { 1, 2, 3, 4 }, new[] { 'a' }, 0.1, 0.2, null, TimeSpan.Zero);
             table.Rows.Add(new DateTime(1920, 04, 03, 12, 48, 31, 210), null, "Bar", Guid.Parse("28545f31-ca0c-40c1-bae0-9b79ca84091b"), "o2389uf", new byte[0], new[] { 'a', 'b', 'c' }, 0.3, 0.4, 'c', TimeSpan.Zero);
             table.Rows.Add(null, null, null, null, null, null, null, null, null, 'h', TimeSpan.FromMinutes(2));
-            table.Rows.Add(new DateTime(2008, 01, 11, 11, 4, 1, 491), null, "Foo", Guid.Empty, "", null, new char[0], -0.3, -0.4, 'a', TimeSpan.FromDays(1));
-            
+            table.Rows.Add(new DateTime(2008, 01, 11, 11, 4, 1, 491), null, "Foo", Guid.Empty, string.Empty, null, new char[0], -0.3, -0.4, 'a', TimeSpan.FromDays(1));
+
             return table;
         }
 
@@ -66,17 +54,24 @@ namespace ProtoBuf.Data.Tests
             var firstRow = matrix[1];
 
             for (var i = 0; i < columnNames.Count(); i++)
+            {
                 table.Columns.Add((string)columnNames[i], firstRow[i].GetType());
+            }
 
             for (var i = 1; i < matrix.Length; i++)
+            {
                 table.Rows.Add(matrix[i]);
+            }
 
             return table;
         }
 
         public static IDataReader DataReaderFromSql(string sql)
         {
-            if (String.IsNullOrWhiteSpace(sql)) throw new ArgumentException("String was null or empty.", "sql");
+            if (string.IsNullOrWhiteSpace(sql))
+            {
+                throw new ArgumentException("String was null or empty.", "sql");
+            }
 
             var connectionString = new SqlConnectionStringBuilder
             {
@@ -94,7 +89,7 @@ namespace ProtoBuf.Data.Tests
             {
                 throw new Exception("These tests require data from the 'AdventureWorksDW2008R2' SQL Server database to run. You can grab it from here: http://msftdbprodsamples.codeplex.com/", e);
             }
-                
+
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = sql;
@@ -108,7 +103,9 @@ namespace ProtoBuf.Data.Tests
             var dataTable = new DataTable();
 
             using (var reader = DataReaderFromSql(sql))
+            {
                 dataTable.Load(reader);
+            }
 
             return dataTable;
         }
@@ -118,7 +115,9 @@ namespace ProtoBuf.Data.Tests
             var dataSet = new DataSet();
 
             using (var reader = DataReaderFromSql(sql))
+            {
                 dataSet.Load(reader, LoadOption.OverwriteChanges, tableNames);
+            }
 
             return dataSet;
         }
@@ -141,13 +140,15 @@ namespace ProtoBuf.Data.Tests
         {
             var dataTable = new DataTable();
             for (var i = 0; i < numberOfColumns; i++)
-                dataTable.Columns.Add("Column_" + i, typeof (float));
+            {
+                dataTable.Columns.Add("Column_" + i, typeof(float));
+            }
 
             for (var i = 0; i < numberOfRows; i++)
             {
                 var objectArray = Enumerable
                     .Range(0, numberOfColumns)
-                    .Select(_ => random.NextDouble())
+                    .Select(_ => Random.NextDouble())
                     .Cast<object>()
                     .ToArray();
 

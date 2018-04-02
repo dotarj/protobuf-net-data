@@ -1,16 +1,4 @@
-﻿// Copyright 2012 Richard Dingwall - http://richarddingwall.name
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+﻿// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
 using System;
 using System.Collections;
@@ -44,15 +32,15 @@ namespace ProtoBuf.Data.Tests
                 using (var memoryStream = new MemoryStream())
                 {
                     DataSerializer.Serialize(memoryStream, r);
-                    expectedBytes = memoryStream.GetTrimmedBuffer();
+                    this.expectedBytes = memoryStream.GetTrimmedBuffer();
                 }
 
-                reader = testData.CreateDataReader();
-                using (var stream = new ProtoDataStream(reader))
+                this.reader = testData.CreateDataReader();
+                using (var stream = new ProtoDataStream(this.reader))
                 using (var memoryStream = new MemoryStream())
                 {
                     stream.CopyTo(memoryStream);
-                    actualBytes = memoryStream.GetTrimmedBuffer();
+                    this.actualBytes = memoryStream.GetTrimmedBuffer();
                 }
             }
 
@@ -66,7 +54,7 @@ namespace ProtoBuf.Data.Tests
             [Fact]
             public void It_should_dispose_the_reader()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.Read());
+                Assert.Throws<InvalidOperationException>(() => this.reader.Read());
             }
         }
 
@@ -84,15 +72,15 @@ namespace ProtoBuf.Data.Tests
                 using (var memoryStream = new MemoryStream())
                 {
                     DataSerializer.Serialize(memoryStream, r);
-                    expectedBytes = memoryStream.GetTrimmedBuffer();
+                    this.expectedBytes = memoryStream.GetTrimmedBuffer();
                 }
 
-                reader = testData.CreateDataReader();
-                using (var stream = new ProtoDataStream(reader))
+                this.reader = testData.CreateDataReader();
+                using (var stream = new ProtoDataStream(this.reader))
                 using (var memoryStream = new MemoryStream())
                 {
                     stream.CopyTo(memoryStream);
-                    actualBytes = memoryStream.GetTrimmedBuffer();
+                    this.actualBytes = memoryStream.GetTrimmedBuffer();
                 }
             }
 
@@ -100,14 +88,13 @@ namespace ProtoBuf.Data.Tests
             public void It_should_be_binary_equal_to_the_data_serializer_version()
             {
                 Assert.Equal(this.expectedBytes.Length, this.actualBytes.Length);
-                //actualBytes.Length.Should().Be.EqualTo(expectedBytes.Length);
                 Assert.Equal(this.expectedBytes, this.actualBytes);
             }
 
             [Fact]
             public void It_should_dispose_the_reader()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.Read());
+                Assert.Throws<InvalidOperationException>(() => this.reader.Read());
             }
         }
 
@@ -118,20 +105,20 @@ namespace ProtoBuf.Data.Tests
 
             public When_reading_from_a_stream_with_varying_buffer_sizes()
             {
-                testData = TestData.GenerateRandomDataTable(10, 10000);
+                this.testData = TestData.GenerateRandomDataTable(10, 10000);
 
-                using (var reader = testData.CreateDataReader())
+                using (var reader = this.testData.CreateDataReader())
                 using (var memoryStream = new MemoryStream())
                 {
                     DataSerializer.Serialize(memoryStream, reader);
-                    expectedBytes = memoryStream.GetTrimmedBuffer();
+                    this.expectedBytes = memoryStream.GetTrimmedBuffer();
                 }
             }
 
             [Fact]
             public void It_should_populate_the_buffer_correctly()
             {
-                using (var reader = testData.CreateDataReader())
+                using (var reader = this.testData.CreateDataReader())
                 using (var stream = new ProtoDataStream(reader))
                 {
                     var buffer1 = new byte[16];
@@ -145,7 +132,7 @@ namespace ProtoBuf.Data.Tests
                     var buffer2 = new byte[16 * 1024];
                     var buffer2Readed = stream.Read(buffer2, 0, buffer2.Length);
                     Assert.Equal(buffer2.Length, buffer2Readed);
-                    Assert.Equal(expectedBytes.Skip(buffer1.Length).Take(buffer2.Length), buffer2);
+                    Assert.Equal(this.expectedBytes.Skip(buffer1.Length).Take(buffer2.Length), buffer2);
                 }
             }
         }
@@ -159,21 +146,21 @@ namespace ProtoBuf.Data.Tests
             {
                 var testData = TestData.GenerateRandomDataTable(10, 10000);
 
-                reader = testData.CreateDataReader();
-                stream = new ProtoDataStream(reader);
+                this.reader = testData.CreateDataReader();
+                this.stream = new ProtoDataStream(this.reader);
 
                 var buffer = new byte[512];
-                stream.Read(buffer, 0, buffer.Length);
-                stream.Read(buffer, 0, buffer.Length);
-                stream.Read(buffer, 0, buffer.Length);
+                this.stream.Read(buffer, 0, buffer.Length);
+                this.stream.Read(buffer, 0, buffer.Length);
+                this.stream.Read(buffer, 0, buffer.Length);
 
-                stream.Dispose();
+                this.stream.Dispose();
             }
 
             [Fact]
             public void It_should_dispose_the_reader()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.Read());
+                Assert.Throws<InvalidOperationException>(() => this.reader.Read());
             }
         }
 
@@ -199,15 +186,15 @@ namespace ProtoBuf.Data.Tests
                 using (var memoryStream = new MemoryStream())
                 {
                     DataSerializer.Serialize(memoryStream, r);
-                    expectedBytes = memoryStream.GetTrimmedBuffer();
+                    this.expectedBytes = memoryStream.GetTrimmedBuffer();
                 }
 
-                reader = testData.CreateDataReader();
-                using (var stream = new ProtoDataStream(reader))
+                this.reader = testData.CreateDataReader();
+                using (var stream = new ProtoDataStream(this.reader))
                 using (var memoryStream = new MemoryStream())
                 {
                     stream.CopyTo(memoryStream);
-                    actualBytes = memoryStream.GetTrimmedBuffer();
+                    this.actualBytes = memoryStream.GetTrimmedBuffer();
                 }
             }
 
@@ -221,7 +208,7 @@ namespace ProtoBuf.Data.Tests
             [Fact]
             public void It_should_dispose_the_reader()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.Read());
+                Assert.Throws<InvalidOperationException>(() => this.reader.Read());
             }
         }
 
@@ -232,21 +219,21 @@ namespace ProtoBuf.Data.Tests
 
             public When_copies_from_proto_stream_with_variuos_buffers_sizes()
             {
-                testData = TestData.SmallDataTable();
+                this.testData = TestData.SmallDataTable();
 
-                using (var r = testData.CreateDataReader())
+                using (var r = this.testData.CreateDataReader())
                 using (var memoryStream = new MemoryStream())
                 {
                     DataSerializer.Serialize(memoryStream, r);
-                    expectedBytes = memoryStream.GetTrimmedBuffer();
+                    this.expectedBytes = memoryStream.GetTrimmedBuffer();
                 }
             }
 
             ~When_copies_from_proto_stream_with_variuos_buffers_sizes()
             {
-                testData.Dispose();
-                testData = null;
-                expectedBytes = null;
+                this.testData.Dispose();
+                this.testData = null;
+                this.expectedBytes = null;
             }
 
 #if !NET40
@@ -255,51 +242,47 @@ namespace ProtoBuf.Data.Tests
             [ClassData(typeof(BuffersData))]
             public async Task It_should_copy_async_with_various_buffers(int protoBufferSize, int copyBufferSize)
             {
-
-                byte[] actualBytes_;
-                using (var reader = testData.CreateDataReader())
+                byte[] actualBytes;
+                using (var reader = this.testData.CreateDataReader())
                 using (var stream = new ProtoDataStream(reader, protoBufferSize * 1024))
                 using (var memoryStream = new MemoryStream())
                 {
-
                     await stream.CopyToAsync(memoryStream, copyBufferSize * 1024);
-                    actualBytes_ = memoryStream.GetTrimmedBuffer();
+                    actualBytes = memoryStream.GetTrimmedBuffer();
                 }
 
-                Assert.Equal(expectedBytes.LongLength, actualBytes_.LongLength);
-                Assert.Equal(expectedBytes, actualBytes_);
+                Assert.Equal(this.expectedBytes.LongLength, actualBytes.LongLength);
+                Assert.Equal(this.expectedBytes, actualBytes);
             }
 #endif
-
 
             [Theory]
             [ClassData(typeof(BuffersData))]
             public void It_should_copy_with_various_buffers(int protoBufferSize, int copyBufferSize)
             {
-                byte[] actualBytes_;
-                using (var reader = testData.CreateDataReader())
+                byte[] actualBytes;
+                using (var reader = this.testData.CreateDataReader())
                 using (var stream = new ProtoDataStream(reader, protoBufferSize * 1024))
                 using (var memoryStream = new MemoryStream())
                 {
-
                     stream.CopyTo(memoryStream, copyBufferSize * 1024);
-                    actualBytes_ = memoryStream.GetTrimmedBuffer();
+                    actualBytes = memoryStream.GetTrimmedBuffer();
                 }
 
-                Assert.Equal(expectedBytes.LongLength, actualBytes_.LongLength);
-                Assert.Equal(expectedBytes, actualBytes_);
+                Assert.Equal(this.expectedBytes.LongLength, actualBytes.LongLength);
+                Assert.Equal(this.expectedBytes, actualBytes);
             }
 
-            class BuffersData : IEnumerable<object[]>
+            private class BuffersData : IEnumerable<object[]>
             {
-                private readonly int[] _protoBufferSizes = { 128, 137, 1024 };
-                private readonly int[] _copyBufferSizes = { 64, 75, 128, 512 };
+                private readonly int[] protoBufferSizes = { 128, 137, 1024 };
+                private readonly int[] copyBufferSizes = { 64, 75, 128, 512 };
 
                 public IEnumerator<object[]> GetEnumerator()
                 {
-                    foreach (var protoBufferSize in this._protoBufferSizes)
+                    foreach (var protoBufferSize in this.protoBufferSizes)
                     {
-                        foreach (var copyBufferSize in this._copyBufferSizes)
+                        foreach (var copyBufferSize in this.copyBufferSizes)
                         {
                             yield return new object[] { protoBufferSize, copyBufferSize };
                         }
@@ -332,15 +315,15 @@ namespace ProtoBuf.Data.Tests
                 using (var memoryStream = new MemoryStream())
                 {
                     DataSerializer.Serialize(memoryStream, r);
-                    expectedBytes = memoryStream.GetTrimmedBuffer();
+                    this.expectedBytes = memoryStream.GetTrimmedBuffer();
                 }
 
-                reader = testData.CreateDataReader();
-                using (var stream = new ProtoDataStream(reader, 50 * 1024 * 1024))//50 Mb buffer which 
+                this.reader = testData.CreateDataReader();
+                using (var stream = new ProtoDataStream(this.reader, 50 * 1024 * 1024)) // 50 Mb buffer which
                 using (var memoryStream = new MemoryStream())
                 {
                     stream.CopyTo(memoryStream);
-                    actualBytes = memoryStream.GetTrimmedBuffer();
+                    this.actualBytes = memoryStream.GetTrimmedBuffer();
                 }
             }
 
@@ -354,7 +337,7 @@ namespace ProtoBuf.Data.Tests
             [Fact]
             public void It_should_dispose_the_reader()
             {
-                Assert.Throws<InvalidOperationException>(() => reader.Read());
+                Assert.Throws<InvalidOperationException>(() => this.reader.Read());
             }
         }
     }
