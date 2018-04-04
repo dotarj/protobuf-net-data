@@ -55,6 +55,23 @@ namespace ProtoBuf.Data.Tests
         }
 
         [Fact]
+        public void ShouldSerializeStringColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader("foo");
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(1, this.reader.ReadInt32());
+        }
+
+        [Fact]
         public void ShouldSerializeDateTimeValue()
         {
             // Arrange
@@ -70,6 +87,23 @@ namespace ProtoBuf.Data.Tests
             this.ReadUntilFieldValue();
 
             Assert.Equal(value, BclHelpers.ReadDateTime(this.reader));
+        }
+
+        [Fact]
+        public void ShouldSerializeDateTimeColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader(new DateTime(1969, 10, 29, 22, 30, 0));
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(2, this.reader.ReadInt32());
         }
 
         [Fact]
@@ -91,6 +125,23 @@ namespace ProtoBuf.Data.Tests
         }
 
         [Fact]
+        public void ShouldSerializeInt32ColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader(42);
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(3, this.reader.ReadInt32());
+        }
+
+        [Fact]
         public void ShouldSerializeInt64Value()
         {
             // Arrange
@@ -106,6 +157,23 @@ namespace ProtoBuf.Data.Tests
             this.ReadUntilFieldValue();
 
             Assert.Equal(value, this.reader.ReadInt64());
+        }
+
+        [Fact]
+        public void ShouldSerializeInt64ColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader(42L);
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(4, this.reader.ReadInt32());
         }
 
         [Fact]
@@ -127,6 +195,23 @@ namespace ProtoBuf.Data.Tests
         }
 
         [Fact]
+        public void ShouldSerializeInt16ColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader((short)42);
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(5, this.reader.ReadInt32());
+        }
+
+        [Fact]
         public void ShouldSerializeBooleanValue()
         {
             // Arrange
@@ -142,6 +227,23 @@ namespace ProtoBuf.Data.Tests
             this.ReadUntilFieldValue();
 
             Assert.Equal(value, this.reader.ReadBoolean());
+        }
+
+        [Fact]
+        public void ShouldSerializeBooleanColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader(true);
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(6, this.reader.ReadInt32());
         }
 
         [Fact]
@@ -163,6 +265,23 @@ namespace ProtoBuf.Data.Tests
         }
 
         [Fact]
+        public void ShouldSerializeByteColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader((byte)42);
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(7, this.reader.ReadInt32());
+        }
+
+        [Fact]
         public void ShouldSerializeFloatValue()
         {
             // Arrange
@@ -178,6 +297,23 @@ namespace ProtoBuf.Data.Tests
             this.ReadUntilFieldValue();
 
             Assert.Equal(value, this.reader.ReadSingle());
+        }
+
+        [Fact]
+        public void ShouldSerializeFloatColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader(42f);
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(8, this.reader.ReadInt32());
         }
 
         [Fact]
@@ -199,6 +335,23 @@ namespace ProtoBuf.Data.Tests
         }
 
         [Fact]
+        public void ShouldSerializeDoubleColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader(42d);
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(9, this.reader.ReadInt32());
+        }
+
+        [Fact]
         public void ShouldSerializeGuidValue()
         {
             // Arrange
@@ -214,6 +367,23 @@ namespace ProtoBuf.Data.Tests
             this.ReadUntilFieldValue();
 
             Assert.Equal(value, BclHelpers.ReadGuid(this.reader));
+        }
+
+        [Fact]
+        public void ShouldSerializeGuidColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader(Guid.NewGuid());
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(10, this.reader.ReadInt32());
         }
 
         [Fact]
@@ -235,6 +405,23 @@ namespace ProtoBuf.Data.Tests
         }
 
         [Fact]
+        public void ShouldSerializeCharColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader(';');
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(11, this.reader.ReadInt32());
+        }
+
+        [Fact]
         public void ShouldSerializeDecimalValue()
         {
             // Arrange
@@ -250,6 +437,23 @@ namespace ProtoBuf.Data.Tests
             this.ReadUntilFieldValue();
 
             Assert.Equal(value, BclHelpers.ReadDecimal(this.reader));
+        }
+
+        [Fact]
+        public void ShouldSerializeDecimalColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader(42m);
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(12, this.reader.ReadInt32());
         }
 
         [Fact]
@@ -271,6 +475,23 @@ namespace ProtoBuf.Data.Tests
         }
 
         [Fact]
+        public void ShouldSerializeByteArrayColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader(new[] { (byte)42, (byte)42 });
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(13, this.reader.ReadInt32());
+        }
+
+        [Fact]
         public void ShouldSerializeCharArrayValue()
         {
             // Arrange
@@ -286,6 +507,23 @@ namespace ProtoBuf.Data.Tests
             this.ReadUntilFieldValue();
 
             Assert.Equal(value, this.reader.ReadString().ToCharArray());
+        }
+
+        [Fact]
+        public void ShouldSerializeCharArrayColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader(new[] { 'f', 'o', 'o' });
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(14, this.reader.ReadInt32());
         }
 
         [Fact]
@@ -306,7 +544,38 @@ namespace ProtoBuf.Data.Tests
             Assert.Equal(value, BclHelpers.ReadTimeSpan(this.reader));
         }
 
+        [Fact]
+        public void ShouldSerializeTimeSpanColumnType()
+        {
+            // Arrange
+            var dataReader = DataReaderHelper.CreateDataReader(TimeSpan.FromTicks(1));
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnType();
+
+            Assert.Equal(15, this.reader.ReadInt32());
+        }
+
         private void ReadUntilFieldValue()
+        {
+            this.ReadUntilColumnType();
+
+            this.reader.ReadInt32();
+
+            this.ReadExpectedFieldHeader(NoneFieldHeader);
+            this.EndSubItem();
+
+            this.ReadExpectedFieldHeader(RecordFieldHeader);
+            this.StartSubItem();
+            this.ReadExpectedFieldHeader(1);
+        }
+
+        private void ReadUntilColumnType()
         {
             this.ReadExpectedFieldHeader(ResultFieldHeader);
             this.StartSubItem();
@@ -316,13 +585,6 @@ namespace ProtoBuf.Data.Tests
             this.ReadExpectedFieldHeader(ColumnNameFieldHeader);
             this.reader.ReadString();
             this.ReadExpectedFieldHeader(ColumnTypeFieldHeader);
-            this.reader.ReadInt32();
-            this.ReadExpectedFieldHeader(NoneFieldHeader);
-            this.EndSubItem();
-
-            this.ReadExpectedFieldHeader(RecordFieldHeader);
-            this.StartSubItem();
-            this.ReadExpectedFieldHeader(1);
         }
 
         private void ReadExpectedFieldHeader(int expectedFieldHeader)
