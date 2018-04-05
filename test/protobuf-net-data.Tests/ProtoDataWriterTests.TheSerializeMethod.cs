@@ -23,7 +23,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldThrowIfStreamIsNull()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(1);
+            var dataReader = this.CreateDataReader(1);
 
             // Assert
             Assert.Throws<ArgumentNullException>(() => this.writer.Serialize(null, dataReader));
@@ -37,11 +37,35 @@ namespace ProtoBuf.Data.Tests
         }
 
         [Fact]
+        public void ShouldSerializeColumnName()
+        {
+            // Arrange
+            var columnName = "foo";
+            var dataTable = new DataTable();
+
+            dataTable.Columns.Add(columnName, typeof(int));
+
+            dataTable.Rows.Add(1);
+
+            var dataReader = dataTable.CreateDataReader();
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnName();
+
+            Assert.Equal(columnName, this.reader.ReadString());
+        }
+
+        [Fact]
         public void ShouldSerializeStringValue()
         {
             // Arrange
             var value = "foo";
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -58,7 +82,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeStringColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader("foo");
+            var dataReader = this.CreateDataReader("foo");
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -76,7 +100,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = new DateTime(1969, 10, 29, 22, 30, 0);
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -93,7 +117,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeDateTimeColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(new DateTime(1969, 10, 29, 22, 30, 0));
+            var dataReader = this.CreateDataReader(new DateTime(1969, 10, 29, 22, 30, 0));
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -111,7 +135,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = 42;
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -128,7 +152,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeInt32ColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(42);
+            var dataReader = this.CreateDataReader(42);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -146,7 +170,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = 42L;
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -163,7 +187,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeInt64ColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(42L);
+            var dataReader = this.CreateDataReader(42L);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -181,7 +205,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = (short)42;
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -198,7 +222,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeInt16ColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader((short)42);
+            var dataReader = this.CreateDataReader((short)42);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -216,7 +240,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = true;
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -233,7 +257,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeBooleanColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(true);
+            var dataReader = this.CreateDataReader(true);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -251,7 +275,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = (byte)42;
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -268,7 +292,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeByteColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader((byte)42);
+            var dataReader = this.CreateDataReader((byte)42);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -286,7 +310,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = 42f;
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -303,7 +327,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeFloatColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(42f);
+            var dataReader = this.CreateDataReader(42f);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -321,7 +345,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = 42d;
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -338,7 +362,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeDoubleColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(42d);
+            var dataReader = this.CreateDataReader(42d);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -356,7 +380,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = Guid.NewGuid();
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -373,7 +397,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeGuidColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(Guid.NewGuid());
+            var dataReader = this.CreateDataReader(Guid.NewGuid());
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -391,7 +415,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = ';';
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -408,7 +432,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeCharColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(';');
+            var dataReader = this.CreateDataReader(';');
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -426,7 +450,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = 42m;
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -443,7 +467,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeDecimalColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(42m);
+            var dataReader = this.CreateDataReader(42m);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -461,7 +485,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = new[] { (byte)42, (byte)42 };
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -478,7 +502,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeByteArrayColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(new[] { (byte)42, (byte)42 });
+            var dataReader = this.CreateDataReader(new[] { (byte)42, (byte)42 });
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -496,7 +520,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = new[] { 'f', 'o', 'o' };
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -513,7 +537,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeCharArrayColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(new[] { 'f', 'o', 'o' });
+            var dataReader = this.CreateDataReader(new[] { 'f', 'o', 'o' });
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -531,7 +555,7 @@ namespace ProtoBuf.Data.Tests
         {
             // Arrange
             var value = TimeSpan.FromTicks(1);
-            var dataReader = DataReaderHelper.CreateDataReader(value);
+            var dataReader = this.CreateDataReader(value);
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -548,7 +572,7 @@ namespace ProtoBuf.Data.Tests
         public void ShouldSerializeTimeSpanColumnType()
         {
             // Arrange
-            var dataReader = DataReaderHelper.CreateDataReader(TimeSpan.FromTicks(1));
+            var dataReader = this.CreateDataReader(TimeSpan.FromTicks(1));
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
@@ -561,7 +585,94 @@ namespace ProtoBuf.Data.Tests
             Assert.Equal(15, this.reader.ReadInt32());
         }
 
-        private void ReadUntilFieldValue()
+        [Fact]
+        public void ShouldNotSerializeIfValueIsNull()
+        {
+            // Arrange
+            string value = null;
+            var dataReader = this.CreateDataReader(value);
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilField();
+            this.ReadExpectedFieldHeader(3);
+
+            Assert.Equal(0, this.reader.ReadFieldHeader());
+        }
+
+        [Fact]
+        public void ShouldNotSerializeIfValueIsDBNull()
+        {
+            // Arrange
+            var value = DBNull.Value;
+            var dataTable = new DataTable();
+
+            dataTable.Columns.Add("foo", typeof(string));
+
+            dataTable.Rows.Add(value);
+
+            var dataReader = dataTable.CreateDataReader();
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilField();
+            this.ReadExpectedFieldHeader(3);
+
+            Assert.Equal(0, this.reader.ReadFieldHeader());
+        }
+
+        [Fact]
+        public void ShouldSerializeMultipleResults()
+        {
+            // Arrange
+            var dataSet = new DataSet();
+
+            dataSet.Tables.Add(new DataTable());
+            dataSet.Tables.Add(new DataTable());
+
+            dataSet.Tables[0].Columns.Add("foo", typeof(int));
+            dataSet.Tables[0].Rows.Add(1);
+
+            dataSet.Tables[1].Columns.Add("bar", typeof(int));
+            dataSet.Tables[1].Rows.Add(1);
+
+            var dataReader = dataSet.CreateDataReader();
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilResultEnd();
+
+            Assert.Equal(ResultFieldHeader, this.reader.ReadFieldHeader());
+        }
+
+        private void ReadUntilResultEnd()
+        {
+            this.ReadUntilFieldValue();
+
+            this.reader.ReadInt32();
+
+            this.ReadExpectedFieldHeader(NoneFieldHeader);
+
+            this.EndSubItem();
+
+            this.ReadExpectedFieldHeader(NoneFieldHeader);
+
+            this.EndSubItem();
+        }
+
+        private void ReadUntilField()
         {
             this.ReadUntilColumnType();
 
@@ -569,6 +680,11 @@ namespace ProtoBuf.Data.Tests
 
             this.ReadExpectedFieldHeader(NoneFieldHeader);
             this.EndSubItem();
+        }
+
+        private void ReadUntilFieldValue()
+        {
+            this.ReadUntilField();
 
             this.ReadExpectedFieldHeader(RecordFieldHeader);
             this.StartSubItem();
@@ -577,14 +693,21 @@ namespace ProtoBuf.Data.Tests
 
         private void ReadUntilColumnType()
         {
+            this.ReadUntilColumnName();
+
+            this.reader.ReadString();
+
+            this.ReadExpectedFieldHeader(ColumnTypeFieldHeader);
+        }
+
+        private void ReadUntilColumnName()
+        {
             this.ReadExpectedFieldHeader(ResultFieldHeader);
             this.StartSubItem();
 
             this.ReadExpectedFieldHeader(ColumnFieldHeader);
             this.StartSubItem();
             this.ReadExpectedFieldHeader(ColumnNameFieldHeader);
-            this.reader.ReadString();
-            this.ReadExpectedFieldHeader(ColumnTypeFieldHeader);
         }
 
         private void ReadExpectedFieldHeader(int expectedFieldHeader)
@@ -605,6 +728,17 @@ namespace ProtoBuf.Data.Tests
         private void EndSubItem()
         {
             ProtoReader.EndSubItem(this.tokens.Pop(), this.reader);
+        }
+
+        private IDataReader CreateDataReader<TDataType>(TDataType value)
+        {
+            var dataTable = new DataTable();
+
+            dataTable.Columns.Add(typeof(TDataType).Name, typeof(TDataType));
+
+            dataTable.Rows.Add(value);
+
+            return dataTable.CreateDataReader();
         }
     }
 }
