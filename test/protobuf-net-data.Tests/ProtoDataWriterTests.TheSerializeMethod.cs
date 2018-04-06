@@ -61,6 +61,63 @@ namespace ProtoBuf.Data.Tests
         }
 
         [Fact]
+        public void ShouldSerializeExpressionColumn()
+        {
+            // Arrange
+            var columnName = "foo";
+            var dataTable = new DataTable();
+
+            dataTable.Columns.Add(columnName, typeof(int));
+
+            dataTable.Rows.Add(1);
+
+            var dataReader = dataTable.CreateDataReader();
+
+            dataReader.GetSchemaTable().Rows[0]["Expression"] = true;
+
+            var options = new ProtoDataWriterOptions() { IncludeComputedColumns = true };
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader, options);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilColumnName();
+
+            Assert.Equal(columnName, this.reader.ReadString());
+        }
+
+        [Fact]
+        public void ShouldNotSerializeExpressionColumn()
+        {
+            // Arrange
+            var columnName = "foo";
+            var dataTable = new DataTable();
+
+            dataTable.Columns.Add(columnName, typeof(int));
+
+            dataTable.Rows.Add(1);
+
+            var dataReader = dataTable.CreateDataReader();
+
+            dataReader.GetSchemaTable().Rows[0]["Expression"] = true;
+
+            var options = new ProtoDataWriterOptions() { IncludeComputedColumns = false };
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader, options);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadExpectedFieldHeader(ResultFieldHeader);
+            this.StartSubItem();
+
+            Assert.Equal(RecordFieldHeader, this.reader.ReadFieldHeader());
+        }
+
+        [Fact]
         public void ShouldSerializeStringValue()
         {
             // Arrange
@@ -619,6 +676,27 @@ namespace ProtoBuf.Data.Tests
 
             // Act
             this.writer.Serialize(this.stream, dataReader);
+
+            // Assert
+            this.stream.Position = 0;
+
+            this.ReadUntilField();
+            this.ReadExpectedFieldHeader(3);
+
+            Assert.Equal(0, this.reader.ReadFieldHeader());
+        }
+
+        [Fact]
+        public void ShouldNotSerializeIfValueIsEmptyArray()
+        {
+            // Arrange
+            var value = new char[0];
+            var dataReader = this.CreateDataReader(value);
+
+            var options = new ProtoDataWriterOptions() { SerializeEmptyArraysAsNull = true };
+
+            // Act
+            this.writer.Serialize(this.stream, dataReader, options);
 
             // Assert
             this.stream.Position = 0;
