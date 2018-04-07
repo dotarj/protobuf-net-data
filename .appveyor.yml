@@ -107,7 +107,7 @@ after_build:
 test_script:
 - ps: |
       Execute-Action "running unit tests" {
-          dotnet test test/$env:APPVEYOR_PROJECT_NAME.Tests -c $env:CONFIGURATION --no-restore --no-build -v m
+          mono “$env:XUNIT20/xunit.console.x86.exe” “test/$env:APPVEYOR_PROJECT_NAME.Tests/bin/$env:CONFIGURATION/net471/$env:APPVEYOR_PROJECT_NAME.Tests.dll”
       }
 
 after_test:
