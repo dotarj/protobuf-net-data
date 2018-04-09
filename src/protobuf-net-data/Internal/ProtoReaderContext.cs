@@ -16,7 +16,7 @@ namespace ProtoBuf.Data.Internal
 
         public ProtoReader Reader { get; }
 
-        public List<ProtoBufDataColumn> Columns { get; set; } = new List<ProtoBufDataColumn>();
+        public List<ProtoDataColumn> Columns { get; set; } = new List<ProtoDataColumn>();
 
         public ProtoBufDataBuffer[] Buffers { get; set; }
 

@@ -6,7 +6,7 @@ using System.Data;
 
 namespace ProtoBuf.Data.Internal
 {
-    internal sealed class ProtoDataColumnFactory
+    internal static class ProtoDataColumnFactory
     {
         private static readonly bool IsRunningOnMono;
 
@@ -16,28 +16,19 @@ namespace ProtoBuf.Data.Internal
             IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
         }
 
-        public IList<ProtoDataColumn> GetColumns(IDataReader reader, ProtoDataWriterOptions options)
+        public static IList<ProtoDataColumn> GetColumns(IDataReader reader, ProtoDataWriterOptions options)
         {
-            if (reader == null)
+            using (var schemaTable = reader.GetSchemaTable())
             {
-                throw new ArgumentNullException("reader");
-            }
+                var schemaSupportsExpressions = schemaTable.Columns.Contains("Expression");
 
-            if (options == null)
-            {
-                throw new ArgumentNullException("options");
-            }
+                var columns = new List<ProtoDataColumn>(schemaTable.Rows.Count);
 
-            using (DataTable schema = reader.GetSchemaTable())
-            {
-                bool schemaSupportsExpressions = schema.Columns.Contains("Expression");
-
-                var columns = new List<ProtoDataColumn>(schema.Rows.Count);
-                for (int i = 0; i < schema.Rows.Count; i++)
+                for (var i = 0; i < schemaTable.Rows.Count; i++)
                 {
                     // Assumption: rows in the schema table are always ordered by
                     // Ordinal position, ascending
-                    DataRow row = schema.Rows[i];
+                    var row = schemaTable.Rows[i];
 
                     // Skip computed columns unless requested.
                     if (schemaSupportsExpressions)
@@ -59,14 +50,11 @@ namespace ProtoBuf.Data.Internal
                         }
                     }
 
-                    var col = new ProtoDataColumn
-                    {
-                        ColumnIndex = i,
-                        ProtoDataType = ConvertProtoDataType.FromClrType((Type)row["DataType"]),
-                        ColumnName = (string)row["ColumnName"]
-                    };
+                    var columnName = (string)row["ColumnName"];
+                    var dataType = (Type)row["DataType"];
+                    var protoBufDataType = ConvertProtoDataType.FromClrType(dataType);
 
-                    columns.Add(col);
+                    columns.Add(new ProtoDataColumn(columnName, dataType, protoBufDataType));
                 }
 
                 return columns;
