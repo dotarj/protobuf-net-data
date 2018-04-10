@@ -19,10 +19,10 @@ namespace ProtoBuf.Data.Internal
                 throw new InvalidDataException($"Field header '{ColumnFieldHeader}' expected, actual '{context.CurrentFieldHeader}'.");
             }
 
-            context.Columns = new List<ProtoBufDataColumn>(ReadColumnsImpl(context));
+            context.Columns = new List<ProtoDataColumn>(ReadColumnsImpl(context));
         }
 
-        private static IEnumerable<ProtoBufDataColumn> ReadColumnsImpl(ProtoReaderContext context)
+        private static IEnumerable<ProtoDataColumn> ReadColumnsImpl(ProtoReaderContext context)
         {
             do
             {
@@ -39,7 +39,7 @@ namespace ProtoBuf.Data.Internal
 
                 context.EndSubItem();
 
-                yield return new ProtoBufDataColumn(name: name, dataType: TypeHelper.GetType(protoDataType), protoBufDataType: protoDataType);
+                yield return new ProtoDataColumn(name: name, dataType: TypeHelper.GetType(protoDataType), protoBufDataType: protoDataType);
             }
             while (context.ReadFieldHeader() == ColumnFieldHeader);
         }

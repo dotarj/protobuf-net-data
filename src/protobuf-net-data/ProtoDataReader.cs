@@ -339,7 +339,7 @@ namespace ProtoBuf.Data
             this.ConsumeAnyRemainingRows();
 
             this.schemaTable = null;
-            this.context.Columns = new List<ProtoBufDataColumn>();
+            this.context.Columns = new List<ProtoDataColumn>();
 
             return ResultReader.ReadResult(this.context);
         }

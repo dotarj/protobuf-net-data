@@ -25,7 +25,6 @@ namespace ProtoBuf.Data
         private const int ProtoWriterBufferSize = 1024;
 
         private readonly ProtoDataWriterOptions options;
-        private readonly ProtoDataColumnFactory columnFactory;
 
         private IDataReader reader;
         private ProtoWriter writer;
@@ -134,7 +133,6 @@ namespace ProtoBuf.Data
             this.options = options;
 
             this.resultIndex = 0;
-            this.columnFactory = new ProtoDataColumnFactory();
             this.bufferStream = new CircularStream(bufferSize);
             this.writer = new ProtoWriter(this.bufferStream, null, null);
         }
@@ -263,7 +261,7 @@ namespace ProtoBuf.Data
 
             this.currentResultToken = ProtoWriter.StartSubItem(this.resultIndex, this.writer);
 
-            IList<ProtoDataColumn> columns = this.columnFactory.GetColumns(this.reader, this.options);
+            IList<ProtoDataColumn> columns = ProtoDataColumnFactory.GetColumns(this.reader, this.options);
             new HeaderWriter(this.writer).WriteHeader(columns);
 
             this.rowWriter = new RowWriter(this.writer, columns, this.options);

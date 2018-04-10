@@ -42,12 +42,13 @@ namespace ProtoBuf.Data.Internal
         public void WriteRow(IDataRecord row)
         {
             int fieldIndex = 1;
+            int columnIndex = 0;
             ProtoWriter.WriteFieldHeader(3, WireType.StartGroup, this.writer);
             SubItemToken token = ProtoWriter.StartSubItem(this.rowIndex, this.writer);
 
             foreach (ProtoDataColumn column in this.columns)
             {
-                object value = row[column.ColumnIndex];
+                object value = row[columnIndex];
                 if (value == null || value is DBNull || (this.options.SerializeEmptyArraysAsNull && IsZeroLengthArray(value)))
                 {
                     // don't write anything
@@ -138,6 +139,7 @@ namespace ProtoBuf.Data.Internal
                 }
 
                 fieldIndex++;
+                columnIndex++;
             }
 
             ProtoWriter.EndSubItem(token, this.writer);

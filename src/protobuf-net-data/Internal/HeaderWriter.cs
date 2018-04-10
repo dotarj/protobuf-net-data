@@ -32,7 +32,7 @@ namespace ProtoBuf.Data.Internal
                 ProtoWriter.WriteFieldHeader(2, WireType.StartGroup, this.writer);
                 SubItemToken columnToken = ProtoWriter.StartSubItem(column, this.writer);
                 ProtoWriter.WriteFieldHeader(1, WireType.String, this.writer);
-                ProtoWriter.WriteString(column.ColumnName, this.writer);
+                ProtoWriter.WriteString(column.Name, this.writer);
                 ProtoWriter.WriteFieldHeader(2, WireType.Variant, this.writer);
                 ProtoWriter.WriteInt32((int)column.ProtoDataType, this.writer);
                 ProtoWriter.EndSubItem(columnToken, this.writer);
