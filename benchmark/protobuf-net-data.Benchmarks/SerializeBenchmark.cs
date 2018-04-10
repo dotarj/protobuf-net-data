@@ -27,7 +27,7 @@ namespace ProtoBuf.Data.Benchmarks
         [Benchmark]
         public void Run()
         {
-            var dataReader = new DataReaderMock(SchemaTable);
+            var dataReader = new DataReaderMock(1000, SchemaTable);
 
             using (var memoryStream = new MemoryStream())
             {

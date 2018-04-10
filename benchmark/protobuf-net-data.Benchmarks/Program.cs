@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
-using System;
 using BenchmarkDotNet.Running;
 
 namespace ProtoBuf.Data.Benchmarks
@@ -9,10 +8,13 @@ namespace ProtoBuf.Data.Benchmarks
     {
         public static void Main(string[] args)
         {
-            BenchmarkRunner.Run<SerializeBenchmark>();
-            BenchmarkRunner.Run<DeserializeBenchmark>();
+            var switcher = new BenchmarkSwitcher(new[]
+            {
+                typeof(SerializeBenchmark),
+                typeof(DeserializeBenchmark)
+            });
 
-            Console.Read();
+            switcher.Run(args);
         }
     }
 }

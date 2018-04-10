@@ -8,12 +8,14 @@ namespace ProtoBuf.Data.Benchmarks
     public class DataReaderMock : IDataReader
     {
         private readonly DataTable[] schemaTables;
+        private readonly int rowCount;
 
         private int resultIndex;
         private int rowIndex = -1;
 
-        public DataReaderMock(params DataTable[] schemaTables)
+        public DataReaderMock(int rowCount, params DataTable[] schemaTables)
         {
+            this.rowCount = rowCount;
             this.schemaTables = schemaTables;
         }
 
@@ -170,7 +172,7 @@ namespace ProtoBuf.Data.Benchmarks
 
         public bool Read()
         {
-            return ++this.rowIndex < 1;
+            return ++this.rowIndex < rowCount;
         }
 
         private object GetDefault(Type type)

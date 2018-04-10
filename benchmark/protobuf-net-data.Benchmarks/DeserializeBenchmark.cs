@@ -23,7 +23,7 @@ namespace ProtoBuf.Data.Benchmarks
             schemaTable.Rows.Add("bar", typeof(Guid));
             schemaTable.Rows.Add("baz", typeof(float));
 
-            var dataReader = new DataReaderMock(schemaTable);
+            var dataReader = new DataReaderMock(1000, schemaTable);
 
             using (var memoryStream = new MemoryStream())
             {
