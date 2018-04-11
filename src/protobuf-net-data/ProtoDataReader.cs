@@ -166,7 +166,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.context.Buffers[i].Bool;
         }
@@ -176,7 +175,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.context.Buffers[i].Byte;
         }
@@ -186,7 +184,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.CopyArray(this.context.Buffers[i].ByteArray, fieldOffset, buffer, bufferOffset, length);
         }
@@ -196,7 +193,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.context.Buffers[i].Char;
         }
@@ -206,7 +202,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.CopyArray(this.context.Buffers[i].CharArray, fieldOffset, buffer, bufferOffset, length);
         }
@@ -216,7 +211,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.context.Buffers[i].Guid;
         }
@@ -226,7 +220,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.context.Buffers[i].Short;
         }
@@ -236,7 +229,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.context.Buffers[i].Int;
         }
@@ -246,7 +238,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.context.Buffers[i].Long;
         }
@@ -256,7 +247,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.context.Buffers[i].Float;
         }
@@ -266,7 +256,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.context.Buffers[i].Double;
         }
@@ -276,7 +265,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.context.Buffers[i].String;
         }
@@ -286,7 +274,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.context.Buffers[i].Decimal;
         }
@@ -296,7 +283,6 @@ namespace ProtoBuf.Data
             this.ThrowIfClosed();
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
-            this.ThrowIfNoValueIsNull(i);
 
             return this.context.Buffers[i].DateTime;
         }
@@ -517,14 +503,6 @@ namespace ProtoBuf.Data
         private void ThrowIfNoData()
         {
             if (this.context.ReachedEndOfCurrentResult || this.context.Buffers == null)
-            {
-                throw new InvalidOperationException("Invalid attempt to read when no data is present.");
-            }
-        }
-
-        private void ThrowIfNoValueIsNull(int i)
-        {
-            if (this.context.Buffers[i] == null)
             {
                 throw new InvalidOperationException("Invalid attempt to read when no data is present.");
             }
