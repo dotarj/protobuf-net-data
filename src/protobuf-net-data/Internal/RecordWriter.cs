@@ -17,112 +17,112 @@ namespace ProtoBuf.Data.Internal
 
             for (var columnIndex = 0; columnIndex < context.Columns.Count; columnIndex++)
             {
-                var value = record[columnIndex];
-
-                if (value == null || value is DBNull || (context.Options.SerializeEmptyArraysAsNull && IsZeroLengthArray(value)))
+                // The check whether record[columnIndex] == null is removed due to the fact that value types have to be
+                // boxed into an object just to check whether the field value is null. This creates garbage, thus has
+                // impact on garbage collection. Removing the check should not be a problem as IDataRecord.IsDBNull
+                // should be sufficient (tested with SqlDataReader, SqlLiteDataReader, and DataTableReader).
+                if (record.IsDBNull(columnIndex))
                 {
-                    // don't write anything
+                    continue;
                 }
-                else
+
+                var fieldNumber = columnIndex + 1;
+
+                switch (context.Columns[columnIndex].ProtoDataType)
                 {
-                    var fieldNumber = columnIndex + 1;
+                    case ProtoDataType.String:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.String, context.Writer);
+                        ProtoWriter.WriteString(record.GetString(columnIndex), context.Writer);
+                        break;
 
-                    switch (context.Columns[columnIndex].ProtoDataType)
-                    {
-                        case ProtoDataType.String:
+                    case ProtoDataType.Short:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
+                        ProtoWriter.WriteInt16(record.GetInt16(columnIndex), context.Writer);
+                        break;
+
+                    case ProtoDataType.Decimal:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.StartGroup, context.Writer);
+                        BclHelpers.WriteDecimal(record.GetDecimal(columnIndex), context.Writer);
+                        break;
+
+                    case ProtoDataType.Int:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
+                        ProtoWriter.WriteInt32(record.GetInt32(columnIndex), context.Writer);
+                        break;
+
+                    case ProtoDataType.Guid:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.StartGroup, context.Writer);
+                        BclHelpers.WriteGuid(record.GetGuid(columnIndex), context.Writer);
+                        break;
+
+                    case ProtoDataType.DateTime:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.StartGroup, context.Writer);
+                        BclHelpers.WriteDateTime(record.GetDateTime(columnIndex), context.Writer);
+                        break;
+
+                    case ProtoDataType.Bool:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
+                        ProtoWriter.WriteBoolean(record.GetBoolean(columnIndex), context.Writer);
+                        break;
+
+                    case ProtoDataType.Byte:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
+                        ProtoWriter.WriteByte(record.GetByte(columnIndex), context.Writer);
+                        break;
+
+                    case ProtoDataType.Char:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
+                        ProtoWriter.WriteInt16((short)record.GetChar(columnIndex), context.Writer);
+                        break;
+
+                    case ProtoDataType.Double:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Fixed64, context.Writer);
+                        ProtoWriter.WriteDouble(record.GetDouble(columnIndex), context.Writer);
+                        break;
+
+                    case ProtoDataType.Float:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Fixed32, context.Writer);
+                        ProtoWriter.WriteSingle(record.GetFloat(columnIndex), context.Writer);
+                        break;
+
+                    case ProtoDataType.Long:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
+                        ProtoWriter.WriteInt64(record.GetInt64(columnIndex), context.Writer);
+                        break;
+
+                    case ProtoDataType.ByteArray:
+                        var bytes = (byte[])record[columnIndex];
+
+                        if (bytes.Length != 0 || !context.Options.SerializeEmptyArraysAsNull)
+                        {
                             ProtoWriter.WriteFieldHeader(fieldNumber, WireType.String, context.Writer);
-                            ProtoWriter.WriteString((string)value, context.Writer);
-                            break;
+                            ProtoWriter.WriteBytes(bytes, 0, bytes.Length, context.Writer);
+                        }
 
-                        case ProtoDataType.Short:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
-                            ProtoWriter.WriteInt16((short)value, context.Writer);
-                            break;
+                        break;
 
-                        case ProtoDataType.Decimal:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.StartGroup, context.Writer);
-                            BclHelpers.WriteDecimal((decimal)value, context.Writer);
-                            break;
+                    case ProtoDataType.CharArray:
+                        var characters = (char[])record[columnIndex];
 
-                        case ProtoDataType.Int:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
-                            ProtoWriter.WriteInt32((int)value, context.Writer);
-                            break;
-
-                        case ProtoDataType.Guid:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.StartGroup, context.Writer);
-                            BclHelpers.WriteGuid((Guid)value, context.Writer);
-                            break;
-
-                        case ProtoDataType.DateTime:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.StartGroup, context.Writer);
-                            BclHelpers.WriteDateTime((DateTime)value, context.Writer);
-                            break;
-
-                        case ProtoDataType.Bool:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
-                            ProtoWriter.WriteBoolean((bool)value, context.Writer);
-                            break;
-
-                        case ProtoDataType.Byte:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
-                            ProtoWriter.WriteByte((byte)value, context.Writer);
-                            break;
-
-                        case ProtoDataType.Char:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
-                            ProtoWriter.WriteInt16((short)(char)value, context.Writer);
-                            break;
-
-                        case ProtoDataType.Double:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Fixed64, context.Writer);
-                            ProtoWriter.WriteDouble((double)value, context.Writer);
-                            break;
-
-                        case ProtoDataType.Float:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Fixed32, context.Writer);
-                            ProtoWriter.WriteSingle((float)value, context.Writer);
-                            break;
-
-                        case ProtoDataType.Long:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
-                            ProtoWriter.WriteInt64((long)value, context.Writer);
-                            break;
-
-                        case ProtoDataType.ByteArray:
+                        if (characters.Length != 0 || !context.Options.SerializeEmptyArraysAsNull)
+                        {
                             ProtoWriter.WriteFieldHeader(fieldNumber, WireType.String, context.Writer);
-                            ProtoWriter.WriteBytes((byte[])value, 0, ((byte[])value).Length, context.Writer);
-                            break;
+                            ProtoWriter.WriteString(new string(characters), context.Writer);
+                        }
 
-                        case ProtoDataType.CharArray:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.String, context.Writer);
-                            ProtoWriter.WriteString(new string((char[])value), context.Writer);
-                            break;
+                        break;
 
-                        case ProtoDataType.TimeSpan:
-                            ProtoWriter.WriteFieldHeader(fieldNumber, WireType.StartGroup, context.Writer);
-                            BclHelpers.WriteTimeSpan((TimeSpan)value, context.Writer);
-                            break;
+                    case ProtoDataType.TimeSpan:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.StartGroup, context.Writer);
+                        BclHelpers.WriteTimeSpan((TimeSpan)record[columnIndex], context.Writer);
+                        break;
 
-                        default:
-                            throw new UnsupportedColumnTypeException(ConvertProtoDataType.ToClrType(context.Columns[columnIndex].ProtoDataType));
-                    }
+                    default:
+                        throw new UnsupportedColumnTypeException(ConvertProtoDataType.ToClrType(context.Columns[columnIndex].ProtoDataType));
                 }
             }
 
             context.EndSubItem();
-        }
-
-        private static bool IsZeroLengthArray(object value)
-        {
-            var array = value as Array;
-
-            if (array == null)
-            {
-                return false;
-            }
-
-            return array.Length == 0;
         }
     }
 }
