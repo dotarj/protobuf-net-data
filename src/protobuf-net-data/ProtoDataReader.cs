@@ -66,7 +66,7 @@ namespace ProtoBuf.Data
             {
                 this.ThrowIfClosed();
 
-                return 1;
+                return 0;
             }
         }
 
