@@ -81,7 +81,7 @@ namespace ProtoBuf.Data
             get { return 0; }
         }
 
-        object IDataRecord.this[int i]
+        public object this[int i]
         {
             get
             {
@@ -89,7 +89,7 @@ namespace ProtoBuf.Data
             }
         }
 
-        object IDataRecord.this[string name]
+        public object this[string name]
         {
             get
             {
