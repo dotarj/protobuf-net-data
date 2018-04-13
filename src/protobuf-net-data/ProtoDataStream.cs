@@ -159,7 +159,7 @@ namespace ProtoBuf.Data
 
         public override long Length
         {
-            get { return -1; }
+            get { throw new NotSupportedException(); }
         }
 
         public override long Position
@@ -176,7 +176,7 @@ namespace ProtoBuf.Data
 
             set
             {
-                throw new InvalidOperationException("Cannot set stream position.");
+                throw new NotSupportedException();
             }
         }
 
@@ -186,12 +186,12 @@ namespace ProtoBuf.Data
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            throw new InvalidOperationException("This stream cannot seek.");
+            throw new NotSupportedException();
         }
 
         public override void SetLength(long value)
         {
-            throw new InvalidOperationException();
+            throw new NotSupportedException();
         }
 
         public override int Read(byte[] buffer, int offset, int count)
@@ -211,7 +211,7 @@ namespace ProtoBuf.Data
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            throw new InvalidOperationException("This is a stream for reading serialized bytes. Writing is not supported.");
+            throw new NotSupportedException();
         }
 
         protected override void Dispose(bool disposing)
