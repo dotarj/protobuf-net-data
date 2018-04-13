@@ -137,31 +137,57 @@ namespace ProtoBuf.Data
             this.writer = new ProtoWriter(this.bufferStream, null, null);
         }
 
+        /// <summary>
+        /// Finalizes an instance of the <see cref="ProtoDataStream"/> class.
+        /// </summary>
         ~ProtoDataStream()
         {
             this.Dispose(false);
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="ProtoDataStream"/> supports reading.
+        /// </summary>
+        /// <returns>true if data can be read from the stream; otherwise, false.</returns>
         public override bool CanRead
         {
             get { return !this.disposed; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the stream supports writing. This property is not currently supported and always returns false.
+        /// </summary>
+        /// <returns>false in all cases to indicate that <see cref="ProtoDataStream"/> cannot write to the stream.</returns>
         public override bool CanSeek
         {
             get { return false; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the stream supports seeking. This property is not currently supported and always returns false.
+        /// </summary>
+        /// <returns>false in all cases to indicate that <see cref="ProtoDataStream"/> cannot seek a specific location in the stream.</returns>
         public override bool CanWrite
         {
             get { return false; }
         }
 
+        /// <summary>
+        /// Gets the length of the data available on the stream. This property is not currently supported and always throws a <see cref="NotSupportedException"/>.
+        /// </summary>
+        /// <returns>The length of the data available on the stream.</returns>
+        /// <exception cref="NotSupportedException">Any use of this property.</exception>
         public override long Length
         {
             get { throw new NotSupportedException(); }
         }
 
+        /// <summary>
+        /// Gets or sets the current position in the stream. This set operation of this property is not currently supported and always throws a  <see cref="NotSupportedException"/>.
+        /// </summary>
+        /// <returns>The current position in the stream.</returns>
+        /// <exception cref="InvalidOperationException">The underlying <see cref="ProtoDataReader"/> is closed.</exception>
+        /// <exception cref="NotSupportedException">Any use of the set operation of this property.</exception>
         public override long Position
         {
             get
@@ -180,20 +206,42 @@ namespace ProtoBuf.Data
             }
         }
 
+        /// <summary>
+        /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
+        /// </summary>
         public override void Flush()
         {
         }
 
+        /// <summary>
+        /// Sets the current position of the stream to the given value. This method is not currently supported and always throws a <see cref="NotSupportedException"/>.
+        /// </summary>
+        /// <param name="offset">A byte offset relative to the origin parameter.</param>
+        /// <param name="origin">A value of type <see cref="SeekOrigin"/> indicating the reference point used to obtain the new position.</param>
+        /// <returns>The new position within the current stream.</returns>
+        /// <exception cref="NotSupportedException">Any use of this method.</exception>
         public override long Seek(long offset, SeekOrigin origin)
         {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Sets the length of the current stream. This method is not currently supported and always throws a <see cref="NotSupportedException"/>.
+        /// </summary>
+        /// <param name="value">The desired length of the current stream in bytes.</param>
+        /// <exception cref="NotSupportedException">Any use of this method.</exception>
         public override void SetLength(long value)
         {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Reads data from the <see cref="ProtoDataStream"/>.
+        /// </summary>
+        /// <param name="buffer">An array of type <see cref="byte"/> that is the location in memory to store data read from the <see cref="ProtoDataStream"/>.</param>
+        /// <param name="offset">The location in buffer to begin storing the data to.</param>
+        /// <param name="count">The number of bytes to read from the <see cref="ProtoDataStream"/>.</param>
+        /// <returns>The number of bytes read from the <see cref="ProtoDataStream"/>.</returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (this.bufferStream.Length == 0 && this.readerIsClosed)
@@ -209,11 +257,22 @@ namespace ProtoBuf.Data
             return this.bufferStream.Read(buffer, offset, count);
         }
 
+        /// <summary>
+        /// Writes data to the <see cref="ProtoDataStream"/>. This method is not currently supported and always throws a <see cref="NotSupportedException"/>.
+        /// </summary>
+        /// <param name="buffer">An array of type <see cref="byte"/> that contains the data to write to the <see cref="ProtoDataStream"/>.</param>
+        /// <param name="offset">The location in buffer from which to start writing data.</param>
+        /// <param name="count">The number of bytes to write to the <see cref="ProtoDataStream"/>.</param>
+        /// <exception cref="NotSupportedException">Any use of this method.</exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Releases the unmanaged resources used by the <see cref="ProtoDataStream"/> and optionally releases the managed resources.
+        /// </summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (!this.disposed)
