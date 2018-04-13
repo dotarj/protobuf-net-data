@@ -168,7 +168,7 @@ namespace ProtoBuf.Data
             {
                 if (this.readerIsClosed)
                 {
-                    throw new InvalidOperationException("Reader is closed.");
+                    throw new InvalidOperationException("Invalid attempt to call method when underlying reader is closed.");
                 }
 
                 return this.bufferStream.Position;
