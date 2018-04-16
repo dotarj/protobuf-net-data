@@ -91,30 +91,69 @@ namespace ProtoBuf.Data.Tests
         [Fact]
         public void ShouldNotSerializeExpressionColumn()
         {
-            // Arrange
-            var columnName = "foo";
-            var dataTable = new DataTable();
+            var isRunningOnMono = Type.GetType("Mono.Runtime") != null;
 
-            dataTable.Columns.Add(columnName, typeof(int));
+            if (!isRunningOnMono)
+            {
+                // Arrange
+                var columnName = "foo";
+                var dataTable = new DataTable();
 
-            dataTable.Rows.Add(1);
+                dataTable.Columns.Add(columnName, typeof(int));
 
-            var dataReader = dataTable.CreateDataReader();
+                dataTable.Rows.Add(1);
 
-            dataReader.GetSchemaTable().Rows[0]["Expression"] = true;
+                var dataReader = dataTable.CreateDataReader();
 
-            var options = new ProtoDataWriterOptions() { IncludeComputedColumns = false };
+                dataReader.GetSchemaTable().Rows[0]["Expression"] = true;
 
-            // Act
-            this.writer.Serialize(this.stream, dataReader, options);
+                var options = new ProtoDataWriterOptions() { IncludeComputedColumns = false };
 
-            // Assert
-            this.stream.Position = 0;
+                // Act
+                this.writer.Serialize(this.stream, dataReader, options);
 
-            this.ReadExpectedFieldHeader(ResultFieldHeader);
-            this.StartSubItem();
+                // Assert
+                this.stream.Position = 0;
 
-            Assert.Equal(RecordFieldHeader, this.reader.ReadFieldHeader());
+                this.ReadExpectedFieldHeader(ResultFieldHeader);
+                this.StartSubItem();
+
+                Assert.Equal(RecordFieldHeader, this.reader.ReadFieldHeader());
+            }
+        }
+
+        [Fact]
+        public void ShouldNotSerializeExpressionColumnOnMono()
+        {
+            var isRunningOnMono = Type.GetType("Mono.Runtime") != null;
+
+            if (isRunningOnMono)
+            {
+                // Arrange
+                var columnName = "foo";
+                var dataTable = new DataTable();
+
+                dataTable.Columns.Add(columnName, typeof(int));
+
+                dataTable.Rows.Add(1);
+
+                var dataReader = dataTable.CreateDataReader();
+
+                dataReader.GetSchemaTable().Rows[0]["Expression"] = string.Empty;
+
+                var options = new ProtoDataWriterOptions() { IncludeComputedColumns = false };
+
+                // Act
+                this.writer.Serialize(this.stream, dataReader, options);
+
+                // Assert
+                this.stream.Position = 0;
+
+                this.ReadExpectedFieldHeader(ResultFieldHeader);
+                this.StartSubItem();
+
+                Assert.Equal(RecordFieldHeader, this.reader.ReadFieldHeader());
+            }
         }
 
         [Fact]
