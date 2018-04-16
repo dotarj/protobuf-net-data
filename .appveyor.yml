@@ -57,7 +57,7 @@ init:
 install:
 - ps: |
       Execute-Action "installing tools" {
-          choco install codecov msbuild-sonarqube-runner opencover.portable
+          choco install codecov mono msbuild-sonarqube-runner opencover.portable
       }
 
 dotnet_csproj:
@@ -107,7 +107,8 @@ after_build:
 test_script:
 - ps: |
       Execute-Action "running unit tests" {
-          mono “$env:XUNIT20/xunit.console.x86.exe” “test/$env:APPVEYOR_PROJECT_NAME.Tests/bin/$env:CONFIGURATION/net471/$env:APPVEYOR_PROJECT_NAME.Tests.dll”
+          dotnet test test/$env:APPVEYOR_PROJECT_NAME.Tests -c $env:CONFIGURATION --no-restore --no-build -v m
+          & "$env:ProgramFiles\Mono\bin\mono.exe” “$env:XUNIT20/xunit.console.exe” “test/$env:APPVEYOR_PROJECT_NAME.Tests/bin/$env:CONFIGURATION/net471/$env:APPVEYOR_PROJECT_NAME.Tests.dll”
       }
 
 after_test:
