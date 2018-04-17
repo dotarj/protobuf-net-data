@@ -57,7 +57,7 @@ init:
 install:
 - ps: |
       Execute-Action "installing tools" {
-          choco install codecov msbuild-sonarqube-runner opencover.portable
+          choco install codecov mono msbuild-sonarqube-runner opencover.portable
       }
 
 dotnet_csproj:
@@ -74,10 +74,19 @@ before_build:
 - ps: |
       Execute-Action "beginning code analysis" {
           if ($env:APPVEYOR_PULL_REQUEST_NUMBER) {
-              MSBuild.SonarQube.Runner.exe begin /o:$env:SONARQUBE_ORGANIZATION /k:$env:APPVEYOR_PROJECT_NAME /v:$env:APPVEYOR_BUILD_VERSION /d:sonar.host.url=https://sonarcloud.io /d:sonar.login=$env:SONARQUBE_TOKEN /d:sonar.cs.opencover.reportsPaths=coverage.xml /d:sonar.coverage.exclusions=**/*Tests.cs,**/*Tests.*.cs,**/*Mock.cs /d:sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER /d:sonar.github.repository=$env:APPVEYOR_REPO_NAME /d:sonar.github.oauth=$env:SONARQUBE_GITHUB_TOKEN
+              # For security reasons, AppVeyor only exposes secure variables for pull requests from the same repositoy.
+              # If $env:SONARQUBE_GITHUB_TOKEN is not set, then it is a pull request from another repository and we'll
+              # skip SonarQube analysis.
+              if ($env:SONARQUBE_GITHUB_TOKEN) {
+                  MSBuild.SonarQube.Runner.exe begin /o:$env:SONARQUBE_ORGANIZATION /k:$env:APPVEYOR_PROJECT_NAME /v:$env:APPVEYOR_BUILD_VERSION /d:sonar.host.url=https://sonarcloud.io /d:sonar.login=$env:SONARQUBE_TOKEN /d:sonar.cs.opencover.reportsPaths=coverage.xml /d:sonar.coverage.exclusions=**/*Tests.cs,**/*Tests.*.cs,**/*Mock.cs /d:sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER /d:sonar.github.repository=$env:APPVEYOR_REPO_NAME /d:sonar.github.oauth=$env:SONARQUBE_GITHUB_TOKEN
+
+                  $env:SONARQUBE_RUNNING = $true
+              }
           }
           else {
               MSBuild.SonarQube.Runner.exe begin /o:$env:SONARQUBE_ORGANIZATION /k:$env:APPVEYOR_PROJECT_NAME /v:$env:APPVEYOR_BUILD_VERSION /d:sonar.host.url=https://sonarcloud.io /d:sonar.login=$env:SONARQUBE_TOKEN /d:sonar.cs.opencover.reportsPaths=coverage.xml /d:sonar.coverage.exclusions=**/*Tests.cs,**/*Tests.*.cs,**/*Mock.cs
+
+              $env:SONARQUBE_RUNNING = $true
           }
       }
 
@@ -108,6 +117,7 @@ test_script:
 - ps: |
       Execute-Action "running unit tests" {
           dotnet test test/$env:APPVEYOR_PROJECT_NAME.Tests -c $env:CONFIGURATION --no-restore --no-build -v m
+          & "$env:ProgramFiles\Mono\bin\mono.exe” “$env:XUNIT20/xunit.console.exe” “test/$env:APPVEYOR_PROJECT_NAME.Tests/bin/$env:CONFIGURATION/net471/$env:APPVEYOR_PROJECT_NAME.Tests.dll”
       }
 
 after_test:
@@ -125,7 +135,9 @@ after_test:
 
 - ps: |
       Execute-Action "ending code analysis" {
-          MSBuild.SonarQube.Runner.exe end /d:sonar.login=$env:SONARQUBE_TOKEN
+          if ($env:SONARQUBE_RUNNING -eq $true) {
+              MSBuild.SonarQube.Runner.exe end /d:sonar.login=$env:SONARQUBE_TOKEN
+          }
       }
 
 artifacts:

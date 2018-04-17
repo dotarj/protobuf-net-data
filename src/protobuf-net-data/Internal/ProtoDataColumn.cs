@@ -1,16 +1,22 @@
 ﻿// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
+using System;
+
 namespace ProtoBuf.Data.Internal
 {
-    internal struct ProtoDataColumn
+    internal sealed class ProtoDataColumn
     {
-        public ProtoDataType ProtoDataType;
-        public string ColumnName;
-        public int ColumnIndex;
-
-        public override string ToString()
+        public ProtoDataColumn(string name, Type dataType, ProtoDataType protoBufDataType)
         {
-            return string.Format("{0} ({1})", this.ColumnName, this.ProtoDataType);
+            this.Name = name;
+            this.DataType = dataType;
+            this.ProtoDataType = protoBufDataType;
         }
+
+        public string Name { get; }
+
+        public Type DataType { get; }
+
+        public ProtoDataType ProtoDataType { get; }
     }
 }

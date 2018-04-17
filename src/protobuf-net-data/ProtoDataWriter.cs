@@ -1,6 +1,5 @@
 // Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
-using System;
 using System.Data;
 using System.IO;
 using ProtoBuf.Data.Internal;
@@ -72,62 +71,37 @@ namespace ProtoBuf.Data
         /// <param name="options"><see cref="ProtoDataWriterOptions"/> specifying any custom serialization options.</param>
         public void Serialize(Stream stream, IDataReader reader, ProtoDataWriterOptions options)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException("stream");
-            }
+            Throw.IfNull(stream, nameof(stream));
+            Throw.IfNull(reader, nameof(reader));
 
-            if (reader == null)
-            {
-                throw new ArgumentNullException("reader");
-            }
-
-            // Null options are permitted to be passed in.
             options = options ?? new ProtoDataWriterOptions();
 
-            // For a (minor) performance improvement, Serialize() has been left
-            // as a single long method with functions manually inlined.
             var resultIndex = 0;
 
             using (var writer = new ProtoWriter(stream, null, null))
             {
+                var context = new ProtoWriterContext(writer, options);
+
                 do
                 {
-                    // This is the underlying protocol buffers structure we use:
-                    //
-                    // <1 StartGroup> each DataTable
-                    // <SubItem>
-                    //     <2 StartGroup> each DataColumn
-                    //     <SubItem>
-                    //         <1 String> Column Name
-                    //         <2 Variant> Column ProtoDataType (enum casted to int)
-                    //     </SubItem>
-                    //     <3 StartGroup> each DataRow
-                    //     <SubItem>
-                    //         <(# Column Index) (corresponding type)> Field Value
-                    //     </SubItem>
-                    // </SubItem>
-                    //
-                    // NB if Field Value is a DataTable, the whole DataTable is
-
-                    // write the table
                     ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);
 
-                    SubItemToken resultToken = ProtoWriter.StartSubItem(resultIndex, writer);
+                    context.StartSubItem(resultIndex);
 
-                    var columns = new ProtoDataColumnFactory().GetColumns(reader, options);
+                    context.Columns = ProtoDataColumnFactory.GetColumns(reader, options);
 
-                    new HeaderWriter(writer).WriteHeader(columns);
+                    ColumnsWriter.WriteColumns(context);
 
-                    var rowWriter = new RowWriter(writer, columns, options);
+                    var recordIndex = 0;
 
-                    // write the rows
                     while (reader.Read())
                     {
-                        rowWriter.WriteRow(reader);
+                        RecordWriter.WriteRecord(context, recordIndex, reader);
+
+                        recordIndex++;
                     }
 
-                    ProtoWriter.EndSubItem(resultToken, writer);
+                    context.EndSubItem();
 
                     resultIndex++;
                 }
