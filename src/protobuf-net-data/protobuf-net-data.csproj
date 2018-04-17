@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType Condition="$(codecov) == 'true'">full</DebugType>
-    <DebugType Condition="$(codecov) != 'true'">pdbonly</DebugType>
+    <DebugType Condition="$(codecov) != 'true'">embedded</DebugType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>false</IncludeSymbols>
     <TargetFrameworks>net20;net30;net35;net40;net45;netstandard2.0</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Version>0.0.0</Version>
@@ -37,6 +39,15 @@
 
   <ItemGroup>
     <AdditionalFiles Include="../../stylecop.json" Visible="False" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SourceLinkEnabled)' != 'false'">
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.0" PrivateAssets="All" />
+    <PackageReference Include="SourceLink.Create.GitHub" Version="2.8.0" PrivateAssets="All" />
+    <PackageReference Include="SourceLink.Embed.AllSourceFiles" Version="2.8.0" PrivateAssets="All" />
+    <PackageReference Include="SourceLink.Test" Version="2.8.0" PrivateAssets="All" />
+    <DotNetCliToolReference Include="dotnet-sourcelink" Version="2.8.0" />
+    <DotNetCliToolReference Include="dotnet-sourcelink-git" Version="2.8.0" />
   </ItemGroup>
 
 </Project>

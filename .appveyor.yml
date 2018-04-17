@@ -93,7 +93,7 @@ before_build:
 build_script:
 - ps: |
       Execute-Action "building project" {
-          msbuild -p:Configuration=$env:CONFIGURATION -v:m
+          msbuild -p:Configuration=$env:CONFIGURATION -v:m /p:SourceLinkCreate=true /p:SourceLinkTest=true
       }
 
 after_build:
