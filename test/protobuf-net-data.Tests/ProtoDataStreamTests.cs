@@ -14,7 +14,7 @@ using Xunit.Extensions;
 
 namespace ProtoBuf.Data.Tests
 {
-    public class ProtoDataStreamTests
+    public partial class ProtoDataStreamTests
     {
         // Protobuf-net only flushes every 1024 bytes. So check we can
         // successfully write a stream smaller than that.
