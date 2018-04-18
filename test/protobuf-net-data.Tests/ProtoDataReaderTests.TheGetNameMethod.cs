@@ -14,7 +14,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenDataReaderIsClosed()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: "foo");
+                var dataReader = this.CreateDataReader(value: "foo");
 
                 dataReader.Close();
 
@@ -26,7 +26,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenIndexIsOutOfRange()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: "foo");
+                var dataReader = this.CreateDataReader(value: "foo");
 
                 dataReader.Read();
 
@@ -42,7 +42,7 @@ namespace ProtoBuf.Data.Tests
 
                 dataTable.Columns.Add("foo", typeof(int));
 
-                var dataReader = DataReaderHelper.ToProtoDataReader(dataTable.CreateDataReader());
+                var dataReader = this.ToProtoDataReader(dataTable.CreateDataReader());
 
                 // Act
                 var result = dataReader.GetName(0);

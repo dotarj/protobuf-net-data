@@ -5,9 +5,9 @@ using System.IO;
 
 namespace ProtoBuf.Data.Tests
 {
-    internal static class DataReaderHelper
+    public partial class ProtoDataReaderTests
     {
-        public static ProtoDataReader CreateDataReader<TDataType>(TDataType value)
+        protected ProtoDataReader CreateDataReader<TDataType>(TDataType value)
         {
             var dataTable = new DataTable();
 
@@ -15,10 +15,10 @@ namespace ProtoBuf.Data.Tests
 
             dataTable.Rows.Add(value);
 
-            return ToProtoDataReader(dataTable.CreateDataReader());
+            return this.ToProtoDataReader(dataTable.CreateDataReader());
         }
 
-        public static ProtoDataReader ToProtoDataReader(IDataReader dataReader)
+        protected ProtoDataReader ToProtoDataReader(IDataReader dataReader)
         {
             var memoryStream = new MemoryStream();
 

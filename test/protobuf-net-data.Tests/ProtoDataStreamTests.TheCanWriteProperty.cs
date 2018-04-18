@@ -12,7 +12,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldReturnFalse()
             {
                 // Arrange
-                var stream = new ProtoDataStream(DataReaderHelper.CreateDataReader("foo"));
+                var stream = new ProtoDataStream(this.CreateDataReader("foo"));
 
                 // Act
                 var result = stream.CanWrite;

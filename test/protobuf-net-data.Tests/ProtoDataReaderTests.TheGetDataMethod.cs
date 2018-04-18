@@ -14,7 +14,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowException()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: true);
+                var dataReader = this.CreateDataReader(value: true);
 
                 // Assert
                 Assert.Throws<NotSupportedException>(() => ((IDataReader)dataReader).GetData(0));

@@ -13,7 +13,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenDataReaderIsClosed()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: decimal.MinValue);
+                var dataReader = this.CreateDataReader(value: decimal.MinValue);
 
                 dataReader.Close();
 
@@ -25,7 +25,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenNoData()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: decimal.MinValue);
+                var dataReader = this.CreateDataReader(value: decimal.MinValue);
 
                 // Assert
                 Assert.Throws<InvalidOperationException>(() => dataReader.GetDecimal(0));
@@ -35,7 +35,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenIndexIsOutOfRange()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: decimal.MinValue);
+                var dataReader = this.CreateDataReader(value: decimal.MinValue);
 
                 dataReader.Read();
 
@@ -47,7 +47,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenIsNull()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: (string)null);
+                var dataReader = this.CreateDataReader(value: (string)null);
 
                 dataReader.Read();
 
@@ -60,7 +60,7 @@ namespace ProtoBuf.Data.Tests
             {
                 // Arrange
                 var value = decimal.MinValue;
-                var dataReader = DataReaderHelper.CreateDataReader(value: value);
+                var dataReader = this.CreateDataReader(value: value);
 
                 dataReader.Read();
 

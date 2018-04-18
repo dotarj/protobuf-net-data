@@ -13,7 +13,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenDataReaderIsClosed()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: "foo");
+                var dataReader = this.CreateDataReader(value: "foo");
 
                 dataReader.Close();
 
@@ -25,7 +25,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenNoData()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: "foo");
+                var dataReader = this.CreateDataReader(value: "foo");
 
                 // Assert
                 Assert.Throws<InvalidOperationException>(() => dataReader[0]);
@@ -35,7 +35,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenIndexIsOutOfRange()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: "foo");
+                var dataReader = this.CreateDataReader(value: "foo");
 
                 dataReader.Read();
 
@@ -48,7 +48,7 @@ namespace ProtoBuf.Data.Tests
             {
                 // Arrange
                 var value = "foo";
-                var dataReader = DataReaderHelper.CreateDataReader(value: value);
+                var dataReader = this.CreateDataReader(value: value);
 
                 dataReader.Read();
 

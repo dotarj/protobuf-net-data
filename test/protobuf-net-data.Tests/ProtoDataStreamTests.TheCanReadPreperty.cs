@@ -12,7 +12,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldReturnTrueIfNotDisposed()
             {
                 // Arrange
-                var stream = new ProtoDataStream(DataReaderHelper.CreateDataReader("foo"));
+                var stream = new ProtoDataStream(this.CreateDataReader("foo"));
 
                 // Act
                 var result = stream.CanRead;
@@ -25,7 +25,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldReturnFalseIfDisposed()
             {
                 // Arrange
-                var stream = new ProtoDataStream(DataReaderHelper.CreateDataReader("foo"));
+                var stream = new ProtoDataStream(this.CreateDataReader("foo"));
 
                 stream.Dispose();
 

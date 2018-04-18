@@ -13,7 +13,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowException()
             {
                 // Arrange
-                var stream = new ProtoDataStream(DataReaderHelper.CreateDataReader("foo"));
+                var stream = new ProtoDataStream(this.CreateDataReader("foo"));
 
                 // Assert
                 Assert.Throws<NotSupportedException>(() => stream.Length);
