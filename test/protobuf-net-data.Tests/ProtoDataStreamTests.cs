@@ -16,13 +16,16 @@ namespace ProtoBuf.Data.Tests
 {
     public partial class ProtoDataStreamTests
     {
-        protected IDataReader CreateDataReader<TDataType>(TDataType value)
+        protected IDataReader CreateDataReader<TDataType>(TDataType value, int recordCount = 1)
         {
             var dataTable = new DataTable();
 
             dataTable.Columns.Add(typeof(TDataType).Name, typeof(TDataType));
 
-            dataTable.Rows.Add(value);
+            for (var i = 0; i < recordCount; i++)
+            {
+                dataTable.Rows.Add(value);
+            }
 
             return dataTable.CreateDataReader();
         }
