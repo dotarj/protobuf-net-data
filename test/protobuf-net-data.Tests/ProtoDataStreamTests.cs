@@ -14,8 +14,22 @@ using Xunit.Extensions;
 
 namespace ProtoBuf.Data.Tests
 {
-    public class ProtoDataStreamTests
+    public partial class ProtoDataStreamTests
     {
+        protected IDataReader CreateDataReader<TDataType>(TDataType value, int recordCount = 1)
+        {
+            var dataTable = new DataTable();
+
+            dataTable.Columns.Add(typeof(TDataType).Name, typeof(TDataType));
+
+            for (var i = 0; i < recordCount; i++)
+            {
+                dataTable.Rows.Add(value);
+            }
+
+            return dataTable.CreateDataReader();
+        }
+
         // Protobuf-net only flushes every 1024 bytes. So check we can
         // successfully write a stream smaller than that.
         public class When_reading_from_a_stream_less_than_protobuf_nets_flush_size

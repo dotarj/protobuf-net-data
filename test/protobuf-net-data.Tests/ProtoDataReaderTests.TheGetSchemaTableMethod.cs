@@ -14,7 +14,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenDataReaderIsClosed()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: "foo");
+                var dataReader = this.CreateDataReader(value: "foo");
 
                 dataReader.Close();
 
@@ -26,7 +26,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldSetTableName()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: "foo");
+                var dataReader = this.CreateDataReader(value: "foo");
 
                 // Act
                 var schemaTable = dataReader.GetSchemaTable();
@@ -44,7 +44,7 @@ namespace ProtoBuf.Data.Tests
                 dataTable.Columns.Add("foo", typeof(int));
                 dataTable.Columns.Add("bar", typeof(string));
 
-                var dataReader = DataReaderHelper.ToProtoDataReader(dataTable.CreateDataReader());
+                var dataReader = this.ToProtoDataReader(dataTable.CreateDataReader());
 
                 // Act
                 var schemaTable = dataReader.GetSchemaTable();
@@ -62,7 +62,7 @@ namespace ProtoBuf.Data.Tests
                 dataTable.Columns.Add("foo", typeof(int));
                 dataTable.Columns.Add("bar", typeof(string));
 
-                var dataReader = DataReaderHelper.ToProtoDataReader(dataTable.CreateDataReader());
+                var dataReader = this.ToProtoDataReader(dataTable.CreateDataReader());
 
                 // Act
                 var schemaTable = dataReader.GetSchemaTable();
@@ -80,7 +80,7 @@ namespace ProtoBuf.Data.Tests
                 dataTable.Columns.Add("foo", typeof(int));
                 dataTable.Columns.Add("bar", typeof(string));
 
-                var dataReader = DataReaderHelper.ToProtoDataReader(dataTable.CreateDataReader());
+                var dataReader = this.ToProtoDataReader(dataTable.CreateDataReader());
 
                 // Act
                 var schemaTable = dataReader.GetSchemaTable();
@@ -98,7 +98,7 @@ namespace ProtoBuf.Data.Tests
                 dataTable.Columns.Add("foo", typeof(int));
                 dataTable.Columns.Add("bar", typeof(string));
 
-                var dataReader = DataReaderHelper.ToProtoDataReader(dataTable.CreateDataReader());
+                var dataReader = this.ToProtoDataReader(dataTable.CreateDataReader());
 
                 // Act
                 var schemaTable = dataReader.GetSchemaTable();

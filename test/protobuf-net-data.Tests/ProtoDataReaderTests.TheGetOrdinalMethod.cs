@@ -18,7 +18,7 @@ namespace ProtoBuf.Data.Tests
 
                 dataTable.Columns.Add("foo", typeof(int));
 
-                var dataReader = DataReaderHelper.ToProtoDataReader(dataTable.CreateDataReader());
+                var dataReader = this.ToProtoDataReader(dataTable.CreateDataReader());
 
                 dataReader.Close();
 
@@ -30,7 +30,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenIndexIsOutOfRange()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: "foo");
+                var dataReader = this.CreateDataReader(value: "foo");
 
                 dataReader.Read();
 
@@ -47,7 +47,7 @@ namespace ProtoBuf.Data.Tests
                 dataTable.Columns.Add("foo", typeof(int));
                 dataTable.Columns.Add("bar", typeof(int));
 
-                var dataReader = DataReaderHelper.ToProtoDataReader(dataTable.CreateDataReader());
+                var dataReader = this.ToProtoDataReader(dataTable.CreateDataReader());
 
                 // Assert
                 Assert.Equal(1, dataReader.GetOrdinal(dataTable.Columns[1].ColumnName));

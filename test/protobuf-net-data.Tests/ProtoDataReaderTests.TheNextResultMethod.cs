@@ -14,7 +14,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenDataReaderIsClosed()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: "foo");
+                var dataReader = this.CreateDataReader(value: "foo");
 
                 dataReader.Close();
 
@@ -26,7 +26,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldNotCloseWhenNoMoreResults()
             {
                 // Act
-                var dataReader = DataReaderHelper.CreateDataReader(value: (string)null);
+                var dataReader = this.CreateDataReader(value: (string)null);
 
                 dataReader.NextResult();
 
@@ -38,7 +38,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldReturnFalseWhenNoMoreResults()
             {
                 // Act
-                var dataReader = DataReaderHelper.CreateDataReader(value: (string)null);
+                var dataReader = this.CreateDataReader(value: (string)null);
 
                 // Act
                 var result = dataReader.NextResult();
@@ -56,7 +56,7 @@ namespace ProtoBuf.Data.Tests
                 dataSet.Tables.Add(new DataTable());
                 dataSet.Tables.Add(new DataTable());
 
-                var dataReader = DataReaderHelper.ToProtoDataReader(dataSet.CreateDataReader());
+                var dataReader = this.ToProtoDataReader(dataSet.CreateDataReader());
 
                 // Act
                 var result = dataReader.NextResult();
@@ -80,7 +80,7 @@ namespace ProtoBuf.Data.Tests
                 dataSet.Tables[0].Rows.Add("baz");
                 dataSet.Tables[1].Rows.Add("qux");
 
-                var dataReader = DataReaderHelper.ToProtoDataReader(dataSet.CreateDataReader());
+                var dataReader = this.ToProtoDataReader(dataSet.CreateDataReader());
 
                 // Act
                 dataReader.NextResult();
@@ -103,7 +103,7 @@ namespace ProtoBuf.Data.Tests
                 dataSet.Tables[0].Columns.Add("foo", typeof(string));
                 dataSet.Tables[1].Columns.Add("bar", typeof(string));
 
-                var dataReader = DataReaderHelper.ToProtoDataReader(dataSet.CreateDataReader());
+                var dataReader = this.ToProtoDataReader(dataSet.CreateDataReader());
 
                 // Act
                 dataReader.NextResult();

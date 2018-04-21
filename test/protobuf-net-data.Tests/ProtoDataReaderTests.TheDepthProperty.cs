@@ -14,7 +14,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenDataReaderIsClosed()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: true);
+                var dataReader = this.CreateDataReader(value: true);
 
                 dataReader.Close();
 
@@ -26,7 +26,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldReturnZero()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: true);
+                var dataReader = this.CreateDataReader(value: true);
 
                 dataReader.Read();
 

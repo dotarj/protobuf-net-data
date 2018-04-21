@@ -1,23 +1,22 @@
 ﻿// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
 using System;
-using System.Data;
 using Xunit;
 
 namespace ProtoBuf.Data.Tests
 {
-    public partial class ProtoDataReaderTests
+    public partial class ProtoDataStreamTests
     {
-        public class TheGetDataMethod : ProtoDataReaderTests
+        public class TheWriteMethod : ProtoDataStreamTests
         {
             [Fact]
             public void ShouldThrowException()
             {
                 // Arrange
-                var dataReader = this.CreateDataReader(value: true);
+                var stream = new ProtoDataStream(this.CreateDataReader("foo"));
 
                 // Assert
-                Assert.Throws<NotSupportedException>(() => ((IDataReader)dataReader).GetData(0));
+                Assert.Throws<NotSupportedException>(() => stream.Write(null, 0, 0));
             }
         }
     }

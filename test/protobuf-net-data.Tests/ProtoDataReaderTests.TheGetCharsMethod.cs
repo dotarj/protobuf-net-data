@@ -13,7 +13,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenDataReaderIsClosed()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: new[] { 'a' });
+                var dataReader = this.CreateDataReader(value: new[] { 'a' });
 
                 dataReader.Close();
 
@@ -25,7 +25,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenNoData()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: new[] { 'a' });
+                var dataReader = this.CreateDataReader(value: new[] { 'a' });
 
                 // Assert
                 Assert.Throws<InvalidOperationException>(() => dataReader.GetChars(0, 0, new char[1], 0, 1));
@@ -35,7 +35,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenIndexIsOutOfRange()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: new[] { 'a' });
+                var dataReader = this.CreateDataReader(value: new[] { 'a' });
 
                 dataReader.Read();
 
@@ -47,7 +47,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenIsNull()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: (string)null);
+                var dataReader = this.CreateDataReader(value: (string)null);
 
                 dataReader.Read();
 
@@ -59,7 +59,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenFieldOffsetIsLessThanZero()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: new[] { 'a' });
+                var dataReader = this.CreateDataReader(value: new[] { 'a' });
 
                 dataReader.Read();
 
@@ -71,7 +71,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenLengthIsLessThanZero()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: new[] { 'a' });
+                var dataReader = this.CreateDataReader(value: new[] { 'a' });
 
                 dataReader.Read();
 
@@ -83,7 +83,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenBufferOffsetIsLessThanZero()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: new[] { 'a' });
+                var dataReader = this.CreateDataReader(value: new[] { 'a' });
 
                 dataReader.Read();
 
@@ -95,7 +95,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenBufferOffsetIsGreaterThanBufferSize()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: new[] { 'a' });
+                var dataReader = this.CreateDataReader(value: new[] { 'a' });
 
                 dataReader.Read();
 
@@ -107,7 +107,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenBufferOffsetIsEqualToBufferSize()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: new[] { 'a' });
+                var dataReader = this.CreateDataReader(value: new[] { 'a' });
 
                 dataReader.Read();
 
@@ -120,7 +120,7 @@ namespace ProtoBuf.Data.Tests
             {
                 // Arrange
                 var value = new[] { 'a' };
-                var dataReader = DataReaderHelper.CreateDataReader(value: value);
+                var dataReader = this.CreateDataReader(value: value);
 
                 dataReader.Read();
 
@@ -135,7 +135,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldThrowExceptionWhenByteArrayLengthAndBufferOffsetIsGreaterThanBufferLength()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: new[] { 'a', 'b' });
+                var dataReader = this.CreateDataReader(value: new[] { 'a', 'b' });
 
                 dataReader.Read();
 
@@ -147,7 +147,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldReturnZeroWhenFieldOffsetIsGreaterThanByteArrayLength()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: new[] { 'a' });
+                var dataReader = this.CreateDataReader(value: new[] { 'a' });
 
                 dataReader.Read();
 
@@ -162,7 +162,7 @@ namespace ProtoBuf.Data.Tests
             public void ShouldAdjustCopyLengthWhenFieldOffsetAndLengthExceedsByteArrayLength()
             {
                 // Arrange
-                var dataReader = DataReaderHelper.CreateDataReader(value: new[] { 'a' });
+                var dataReader = this.CreateDataReader(value: new[] { 'a' });
 
                 dataReader.Read();
 
@@ -178,7 +178,7 @@ namespace ProtoBuf.Data.Tests
             {
                 // Arrange
                 var value = new[] { 'a' };
-                var dataReader = DataReaderHelper.CreateDataReader(value: value);
+                var dataReader = this.CreateDataReader(value: value);
 
                 dataReader.Read();
 
