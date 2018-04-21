@@ -36,7 +36,9 @@ namespace ProtoBuf.Data.Tests
                 var reader = new ProtoReader(this.Serialize(dataReader), null, null);
 
                 // Assert
-                this.ReadUntilColumnName(reader);
+                var readerContext = new ProtoReaderContext(reader);
+
+                readerContext.ReadUntilColumnName();
 
                 Assert.Equal(columnName, reader.ReadString());
             }
@@ -62,7 +64,9 @@ namespace ProtoBuf.Data.Tests
                 var reader = new ProtoReader(this.Serialize(dataReader, options), null, null);
 
                 // Assert
-                this.ReadUntilColumnName(reader);
+                var readerContext = new ProtoReaderContext(reader);
+
+                readerContext.ReadUntilColumnName();
 
                 Assert.Equal(columnName, reader.ReadString());
             }
@@ -92,8 +96,10 @@ namespace ProtoBuf.Data.Tests
                     var reader = new ProtoReader(this.Serialize(dataReader, options), null, null);
 
                     // Assert
-                    this.ReadExpectedFieldHeader(reader, ResultFieldHeader);
-                    this.StartSubItem(reader);
+                    var readerContext = new ProtoReaderContext(reader);
+
+                    readerContext.ReadExpectedFieldHeader(ResultFieldHeader);
+                    readerContext.StartSubItem();
 
                     Assert.Equal(RecordFieldHeader, reader.ReadFieldHeader());
                 }
@@ -124,8 +130,10 @@ namespace ProtoBuf.Data.Tests
                     var reader = new ProtoReader(this.Serialize(dataReader, options), null, null);
 
                     // Assert
-                    this.ReadExpectedFieldHeader(reader, ResultFieldHeader);
-                    this.StartSubItem(reader);
+                    var readerContext = new ProtoReaderContext(reader);
+
+                    readerContext.ReadExpectedFieldHeader(ResultFieldHeader);
+                    readerContext.StartSubItem();
 
                     Assert.Equal(RecordFieldHeader, reader.ReadFieldHeader());
                 }
@@ -141,36 +149,6 @@ namespace ProtoBuf.Data.Tests
                 stream.Position = 0;
 
                 return stream;
-            }
-
-            private void ReadUntilColumnName(ProtoReader reader)
-            {
-                this.ReadExpectedFieldHeader(reader, ResultFieldHeader);
-                this.StartSubItem(reader);
-
-                this.ReadExpectedFieldHeader(reader, ColumnFieldHeader);
-                this.StartSubItem(reader);
-                this.ReadExpectedFieldHeader(reader, ColumnNameFieldHeader);
-            }
-
-            private void ReadExpectedFieldHeader(ProtoReader reader, int expectedFieldHeader)
-            {
-                var fieldHeader = reader.ReadFieldHeader();
-
-                if (fieldHeader != expectedFieldHeader)
-                {
-                    throw new InvalidDataException($"Field header {expectedFieldHeader} expected, actual '{fieldHeader}'.");
-                }
-            }
-
-            private void StartSubItem(ProtoReader reader)
-            {
-                this.tokens.Push(ProtoReader.StartSubItem(reader));
-            }
-
-            private void EndSubItem(ProtoReader reader)
-            {
-                ProtoReader.EndSubItem(this.tokens.Pop(), reader);
             }
         }
     }

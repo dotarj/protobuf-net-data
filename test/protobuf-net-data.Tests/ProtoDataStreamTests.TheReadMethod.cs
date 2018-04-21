@@ -10,17 +10,10 @@ namespace ProtoBuf.Data.Tests
 {
     public partial class ProtoDataStreamTests
     {
-        private const int ResultFieldHeader = 1;
-        private const int ColumnFieldHeader = 2;
-        private const int ColumnNameFieldHeader = 1;
-        private const int ColumnTypeFieldHeader = 2;
-        private const int NoneFieldHeader = 0;
-        private const int RecordFieldHeader = 3;
-
-        private readonly Stack<SubItemToken> tokens = new Stack<SubItemToken>();
-
         public class TheReadMethod : ProtoDataStreamTests
         {
+            private const int ResultFieldHeader = 1;
+
             [Fact]
             public void ShouldReturnZeroWhenReaderIsClosed()
             {
@@ -78,7 +71,9 @@ namespace ProtoBuf.Data.Tests
                 var reader = new ProtoReader(this.CopyStream(stream), null, null);
 
                 // Assert
-                this.ReadUntilColumnName(reader);
+                var readerContext = new ProtoReaderContext(reader);
+
+                readerContext.ReadUntilColumnName();
 
                 Assert.Equal(columnName, reader.ReadString());
             }
@@ -96,7 +91,9 @@ namespace ProtoBuf.Data.Tests
                 var reader = new ProtoReader(this.CopyStream(stream), null, null);
 
                 // Assert
-                this.ReadUntilFieldValue(reader);
+                var readerContext = new ProtoReaderContext(reader);
+
+                readerContext.ReadUntilFieldValue();
 
                 Assert.Equal(value, reader.ReadString());
             }
@@ -124,7 +121,9 @@ namespace ProtoBuf.Data.Tests
                 var reader = new ProtoReader(this.CopyStream(stream), null, null);
 
                 // Assert
-                this.ReadUntilResultEnd(reader);
+                var readerContext = new ProtoReaderContext(reader);
+
+                readerContext.ReadUntilResultEnd();
 
                 Assert.Equal(ResultFieldHeader, reader.ReadFieldHeader());
             }
@@ -154,8 +153,10 @@ namespace ProtoBuf.Data.Tests
                 var reader = new ProtoReader(this.CopyStream(stream), null, null);
 
                 // Assert
-                this.ReadUntilResultEnd(reader);
-                this.ReadUntilColumnName(reader);
+                var readerContext = new ProtoReaderContext(reader);
+
+                readerContext.ReadUntilResultEnd();
+                readerContext.ReadUntilColumnName();
 
                 Assert.Equal(columnName, reader.ReadString());
             }
@@ -189,76 +190,6 @@ namespace ProtoBuf.Data.Tests
                 outputStream.Position = 0;
 
                 return outputStream;
-            }
-
-            private void ReadUntilResultEnd(ProtoReader reader)
-            {
-                this.ReadUntilFieldValue(reader);
-
-                reader.ReadInt32();
-
-                this.ReadExpectedFieldHeader(reader, NoneFieldHeader);
-                this.EndSubItem(reader);
-                this.ReadExpectedFieldHeader(reader, NoneFieldHeader);
-                this.EndSubItem(reader);
-            }
-
-            private void ReadUntilField(ProtoReader reader)
-            {
-                this.ReadUntilColumnType(reader);
-
-                reader.ReadInt32();
-
-                this.ReadExpectedFieldHeader(reader, NoneFieldHeader);
-                this.EndSubItem(reader);
-            }
-
-            private void ReadUntilFieldValue(ProtoReader reader)
-            {
-                this.ReadUntilField(reader);
-
-                this.ReadExpectedFieldHeader(reader, RecordFieldHeader);
-                this.StartSubItem(reader);
-                this.ReadExpectedFieldHeader(reader, 1);
-            }
-
-            private void ReadUntilColumnType(ProtoReader reader)
-            {
-                this.ReadUntilColumnName(reader);
-
-                reader.ReadString();
-
-                this.ReadExpectedFieldHeader(reader, ColumnTypeFieldHeader);
-            }
-
-            private void ReadUntilColumnName(ProtoReader reader)
-            {
-                this.ReadExpectedFieldHeader(reader, ResultFieldHeader);
-                this.StartSubItem(reader);
-
-                this.ReadExpectedFieldHeader(reader, ColumnFieldHeader);
-                this.StartSubItem(reader);
-                this.ReadExpectedFieldHeader(reader, ColumnNameFieldHeader);
-            }
-
-            private void ReadExpectedFieldHeader(ProtoReader reader, int expectedFieldHeader)
-            {
-                var fieldHeader = reader.ReadFieldHeader();
-
-                if (fieldHeader != expectedFieldHeader)
-                {
-                    throw new InvalidDataException($"Field header {expectedFieldHeader} expected, actual '{fieldHeader}'.");
-                }
-            }
-
-            private void StartSubItem(ProtoReader reader)
-            {
-                this.tokens.Push(ProtoReader.StartSubItem(reader));
-            }
-
-            private void EndSubItem(ProtoReader reader)
-            {
-                ProtoReader.EndSubItem(this.tokens.Pop(), reader);
             }
         }
     }

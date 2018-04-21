@@ -11,11 +11,6 @@ namespace ProtoBuf.Data.Tests
     public partial class ProtoDataWriterTests
     {
         private const int ResultFieldHeader = 1;
-        private const int ColumnFieldHeader = 2;
-        private const int ColumnNameFieldHeader = 1;
-        private const int ColumnTypeFieldHeader = 2;
-        private const int NoneFieldHeader = 0;
-        private const int RecordFieldHeader = 3;
 
         private readonly Stack<SubItemToken> tokens = new Stack<SubItemToken>();
 
@@ -62,7 +57,9 @@ namespace ProtoBuf.Data.Tests
             var reader = new ProtoReader(this.Serialize(dataReader), null, null);
 
             // Assert
-            this.ReadUntilResultEnd(reader);
+            var readerContext = new ProtoReaderContext(reader);
+
+            readerContext.ReadUntilResultEnd();
 
             Assert.Equal(ResultFieldHeader, reader.ReadFieldHeader());
         }
@@ -77,59 +74,6 @@ namespace ProtoBuf.Data.Tests
             stream.Position = 0;
 
             return stream;
-        }
-
-        private void ReadUntilResultEnd(ProtoReader reader)
-        {
-            this.ReadExpectedFieldHeader(reader, ResultFieldHeader);
-            this.StartSubItem(reader);
-
-            this.ReadExpectedFieldHeader(reader, ColumnFieldHeader);
-            this.StartSubItem(reader);
-            this.ReadExpectedFieldHeader(reader, ColumnNameFieldHeader);
-
-            reader.ReadString();
-
-            this.ReadExpectedFieldHeader(reader, ColumnTypeFieldHeader);
-
-            reader.ReadInt32();
-
-            this.ReadExpectedFieldHeader(reader, NoneFieldHeader);
-            this.EndSubItem(reader);
-
-            this.ReadExpectedFieldHeader(reader, RecordFieldHeader);
-            this.StartSubItem(reader);
-            this.ReadExpectedFieldHeader(reader, 1);
-
-            reader.ReadInt32();
-
-            this.ReadExpectedFieldHeader(reader, NoneFieldHeader);
-
-            this.EndSubItem(reader);
-
-            this.ReadExpectedFieldHeader(reader, NoneFieldHeader);
-
-            this.EndSubItem(reader);
-        }
-
-        private void ReadExpectedFieldHeader(ProtoReader reader, int expectedFieldHeader)
-        {
-            var fieldHeader = reader.ReadFieldHeader();
-
-            if (fieldHeader != expectedFieldHeader)
-            {
-                throw new InvalidDataException($"Field header {expectedFieldHeader} expected, actual '{fieldHeader}'.");
-            }
-        }
-
-        private void StartSubItem(ProtoReader reader)
-        {
-            this.tokens.Push(ProtoReader.StartSubItem(reader));
-        }
-
-        private void EndSubItem(ProtoReader reader)
-        {
-            ProtoReader.EndSubItem(this.tokens.Pop(), reader);
         }
 
         private IDataReader CreateDataReader<TDataType>(TDataType value)
