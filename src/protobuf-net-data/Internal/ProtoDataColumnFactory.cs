@@ -52,7 +52,7 @@ namespace ProtoBuf.Data.Internal
 
                     var columnName = (string)row["ColumnName"];
                     var dataType = (Type)row["DataType"];
-                    var protoBufDataType = ConvertProtoDataType.FromClrType(dataType);
+                    var protoBufDataType = TypeHelper.GetProtoDataType(dataType);
 
                     columns.Add(new ProtoDataColumn(columnName, dataType, protoBufDataType));
                 }

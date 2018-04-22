@@ -118,7 +118,7 @@ namespace ProtoBuf.Data.Internal
                         break;
 
                     default:
-                        throw new UnsupportedColumnTypeException(ConvertProtoDataType.ToClrType(context.Columns[columnIndex].ProtoDataType));
+                        throw new NotSupportedException($"The data type '{context.Columns[columnIndex].DataType.Name}' is not supported. The supported data types are: {TypeHelper.GetSupportedDataTypes()}.");
                 }
             }
 

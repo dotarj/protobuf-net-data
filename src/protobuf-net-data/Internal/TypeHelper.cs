@@ -91,7 +91,7 @@ namespace ProtoBuf.Data.Internal
             throw new InvalidDataException($"Undefined ProtoDataType '{(int)type}'.");
         }
 
-        private static string GetSupportedDataTypes()
+        public static string GetSupportedDataTypes()
         {
             var dataTypeNames = new string[TypeHelper.SupportedDataTypes.Length];
 
