@@ -32,9 +32,9 @@ namespace ProtoBuf.Data
         private bool disposed;
         private int resultIndex;
         private bool isHeaderWritten;
-        private RowWriter rowWriter;
-        private SubItemToken currentResultToken;
+        private ProtoWriterContext context;
         private bool readerIsClosed;
+        private int recordIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProtoDataStream"/> class.
@@ -135,6 +135,7 @@ namespace ProtoBuf.Data
             this.resultIndex = 0;
             this.bufferStream = new CircularStream(bufferSize);
             this.writer = new ProtoWriter(this.bufferStream, null, null);
+            this.context = new ProtoWriterContext(this.writer, this.options);
         }
 
         /// <summary>
@@ -318,12 +319,11 @@ namespace ProtoBuf.Data
 
             ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, this.writer);
 
-            this.currentResultToken = ProtoWriter.StartSubItem(this.resultIndex, this.writer);
+            this.context.StartSubItem(this.resultIndex);
 
-            IList<ProtoDataColumn> columns = ProtoDataColumnFactory.GetColumns(this.reader, this.options);
-            new HeaderWriter(this.writer).WriteHeader(columns);
+            this.context.Columns = ProtoDataColumnFactory.GetColumns(this.reader, this.options);
 
-            this.rowWriter = new RowWriter(this.writer, columns, this.options);
+            ColumnsWriter.WriteColumns(this.context);
 
             this.isHeaderWritten = true;
         }
@@ -342,23 +342,23 @@ namespace ProtoBuf.Data
                 // see any change.
                 if (this.reader.Read())
                 {
-                    this.rowWriter.WriteRow(this.reader);
+                    RecordWriter.WriteRecord(this.context, this.recordIndex, this.reader);
                 }
                 else
                 {
                     this.resultIndex++;
-                    ProtoWriter.EndSubItem(this.currentResultToken, this.writer);
+
+                    this.context.EndSubItem();
 
                     if (this.reader.NextResult())
                     {
-                        // Start next data table.
                         this.isHeaderWritten = false;
+                        this.recordIndex = 0;
+
                         this.FillBuffer(requestedLength);
                     }
                     else
                     {
-                        // All done, no more results.
-                        // little optimization
                         this.writer.Close();
                         this.CloseReader();
                     }

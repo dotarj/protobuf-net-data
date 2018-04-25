@@ -62,7 +62,7 @@ namespace ProtoBuf.Data.Tests
             {
                 using (var originalReader = this.originalTable.CreateDataReader())
                 {
-                    Assert.Throws<UnsupportedColumnTypeException>(() => DataSerializer.Serialize(Stream.Null, originalReader));
+                    Assert.Throws<NotSupportedException>(() => DataSerializer.Serialize(Stream.Null, originalReader));
                 }
             }
 
