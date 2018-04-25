@@ -24,13 +24,13 @@ namespace ProtoBuf.Data.Internal
 
             if (context.Buffers == null)
             {
-                context.Buffers = new ProtoBufDataBuffer[context.Columns.Count];
+                context.Buffers = new ProtoDataBuffer[context.Columns.Count];
 
-                ProtoBufDataBuffer.Initialize(context.Buffers);
+                ProtoDataBuffer.Initialize(context.Buffers);
             }
             else
             {
-                ProtoBufDataBuffer.Clear(context.Buffers);
+                ProtoDataBuffer.Clear(context.Buffers);
             }
 
             context.StartSubItem();
@@ -69,19 +69,19 @@ namespace ProtoBuf.Data.Internal
                         context.Buffers[columnIndex].IsNull = false;
                         break;
                     case ProtoDataType.Int:
-                        context.Buffers[columnIndex].Int = context.Reader.ReadInt32();
+                        context.Buffers[columnIndex].Int32 = context.Reader.ReadInt32();
                         context.Buffers[columnIndex].IsNull = false;
                         break;
                     case ProtoDataType.Long:
-                        context.Buffers[columnIndex].Long = context.Reader.ReadInt64();
+                        context.Buffers[columnIndex].Int64 = context.Reader.ReadInt64();
                         context.Buffers[columnIndex].IsNull = false;
                         break;
                     case ProtoDataType.Short:
-                        context.Buffers[columnIndex].Short = context.Reader.ReadInt16();
+                        context.Buffers[columnIndex].Int16 = context.Reader.ReadInt16();
                         context.Buffers[columnIndex].IsNull = false;
                         break;
                     case ProtoDataType.Bool:
-                        context.Buffers[columnIndex].Bool = context.Reader.ReadBoolean();
+                        context.Buffers[columnIndex].Boolean = context.Reader.ReadBoolean();
                         context.Buffers[columnIndex].IsNull = false;
                         break;
                     case ProtoDataType.Byte:

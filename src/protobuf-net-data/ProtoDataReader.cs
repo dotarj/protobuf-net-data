@@ -243,7 +243,7 @@ namespace ProtoBuf.Data
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
 
-            return this.context.Buffers[i].Bool;
+            return this.context.Buffers[i].Boolean;
         }
 
         /// <summary>
@@ -353,7 +353,7 @@ namespace ProtoBuf.Data
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
 
-            return this.context.Buffers[i].Short;
+            return this.context.Buffers[i].Int16;
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace ProtoBuf.Data
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
 
-            return this.context.Buffers[i].Int;
+            return this.context.Buffers[i].Int32;
         }
 
         /// <summary>
@@ -387,7 +387,7 @@ namespace ProtoBuf.Data
             this.ThrowIfNoData();
             this.ThrowIfIndexOutOfRange(i);
 
-            return this.context.Buffers[i].Long;
+            return this.context.Buffers[i].Int64;
         }
 
         /// <summary>
