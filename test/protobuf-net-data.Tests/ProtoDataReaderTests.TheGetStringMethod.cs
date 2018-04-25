@@ -54,6 +54,18 @@ namespace ProtoBuf.Data.Tests
             }
 
             [Fact]
+            public void ShouldThrowExceptionIfInvalidType()
+            {
+                // Arrange
+                var dataReader = this.CreateDataReader(value: 42);
+
+                dataReader.Read();
+
+                // Assert
+                Assert.Throws<InvalidOperationException>(() => dataReader.GetString(0));
+            }
+
+            [Fact]
             public void ShouldReturnCorrespondingValue()
             {
                 // Arrange

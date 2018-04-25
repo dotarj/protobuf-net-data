@@ -18,7 +18,7 @@ namespace ProtoBuf.Data.Internal
 
         public List<ProtoDataColumn> Columns { get; set; } = new List<ProtoDataColumn>();
 
-        public ProtoBufDataBuffer[] Buffers { get; set; }
+        public ProtoDataBuffer[] Buffers { get; set; }
 
         public bool ReachedEndOfCurrentResult { get; set; }
 

@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 
 namespace ProtoBuf.Data.Internal
 {
-    internal sealed class ProtoBufDataBuffer
+    internal sealed class ProtoDataBuffer
     {
         private ValueTypeBuffer valueTypeBuffer;
         private BufferType bufferType;
         private object referenceTypeBuffer;
 
-        public ProtoBufDataBuffer()
+        public ProtoDataBuffer()
         {
             this.IsNull = true;
         }
@@ -21,10 +21,10 @@ namespace ProtoBuf.Data.Internal
             Empty = 0,
             String = 1,
             DateTime = 2,
-            Int = 3,
-            Long = 4,
-            Short = 5,
-            Bool = 6,
+            Int32 = 3,
+            Int64 = 4,
+            Int16 = 5,
+            Boolean = 6,
             Byte = 7,
             Float = 8,
             Double = 9,
@@ -38,25 +38,21 @@ namespace ProtoBuf.Data.Internal
 
         public bool IsNull { get; set; }
 
-        public bool Bool
+        public bool Boolean
         {
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.Boolean);
 
-                if (this.bufferType == BufferType.Bool)
-                {
-                    return this.valueTypeBuffer.Bool;
-                }
-
-                return (bool)this.Value;
+                return this.valueTypeBuffer.Boolean;
             }
 
             set
             {
-                this.bufferType = BufferType.Bool;
+                this.bufferType = BufferType.Boolean;
 
-                this.valueTypeBuffer.Bool = value;
+                this.valueTypeBuffer.Boolean = value;
             }
         }
 
@@ -65,13 +61,9 @@ namespace ProtoBuf.Data.Internal
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.Byte);
 
-                if (this.bufferType == BufferType.Byte)
-                {
-                    return this.valueTypeBuffer.Byte;
-                }
-
-                return (byte)this.Value;
+                return this.valueTypeBuffer.Byte;
             }
 
             set
@@ -87,13 +79,9 @@ namespace ProtoBuf.Data.Internal
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.ByteArray);
 
-                if (this.bufferType == BufferType.ByteArray)
-                {
-                    return (byte[])this.referenceTypeBuffer;
-                }
-
-                return (byte[])this.Value;
+                return (byte[])this.referenceTypeBuffer;
             }
 
             set
@@ -109,13 +97,9 @@ namespace ProtoBuf.Data.Internal
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.Char);
 
-                if (this.bufferType == BufferType.Char)
-                {
-                    return this.valueTypeBuffer.Char;
-                }
-
-                return (char)this.Value;
+                return this.valueTypeBuffer.Char;
             }
 
             set
@@ -131,13 +115,9 @@ namespace ProtoBuf.Data.Internal
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.CharArray);
 
-                if (this.bufferType == BufferType.CharArray)
-                {
-                    return (char[])this.referenceTypeBuffer;
-                }
-
-                return (char[])this.Value;
+                return (char[])this.referenceTypeBuffer;
             }
 
             set
@@ -153,13 +133,9 @@ namespace ProtoBuf.Data.Internal
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.DateTime);
 
-                if (this.bufferType == BufferType.DateTime)
-                {
-                    return this.valueTypeBuffer.DateTime;
-                }
-
-                return (DateTime)this.Value;
+                return this.valueTypeBuffer.DateTime;
             }
 
             set
@@ -175,13 +151,9 @@ namespace ProtoBuf.Data.Internal
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.Decimal);
 
-                if (this.bufferType == BufferType.Decimal)
-                {
-                    return this.valueTypeBuffer.Decimal;
-                }
-
-                return (decimal)this.Value;
+                return this.valueTypeBuffer.Decimal;
             }
 
             set
@@ -197,13 +169,9 @@ namespace ProtoBuf.Data.Internal
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.Double);
 
-                if (this.bufferType == BufferType.Double)
-                {
-                    return this.valueTypeBuffer.Double;
-                }
-
-                return (double)this.Value;
+                return this.valueTypeBuffer.Double;
             }
 
             set
@@ -219,13 +187,9 @@ namespace ProtoBuf.Data.Internal
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.Float);
 
-                if (this.bufferType == BufferType.Float)
-                {
-                    return this.valueTypeBuffer.Float;
-                }
-
-                return (float)this.Value;
+                return this.valueTypeBuffer.Float;
             }
 
             set
@@ -241,13 +205,9 @@ namespace ProtoBuf.Data.Internal
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.Guid);
 
-                if (this.bufferType == BufferType.Guid)
-                {
-                    return this.valueTypeBuffer.Guid;
-                }
-
-                return (Guid)this.Value;
+                return this.valueTypeBuffer.Guid;
             }
 
             set
@@ -258,69 +218,57 @@ namespace ProtoBuf.Data.Internal
             }
         }
 
-        public int Int
+        public int Int32
         {
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.Int32);
 
-                if (this.bufferType == BufferType.Int)
-                {
-                    return this.valueTypeBuffer.Int;
-                }
-
-                return (int)this.Value;
+                return this.valueTypeBuffer.Int32;
             }
 
             set
             {
-                this.bufferType = BufferType.Int;
+                this.bufferType = BufferType.Int32;
 
-                this.valueTypeBuffer.Int = value;
+                this.valueTypeBuffer.Int32 = value;
             }
         }
 
-        public long Long
+        public long Int64
         {
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.Int64);
 
-                if (this.bufferType == BufferType.Long)
-                {
-                    return this.valueTypeBuffer.Long;
-                }
-
-                return (long)this.Value;
+                return this.valueTypeBuffer.Int64;
             }
 
             set
             {
-                this.bufferType = BufferType.Long;
+                this.bufferType = BufferType.Int64;
 
-                this.valueTypeBuffer.Long = value;
+                this.valueTypeBuffer.Int64 = value;
             }
         }
 
-        public short Short
+        public short Int16
         {
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.Int16);
 
-                if (this.bufferType == BufferType.Short)
-                {
-                    return this.valueTypeBuffer.Short;
-                }
-
-                return (short)this.Value;
+                return this.valueTypeBuffer.Int16;
             }
 
             set
             {
-                this.bufferType = BufferType.Short;
+                this.bufferType = BufferType.Int16;
 
-                this.valueTypeBuffer.Short = value;
+                this.valueTypeBuffer.Int16 = value;
             }
         }
 
@@ -329,13 +277,9 @@ namespace ProtoBuf.Data.Internal
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.String);
 
-                if (this.bufferType == BufferType.String)
-                {
-                    return (string)this.referenceTypeBuffer;
-                }
-
-                return (string)this.Value;
+                return (string)this.referenceTypeBuffer;
             }
 
             set
@@ -351,13 +295,9 @@ namespace ProtoBuf.Data.Internal
             get
             {
                 this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.TimeSpan);
 
-                if (this.bufferType == BufferType.TimeSpan)
-                {
-                    return this.valueTypeBuffer.TimeSpan;
-                }
-
-                return (TimeSpan)this.Value;
+                return this.valueTypeBuffer.TimeSpan;
             }
 
             set
@@ -380,7 +320,7 @@ namespace ProtoBuf.Data.Internal
                 switch (this.bufferType)
                 {
                     case BufferType.Empty: return DBNull.Value;
-                    case BufferType.Bool: return this.Bool;
+                    case BufferType.Boolean: return this.Boolean;
                     case BufferType.Byte: return this.Byte;
                     case BufferType.ByteArray: return this.ByteArray;
                     case BufferType.Char: return this.Char;
@@ -390,9 +330,9 @@ namespace ProtoBuf.Data.Internal
                     case BufferType.Double: return this.Double;
                     case BufferType.Float: return this.Float;
                     case BufferType.Guid: return this.Guid;
-                    case BufferType.Int: return this.Int;
-                    case BufferType.Long: return this.Long;
-                    case BufferType.Short: return this.Short;
+                    case BufferType.Int32: return this.Int32;
+                    case BufferType.Int64: return this.Int64;
+                    case BufferType.Int16: return this.Int16;
                     case BufferType.String: return this.String;
                     case BufferType.TimeSpan: return this.TimeSpan;
                 }
@@ -401,7 +341,7 @@ namespace ProtoBuf.Data.Internal
             }
         }
 
-        public static void Clear(ProtoBufDataBuffer[] buffers)
+        public static void Clear(ProtoDataBuffer[] buffers)
         {
             for (var i = 0; i < buffers.Length; i++)
             {
@@ -409,11 +349,11 @@ namespace ProtoBuf.Data.Internal
             }
         }
 
-        public static void Initialize(ProtoBufDataBuffer[] buffers)
+        public static void Initialize(ProtoDataBuffer[] buffers)
         {
             for (var i = 0; i < buffers.Length; i++)
             {
-                buffers[i] = new ProtoBufDataBuffer();
+                buffers[i] = new ProtoDataBuffer();
             }
         }
 
@@ -432,11 +372,19 @@ namespace ProtoBuf.Data.Internal
             }
         }
 
+        private void ThrowIfInvalidBufferType(BufferType expectedBufferType)
+        {
+            if (this.bufferType != expectedBufferType)
+            {
+                throw new InvalidOperationException($"Invalid attempt to read data of type '{expectedBufferType}' when data is of type '{this.bufferType}'.");
+            }
+        }
+
         [StructLayout(LayoutKind.Explicit)]
         private struct ValueTypeBuffer
         {
             [FieldOffset(0)]
-            public bool Bool;
+            public bool Boolean;
             [FieldOffset(0)]
             public byte Byte;
             [FieldOffset(0)]
@@ -452,11 +400,11 @@ namespace ProtoBuf.Data.Internal
             [FieldOffset(0)]
             public Guid Guid;
             [FieldOffset(0)]
-            public int Int;
+            public int Int32;
             [FieldOffset(0)]
-            public long Long;
+            public long Int64;
             [FieldOffset(0)]
-            public short Short;
+            public short Int16;
             [FieldOffset(0)]
             public TimeSpan TimeSpan;
         }
