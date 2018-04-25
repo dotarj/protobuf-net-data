@@ -59,22 +59,7 @@ namespace ProtoBuf.Data
         /// </exception><filterpriority>2</filterpriority>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != typeof(ProtoDataWriterOptions))
-            {
-                return false;
-            }
-
-            return this.Equals((ProtoDataWriterOptions)obj);
+            return this.Equals(obj as ProtoDataWriterOptions);
         }
 
         /// <summary>
@@ -86,6 +71,7 @@ namespace ProtoBuf.Data
         /// <filterpriority>2</filterpriority>
         public override int GetHashCode()
         {
+            // Implementation according to ReSharper suggestion: https://www.jetbrains.com/help/resharper/Code_Generation__Equality_Members.html
             unchecked
             {
                 return (this.SerializeEmptyArraysAsNull.GetHashCode() * 397) ^ this.IncludeComputedColumns.GetHashCode();
