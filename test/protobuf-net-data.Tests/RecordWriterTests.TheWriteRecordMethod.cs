@@ -451,6 +451,27 @@ namespace ProtoBuf.Data.Tests
             }
 
             [Fact]
+            public void ShouldSerializeEmptyByteArrayAsNull()
+            {
+                // Arrange
+                var dataReader = this.CreateDataReader(new byte[0]);
+                var options = new ProtoDataWriterOptions() { SerializeEmptyArraysAsNull = true };
+
+                // Act
+                var reader = new ProtoReader(this.Serialize(dataReader, options), null, null);
+
+                // Assert
+                var readerContext = new ProtoReaderContext(reader);
+
+                readerContext.ReadUntilField();
+
+                readerContext.ReadExpectedFieldHeader(3);
+                readerContext.StartSubItem();
+
+                Assert.Equal(0, reader.ReadFieldHeader());
+            }
+
+            [Fact]
             public void ShouldSerializeByteArrayColumnType()
             {
                 // Arrange
@@ -483,6 +504,27 @@ namespace ProtoBuf.Data.Tests
                 readerContext.ReadUntilFieldValue();
 
                 Assert.Equal(value, reader.ReadString().ToCharArray());
+            }
+
+            [Fact]
+            public void ShouldSerializeEmptyCharArrayAsNull()
+            {
+                // Arrange
+                var dataReader = this.CreateDataReader(new char[0]);
+                var options = new ProtoDataWriterOptions() { SerializeEmptyArraysAsNull = true };
+
+                // Act
+                var reader = new ProtoReader(this.Serialize(dataReader, options), null, null);
+
+                // Assert
+                var readerContext = new ProtoReaderContext(reader);
+
+                readerContext.ReadUntilField();
+
+                readerContext.ReadExpectedFieldHeader(3);
+                readerContext.StartSubItem();
+
+                Assert.Equal(0, reader.ReadFieldHeader());
             }
 
             [Fact]

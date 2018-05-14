@@ -74,8 +74,11 @@ namespace ProtoBuf.Data.Tests
 
                 dataReader.Read();
 
+                // Act
+                var result = dataReader.GetInt64(0);
+
                 // Assert
-                Assert.Equal(value, dataReader.GetInt64(0));
+                Assert.Equal(value, result);
             }
         }
     }

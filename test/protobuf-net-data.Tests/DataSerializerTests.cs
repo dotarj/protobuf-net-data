@@ -8,7 +8,7 @@ using Xunit;
 
 namespace ProtoBuf.Data.Tests
 {
-    public class DataSerializerTests
+    public partial class DataSerializerTests
     {
         public class When_serializing_a_data_table_to_a_buffer_and_back
         {
