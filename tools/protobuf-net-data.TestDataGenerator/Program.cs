@@ -46,7 +46,7 @@ namespace ProtoBuf.Data.TestDataGenerator
 
             using (var stream = File.Create($"{assemblyVersion}.xml"))
             {
-                dataSet.WriteXml(stream);
+                dataSet.WriteXml(stream, XmlWriteMode.WriteSchema);
             }
         }
 
@@ -60,19 +60,19 @@ namespace ProtoBuf.Data.TestDataGenerator
         {
             var dataSet = new DataSet();
 
-            dataSet.Tables.Add(CreateDataTable());
-            dataSet.Tables.Add(CreateDataTable());
+            dataSet.Tables.Add(CreateDataTable(1));
+            dataSet.Tables.Add(CreateDataTable(2));
 
             return dataSet;
         }
 
-        private static DataTable CreateDataTable()
+        private static DataTable CreateDataTable(int tableIndex)
         {
             var dataTable = new DataTable();
 
             for (var columnIndex = 0; columnIndex < generators.Count; columnIndex++)
             {
-                dataTable.Columns.Add($"{dataTable.TableName}_column_{columnIndex}", generators.Keys.ElementAt(columnIndex));
+                dataTable.Columns.Add($"Table{tableIndex}_Column{columnIndex}", generators.Keys.ElementAt(columnIndex));
             }
 
             dataTable.Rows.Add(CreateDataRow());
