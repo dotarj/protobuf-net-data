@@ -44,9 +44,14 @@ namespace ProtoBuf.Data.TestDataGenerator
                 DataSerializer.Serialize(stream, dataReader);
             }
 
+            using (var stream = File.Create($"{assemblyVersion}.xsd"))
+            {
+                dataSet.WriteXmlSchema(stream, type => type.FullName);
+            }
+
             using (var stream = File.Create($"{assemblyVersion}.xml"))
             {
-                dataSet.WriteXml(stream, XmlWriteMode.WriteSchema);
+                dataSet.WriteXml(stream);
             }
         }
 
