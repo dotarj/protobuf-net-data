@@ -28,7 +28,7 @@ namespace ProtoBuf.Data.TestDataGenerator
             { typeof(long), () => Convert.ToInt64(random.Next()) },
             { typeof(short), () => Convert.ToInt16(random.Next(short.MaxValue)) },
             { typeof(string), () => new string(new[] { (char)random.Next(65, 90), (char)random.Next(65, 90) }) },
-            { typeof(TimeSpan), () => TimeSpan.FromTicks(random.Next()) },
+            { typeof(TimeSpan), () => TimeSpan.FromTicks(random.Next()) }
         };
 
         public static void Main(string[] args)
@@ -77,22 +77,34 @@ namespace ProtoBuf.Data.TestDataGenerator
 
             for (var columnIndex = 0; columnIndex < generators.Count; columnIndex++)
             {
-                dataTable.Columns.Add($"Table{tableIndex}_Column{columnIndex}", generators.Keys.ElementAt(columnIndex));
+                dataTable.Columns.Add($"Table{tableIndex}_Column{columnIndex + 1}", generators.Keys.ElementAt(columnIndex));
             }
 
-            dataTable.Rows.Add(CreateDataRow());
+            dataTable.Rows.Add(CreateDataRow(useDefaults: true));
             dataTable.Rows.Add(CreateDataRow());
 
             return dataTable;
         }
 
-        private static object[] CreateDataRow()
+        private static object[] CreateDataRow(bool useDefaults = false)
         {
             var values = new object[generators.Values.Count];
 
             for (var columnIndex = 0; columnIndex < generators.Count; columnIndex++)
             {
-                values[columnIndex] = generators.Values.ElementAt(columnIndex)();
+                if (useDefaults)
+                {
+                    var columnType = generators.Keys.ElementAt(columnIndex);
+
+                    if (columnType.IsValueType)
+                    {
+                        values[columnIndex] = Activator.CreateInstance(columnType);
+                    }
+                }
+                else
+                {
+                    values[columnIndex] = generators.Values.ElementAt(columnIndex)();
+                }
             }
 
             return values;
