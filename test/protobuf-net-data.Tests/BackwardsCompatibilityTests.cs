@@ -23,7 +23,7 @@ namespace ProtoBuf.Data.Tests
         [Fact]
         public void ShouldBeBackwardsCompatible()
         {
-            var inputs = Directory.GetFiles("./BackwardsCompatibility", "*.proto");
+            var inputs = Directory.GetFiles("./backwards-compatibility", "*.proto");
 
             foreach (var input in inputs)
             {

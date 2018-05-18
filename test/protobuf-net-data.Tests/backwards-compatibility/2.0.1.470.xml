@@ -1,0 +1,54 @@
+<NewDataSet>
+  <Table1>
+    <Table1_Column1>false</Table1_Column1>
+    <Table1_Column2>0</Table1_Column2>
+    <Table1_Column5>0001-01-01T00:00:00+01:00</Table1_Column5>
+    <Table1_Column6>0</Table1_Column6>
+    <Table1_Column7>00000000-0000-0000-0000-000000000000</Table1_Column7>
+    <Table1_Column8>0</Table1_Column8>
+    <Table1_Column9>0</Table1_Column9>
+    <Table1_Column10>0</Table1_Column10>
+  </Table1>
+  <Table1>
+    <Table1_Column1>false</Table1_Column1>
+    <Table1_Column2>147</Table1_Column2>
+    <Table1_Column3>+M4=</Table1_Column3>
+    <Table1_Column4 xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <char>73</char>
+      <char>71</char>
+    </Table1_Column4>
+    <Table1_Column5>2018-05-17T19:51:05.7678962+02:00</Table1_Column5>
+    <Table1_Column6>0.0518967486228313</Table1_Column6>
+    <Table1_Column7>4488f503-719d-4f7b-8731-99e90a1bcb6d</Table1_Column7>
+    <Table1_Column8>1229012294</Table1_Column8>
+    <Table1_Column9>281072339</Table1_Column9>
+    <Table1_Column10>21425</Table1_Column10>
+    <Table1_Column11>BC</Table1_Column11>
+  </Table1>
+  <Table2>
+    <Table2_Column1>false</Table2_Column1>
+    <Table2_Column2>0</Table2_Column2>
+    <Table2_Column5>0001-01-01T00:00:00+01:00</Table2_Column5>
+    <Table2_Column6>0</Table2_Column6>
+    <Table2_Column7>00000000-0000-0000-0000-000000000000</Table2_Column7>
+    <Table2_Column8>0</Table2_Column8>
+    <Table2_Column9>0</Table2_Column9>
+    <Table2_Column10>0</Table2_Column10>
+  </Table2>
+  <Table2>
+    <Table2_Column1>false</Table2_Column1>
+    <Table2_Column2>138</Table2_Column2>
+    <Table2_Column3>QGE=</Table2_Column3>
+    <Table2_Column4 xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <char>88</char>
+      <char>78</char>
+    </Table2_Column4>
+    <Table2_Column5>2018-05-17T19:48:39.1405956+02:00</Table2_Column5>
+    <Table2_Column6>0.0665076417226846</Table2_Column6>
+    <Table2_Column7>f0076c18-fed1-4e2d-8f1c-16d1ddf15ba2</Table2_Column7>
+    <Table2_Column8>416588243</Table2_Column8>
+    <Table2_Column9>538253825</Table2_Column9>
+    <Table2_Column10>31334</Table2_Column10>
+    <Table2_Column11>TK</Table2_Column11>
+  </Table2>
+</NewDataSet>

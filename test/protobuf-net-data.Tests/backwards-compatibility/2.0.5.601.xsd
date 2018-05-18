@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Table1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Table1_Column1" type="xs:boolean" minOccurs="0" />
+              <xs:element name="Table1_Column2" type="xs:unsignedByte" minOccurs="0" />
+              <xs:element name="Table1_Column3" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="Table1_Column4" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:length value="1" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Table1_Column5" msdata:DataType="System.Char[]" type="xs:anyType" minOccurs="0" />
+              <xs:element name="Table1_Column6" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Table1_Column7" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Table1_Column8" type="xs:double" minOccurs="0" />
+              <xs:element name="Table1_Column9" type="xs:float" minOccurs="0" />
+              <xs:element name="Table1_Column10" msdata:DataType="System.Guid" type="xs:string" minOccurs="0" />
+              <xs:element name="Table1_Column11" type="xs:int" minOccurs="0" />
+              <xs:element name="Table1_Column12" type="xs:long" minOccurs="0" />
+              <xs:element name="Table1_Column13" type="xs:short" minOccurs="0" />
+              <xs:element name="Table1_Column14" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Table2">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Table2_Column1" type="xs:boolean" minOccurs="0" />
+              <xs:element name="Table2_Column2" type="xs:unsignedByte" minOccurs="0" />
+              <xs:element name="Table2_Column3" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="Table2_Column4" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:length value="1" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Table2_Column5" msdata:DataType="System.Char[]" type="xs:anyType" minOccurs="0" />
+              <xs:element name="Table2_Column6" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Table2_Column7" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Table2_Column8" type="xs:double" minOccurs="0" />
+              <xs:element name="Table2_Column9" type="xs:float" minOccurs="0" />
+              <xs:element name="Table2_Column10" msdata:DataType="System.Guid" type="xs:string" minOccurs="0" />
+              <xs:element name="Table2_Column11" type="xs:int" minOccurs="0" />
+              <xs:element name="Table2_Column12" type="xs:long" minOccurs="0" />
+              <xs:element name="Table2_Column13" type="xs:short" minOccurs="0" />
+              <xs:element name="Table2_Column14" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
