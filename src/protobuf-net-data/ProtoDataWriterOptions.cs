@@ -27,55 +27,39 @@ namespace ProtoBuf.Data
         public bool IncludeComputedColumns { get; set; }
 
         /// <summary>
-        /// Indicates whether the current object is equal to another object of the same type.
-        /// </summary>
-        /// <returns>
-        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
-        /// </returns>
-        /// <param name="other">An object to compare with this object.</param>
-        public bool Equals(ProtoDataWriterOptions other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return other.SerializeEmptyArraysAsNull.Equals(this.SerializeEmptyArraysAsNull) && other.IncludeComputedColumns.Equals(this.IncludeComputedColumns);
-        }
-
-        /// <summary>
         /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
         /// </summary>
-        /// <returns>
-        /// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
-        /// </returns>
-        /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.
-        /// </param><exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.
-        /// </exception><filterpriority>2</filterpriority>
+        /// <returns>true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.</returns>
+        /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
         public override bool Equals(object obj)
         {
             return this.Equals(obj as ProtoDataWriterOptions);
         }
 
         /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <returns>true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.</returns>
+        /// <param name="other">An object to compare with this object.</param>
+        public bool Equals(ProtoDataWriterOptions other)
+        {
+            return other != null &&
+                this.SerializeEmptyArraysAsNull == other.SerializeEmptyArraysAsNull &&
+                this.IncludeComputedColumns == other.IncludeComputedColumns;
+        }
+
+        /// <summary>
         /// Serves as a hash function for a particular type.
         /// </summary>
-        /// <returns>
-        /// A hash code for the current <see cref="T:System.Object"/>.
-        /// </returns>
-        /// <filterpriority>2</filterpriority>
+        /// <returns>A hash code for the current <see cref="T:System.Object"/>.</returns>
         public override int GetHashCode()
         {
-            // Implementation according to ReSharper suggestion: https://www.jetbrains.com/help/resharper/Code_Generation__Equality_Members.html
-            unchecked
-            {
-                return (this.SerializeEmptyArraysAsNull.GetHashCode() * 397) ^ this.IncludeComputedColumns.GetHashCode();
-            }
+            var hashCode = -607698572;
+
+            hashCode = (hashCode * -1521134295) + this.SerializeEmptyArraysAsNull.GetHashCode();
+            hashCode = (hashCode * -1521134295) + this.IncludeComputedColumns.GetHashCode();
+
+            return hashCode;
         }
     }
 }
