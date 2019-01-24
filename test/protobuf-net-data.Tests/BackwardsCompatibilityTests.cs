@@ -199,8 +199,7 @@ namespace ProtoBuf.Data.Tests
                 }
             }
 
-            // [Ignore("Only when our binary format changes (and we don't care about breaking old versions).")]
-            [Fact]
+            [Fact(Skip = "Only when our binary format changes (and we don't care about breaking old versions).")]
             private void RegenerateTestFile()
             {
                 using (DataSet dataSet = CreateTablesForBackwardsCompatibilityTest())
