@@ -1,0 +1,9 @@
+performance improved due to more efficient serialization and deserialization 
+documentation updated
+ProtoDataReader.GetTimeSpan method added
+SourceLink support added
+IDataRecord indexer properties are now implicitly implemented
+ProtoDataReader.Depth now always returns 0 instead of 1
+ProtoDataReader.Length property now throws NotSupportedException instead of returning -1
+ProtoDataReader.SchemaTable now only returns the columns ColumnName, ColumnOrdinal, ColumnSize, DataType, and DataTypeName
+various methods and properties that are not (and never were) supported now throw NotSupportedException instead of InvalidOperationException

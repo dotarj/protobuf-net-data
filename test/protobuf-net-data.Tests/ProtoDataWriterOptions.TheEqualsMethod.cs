@@ -22,19 +22,6 @@ namespace ProtoBuf.Data.Tests
             }
 
             [Fact]
-            public void ShouldReturnTrueIfSameInstance()
-            {
-                // Arrange
-                var options = new ProtoDataWriterOptions();
-
-                // Act
-                var result = options.Equals(options);
-
-                // Assert
-                Assert.True(result);
-            }
-
-            [Fact]
             public void ShouldReturnFalseIfSerializeEmptyArraysAsNullDiffers()
             {
                 // Arrange
@@ -63,7 +50,7 @@ namespace ProtoBuf.Data.Tests
             }
 
             [Fact]
-            public void ShouldReturnTrueIfValuesAreSame()
+            public void ShouldReturnTrueIfIncludeComputedColumnsAndIncludeComputedColumnsAreSame()
             {
                 // Arrange
                 var options = new ProtoDataWriterOptions() { IncludeComputedColumns = true, SerializeEmptyArraysAsNull = true };
