@@ -476,6 +476,23 @@ namespace ProtoBuf.Data
         }
 
         /// <summary>
+        /// Gets the time span value of the specified field.
+        /// </summary>
+        /// <param name="i">The zero-based column ordinal.</param>
+        /// <returns>The time span value of the specified field.</returns>
+        /// <exception cref="InvalidOperationException">The <see cref="ProtoDataReader"/> is closed.</exception>
+        /// <exception cref="IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="IDataRecord.FieldCount"/>.</exception>
+        /// <exception cref="InvalidCastException">The specified cast is not valid.</exception>
+        public TimeSpan GetTimeSpan(int i)
+        {
+            this.ThrowIfClosed();
+            this.ThrowIfNoData();
+            this.ThrowIfIndexOutOfRange(i);
+
+            return this.context.Buffers[i].TimeSpan;
+        }
+
+        /// <summary>
         /// Returns an <see cref="IDataReader"/> for the specified column ordinal.
         /// </summary>
         /// <param name="i">The index of the field to find.</param>
