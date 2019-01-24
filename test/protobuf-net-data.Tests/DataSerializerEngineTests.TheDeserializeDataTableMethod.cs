@@ -4,7 +4,7 @@ using System;
 using ProtoBuf.Data;
 using Xunit;
 
-namespace ProtoBug.Data.Tests
+namespace ProtoBuf.Data.Tests
 {
     public partial class DataSerializerEngineTests
     {

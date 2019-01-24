@@ -1,0 +1,54 @@
+<NewDataSet>
+  <Table1>
+    <Table1_Column1>false</Table1_Column1>
+    <Table1_Column2>0</Table1_Column2>
+    <Table1_Column5>0001-01-01T00:00:00+01:00</Table1_Column5>
+    <Table1_Column6>0</Table1_Column6>
+    <Table1_Column7>00000000-0000-0000-0000-000000000000</Table1_Column7>
+    <Table1_Column8>0</Table1_Column8>
+    <Table1_Column9>0</Table1_Column9>
+    <Table1_Column10>0</Table1_Column10>
+  </Table1>
+  <Table1>
+    <Table1_Column1>false</Table1_Column1>
+    <Table1_Column2>62</Table1_Column2>
+    <Table1_Column3>7jw=</Table1_Column3>
+    <Table1_Column4 xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <char>70</char>
+      <char>74</char>
+    </Table1_Column4>
+    <Table1_Column5>2018-05-17T19:48:50.9735228+02:00</Table1_Column5>
+    <Table1_Column6>0.717191357499543</Table1_Column6>
+    <Table1_Column7>f22ebfd0-265c-47e0-878a-821bccfda09d</Table1_Column7>
+    <Table1_Column8>68445533</Table1_Column8>
+    <Table1_Column9>1206514277</Table1_Column9>
+    <Table1_Column10>31938</Table1_Column10>
+    <Table1_Column11>EB</Table1_Column11>
+  </Table1>
+  <Table2>
+    <Table2_Column1>false</Table2_Column1>
+    <Table2_Column2>0</Table2_Column2>
+    <Table2_Column5>0001-01-01T00:00:00+01:00</Table2_Column5>
+    <Table2_Column6>0</Table2_Column6>
+    <Table2_Column7>00000000-0000-0000-0000-000000000000</Table2_Column7>
+    <Table2_Column8>0</Table2_Column8>
+    <Table2_Column9>0</Table2_Column9>
+    <Table2_Column10>0</Table2_Column10>
+  </Table2>
+  <Table2>
+    <Table2_Column1>false</Table2_Column1>
+    <Table2_Column2>152</Table2_Column2>
+    <Table2_Column3>ZsA=</Table2_Column3>
+    <Table2_Column4 xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <char>71</char>
+      <char>88</char>
+    </Table2_Column4>
+    <Table2_Column5>2018-05-17T19:52:09.4164828+02:00</Table2_Column5>
+    <Table2_Column6>0.816669395108088</Table2_Column6>
+    <Table2_Column7>89d07285-f71b-499c-8220-bddb86e51f2b</Table2_Column7>
+    <Table2_Column8>278753461</Table2_Column8>
+    <Table2_Column9>281199730</Table2_Column9>
+    <Table2_Column10>12041</Table2_Column10>
+    <Table2_Column11>QI</Table2_Column11>
+  </Table2>
+</NewDataSet>
