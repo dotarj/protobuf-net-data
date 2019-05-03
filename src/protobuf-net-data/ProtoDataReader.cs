@@ -604,9 +604,37 @@ namespace ProtoBuf.Data
 
         private int? GetColumnOrdinalByName(string name)
         {
+            // via case sensitive search, first match with lowest ordinal matches
+            var ordinal = this.GetColumnOrdinalByName(name, CompareOptions.None);
+            if (ordinal.HasValue)
+            {
+                return ordinal;
+            }
+
+            // via case insensitive search, first match with lowest ordinal matches
+            ordinal = this.GetColumnOrdinalByName(name, CompareOptions.IgnoreCase);
+            if (ordinal.HasValue)
+            {
+                return ordinal;
+            }
+
+            // do the slow search now (kana, width insensitive comparison)
+            var compareOptions = CompareOptions.IgnoreKanaType | CompareOptions.IgnoreWidth | CompareOptions.IgnoreCase;
+            ordinal = this.GetColumnOrdinalByName(name, compareOptions);
+            if (ordinal.HasValue)
+            {
+                return ordinal;
+            }
+
+            return null;
+        }
+
+        private int? GetColumnOrdinalByName(string name, CompareOptions compareOptions)
+        {
+            var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
             for (var ordinal = 0; ordinal < this.context.Columns.Count; ordinal++)
             {
-                if (name == this.context.Columns[ordinal].Name)
+                if (compareInfo.Compare(name, this.context.Columns[ordinal].Name, compareOptions) == 0)
                 {
                     return ordinal;
                 }
