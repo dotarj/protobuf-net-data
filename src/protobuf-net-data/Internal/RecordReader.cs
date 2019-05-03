@@ -22,7 +22,7 @@ namespace ProtoBuf.Data.Internal
                 return false;
             }
 
-            if (context.Buffers == null)
+            if (context.Buffers == null || context.Buffers.Length < context.Columns.Count)
             {
                 context.Buffers = new ProtoDataBuffer[context.Columns.Count];
 
