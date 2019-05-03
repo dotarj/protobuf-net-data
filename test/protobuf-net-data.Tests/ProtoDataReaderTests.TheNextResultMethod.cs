@@ -113,6 +113,33 @@ namespace ProtoBuf.Data.Tests
 
                 Assert.Equal(dataSet.Tables[1].Columns[0].ColumnName, dataReader.GetName(0));
             }
+
+            [Fact]
+            public void ShouldExtendBuffers()
+            {
+                // Act
+                var dataSet = new DataSet();
+
+                dataSet.Tables.Add(new DataTable());
+                dataSet.Tables.Add(new DataTable());
+
+                dataSet.Tables[0].Columns.Add("foo", typeof(string));
+                dataSet.Tables[1].Columns.Add("bar", typeof(string));
+                dataSet.Tables[1].Columns.Add("baz", typeof(string));
+
+                dataSet.Tables[0].Rows.Add("qux");
+                dataSet.Tables[1].Rows.Add("quux", "quuz");
+
+                var dataReader = this.ToProtoDataReader(dataSet.CreateDataReader());
+
+                // Act
+                dataReader.NextResult();
+
+                // Assert
+                dataReader.Read();
+
+                Assert.Equal(dataSet.Tables[1].Rows[0][1], dataReader.GetValue(1));
+            }
         }
     }
 }
