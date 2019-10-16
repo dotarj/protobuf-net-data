@@ -178,7 +178,7 @@ This would be a great future roadmap - as far as I know there is currently no to
 
 Thanks to:
 
-* [Marc Gravell](http://marcgravell.blogspot.com/) for [protobuf-net](http://code.google.com/p/protobuf-net/), and the original [DataTableSerializer](http://code.google.com/p/protobuf-net/source/browse/trunk/DataTableSerializer) from which the current implementation of this library is based.
+* [Marc Gravell](http://marcgravell.blogspot.com/) for [protobuf-net](https://github.com/protobuf-net/protobuf-net), and the original [DataTableSerializer](https://github.com/protobuf-net/protobuf-net/tree/master/assorted/DataTableSerializer) from which the current implementation of this library is based.
 * [Alex Reg](http://noldorin.com) for his great [CircularBuffer](http://circularbuffer.codeplex.com/) implementation.
 
 # License
