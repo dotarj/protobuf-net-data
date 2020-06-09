@@ -52,6 +52,51 @@ namespace ProtoBuf.Data.Tests
                 // Assert
                 Assert.Equal(1, dataReader.GetOrdinal(dataTable.Columns[1].ColumnName));
             }
+
+            [Fact]
+            public void ShouldReturnCorrespondingOrdinalWithCaseInsensitiveMatch()
+            {
+                // Arrange
+                var dataTable = new DataTable();
+
+                dataTable.Columns.Add("foo", typeof(int));
+                dataTable.Columns.Add("bar", typeof(int));
+
+                var dataReader = this.ToProtoDataReader(dataTable.CreateDataReader());
+
+                // Assert
+                Assert.Equal(1, dataReader.GetOrdinal("BAR"));
+            }
+
+            [Fact]
+            public void ShouldReturnCorrespondingOrdinalWithKanaInsensitiveMatch()
+            {
+                // Arrange
+                var dataTable = new DataTable();
+
+                dataTable.Columns.Add("foo", typeof(int));
+                dataTable.Columns.Add("カナ", typeof(int));
+
+                var dataReader = this.ToProtoDataReader(dataTable.CreateDataReader());
+
+                // Assert
+                Assert.Equal(1, dataReader.GetOrdinal("かな"));
+            }
+
+            [Fact]
+            public void ShouldReturnCorrespondingOrdinalWithWidthInsensitiveMatch()
+            {
+                // Arrange
+                var dataTable = new DataTable();
+
+                dataTable.Columns.Add("foo", typeof(int));
+                dataTable.Columns.Add("Ａｱ", typeof(int));
+
+                var dataReader = this.ToProtoDataReader(dataTable.CreateDataReader());
+
+                // Assert
+                Assert.Equal(1, dataReader.GetOrdinal("Aア"));
+            }
         }
     }
 }
