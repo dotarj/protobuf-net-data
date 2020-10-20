@@ -54,7 +54,7 @@ namespace ProtoBuf.Data.Tests
             var dataReader = dataSet.CreateDataReader();
 
             // Act
-            var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+            var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
             // Assert
             var readerContext = new ProtoReaderContext(reader);

@@ -35,7 +35,7 @@ namespace ProtoBuf.Data
             }
 
             this.stream = stream;
-            this.reader = new ProtoReader(stream, null, null);
+            this.reader = ProtoReader.Create(stream, null, null);
             this.context = new ProtoReaderContext(this.reader);
 
             ResultReader.ReadResult(this.context);

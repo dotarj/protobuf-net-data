@@ -134,7 +134,7 @@ namespace ProtoBuf.Data
 
             this.resultIndex = 0;
             this.bufferStream = new CircularStream(bufferSize);
-            this.writer = new ProtoWriter(this.bufferStream, null, null);
+            this.writer = ProtoWriter.Create(this.bufferStream, null, null);
             this.context = new ProtoWriterContext(this.writer, this.options);
         }
 

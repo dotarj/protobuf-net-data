@@ -78,7 +78,7 @@ namespace ProtoBuf.Data
 
             var resultIndex = 0;
 
-            using (var writer = new ProtoWriter(stream, null, null))
+            using (var writer = ProtoWriter.Create(stream, null, null))
             {
                 var context = new ProtoWriterContext(writer, options);
 
@@ -106,6 +106,9 @@ namespace ProtoBuf.Data
                     resultIndex++;
                 }
                 while (reader.NextResult());
+
+                // necessary since protobuf-net v3
+                writer.Close();
             }
         }
     }
