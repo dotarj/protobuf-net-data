@@ -48,7 +48,7 @@ namespace ProtoBuf.Data.Tests
                 // Assert
                 outputStream.Position = 0;
 
-                var reader = new ProtoReader(outputStream, null, null);
+                var reader = ProtoReader.Create(outputStream, null, null);
 
                 Assert.Equal(ResultFieldHeader, reader.ReadFieldHeader());
             }
@@ -68,7 +68,7 @@ namespace ProtoBuf.Data.Tests
                 var stream = new ProtoDataStream(dataReader);
 
                 // Act
-                var reader = new ProtoReader(this.CopyStream(stream), null, null);
+                var reader = ProtoReader.Create(this.CopyStream(stream), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -88,7 +88,7 @@ namespace ProtoBuf.Data.Tests
                 var stream = new ProtoDataStream(dataReader);
 
                 // Act
-                var reader = new ProtoReader(this.CopyStream(stream), null, null);
+                var reader = ProtoReader.Create(this.CopyStream(stream), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -118,7 +118,7 @@ namespace ProtoBuf.Data.Tests
                 var stream = new ProtoDataStream(dataReader);
 
                 // Act
-                var reader = new ProtoReader(this.CopyStream(stream), null, null);
+                var reader = ProtoReader.Create(this.CopyStream(stream), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -150,7 +150,7 @@ namespace ProtoBuf.Data.Tests
                 var stream = new ProtoDataStream(dataReader);
 
                 // Act
-                var reader = new ProtoReader(this.CopyStream(stream), null, null);
+                var reader = ProtoReader.Create(this.CopyStream(stream), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);

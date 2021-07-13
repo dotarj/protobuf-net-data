@@ -18,9 +18,11 @@ namespace ProtoBuf.Data.Tests
                 // Arrange
                 var stream = new MemoryStream();
 
-                using (var writer = new ProtoWriter(stream, null, null))
+                using (var writer = ProtoWriter.Create(stream, null, null))
                 {
                     ProtoWriter.WriteFieldHeader(42, WireType.StartGroup, writer);
+
+                    writer.Close();
                 }
 
                 stream.Position = 0;

@@ -33,7 +33,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = dataTable.CreateDataReader();
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -61,7 +61,7 @@ namespace ProtoBuf.Data.Tests
                 var options = new ProtoDataWriterOptions() { IncludeComputedColumns = true };
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader, options), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader, options), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -93,7 +93,7 @@ namespace ProtoBuf.Data.Tests
                     var options = new ProtoDataWriterOptions() { IncludeComputedColumns = false };
 
                     // Act
-                    var reader = new ProtoReader(this.Serialize(dataReader, options), null, null);
+                    var reader = ProtoReader.Create(this.Serialize(dataReader, options), null, null);
 
                     // Assert
                     var readerContext = new ProtoReaderContext(reader);
@@ -127,7 +127,7 @@ namespace ProtoBuf.Data.Tests
                     var options = new ProtoDataWriterOptions() { IncludeComputedColumns = false };
 
                     // Act
-                    var reader = new ProtoReader(this.Serialize(dataReader, options), null, null);
+                    var reader = ProtoReader.Create(this.Serialize(dataReader, options), null, null);
 
                     // Assert
                     var readerContext = new ProtoReaderContext(reader);
