@@ -85,7 +85,7 @@ namespace ProtoBuf.Data.Tests
 
                     ProtoWriter.WriteFieldHeader(1, WireType.String, writer);
                     ProtoWriter.WriteString("foo", writer);
-                    ProtoWriter.WriteFieldHeader(42, WireType.Variant, writer);
+                    ProtoWriter.WriteFieldHeader(42, WireType.Varint, writer);
                     ProtoWriter.WriteInt32((int)1, writer);
 
                     ProtoWriter.EndSubItem(columnToken, writer);
@@ -119,7 +119,7 @@ namespace ProtoBuf.Data.Tests
 
                     ProtoWriter.WriteFieldHeader(1, WireType.String, writer);
                     ProtoWriter.WriteString("foo", writer);
-                    ProtoWriter.WriteFieldHeader(2, WireType.Variant, writer);
+                    ProtoWriter.WriteFieldHeader(2, WireType.Varint, writer);
                     ProtoWriter.WriteInt32((int)1, writer);
                     ProtoWriter.WriteFieldHeader(42, WireType.String, writer);
                     ProtoWriter.WriteString("bar", writer);

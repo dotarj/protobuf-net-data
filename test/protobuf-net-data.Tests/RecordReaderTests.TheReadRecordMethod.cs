@@ -30,7 +30,7 @@ namespace ProtoBuf.Data.Tests
 
                     ProtoWriter.WriteFieldHeader(1, WireType.String, writer);
                     ProtoWriter.WriteString("foo", writer);
-                    ProtoWriter.WriteFieldHeader(2, WireType.Variant, writer);
+                    ProtoWriter.WriteFieldHeader(2, WireType.Varint, writer);
                     ProtoWriter.WriteInt32((int)3, writer);
 
                     ProtoWriter.EndSubItem(columnToken, writer);
@@ -39,9 +39,9 @@ namespace ProtoBuf.Data.Tests
 
                     var recordToken = ProtoWriter.StartSubItem(1, writer);
 
-                    ProtoWriter.WriteFieldHeader(1, WireType.Variant, writer);
+                    ProtoWriter.WriteFieldHeader(1, WireType.Varint, writer);
                     ProtoWriter.WriteInt32((int)1, writer);
-                    ProtoWriter.WriteFieldHeader(2, WireType.Variant, writer);
+                    ProtoWriter.WriteFieldHeader(2, WireType.Varint, writer);
                     ProtoWriter.WriteInt32((int)1, writer);
 
                     ProtoWriter.EndSubItem(recordToken, writer);
