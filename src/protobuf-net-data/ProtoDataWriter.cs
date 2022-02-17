@@ -1,5 +1,6 @@
 // Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
+#pragma warning disable CS0618
 using System.Data;
 using System.IO;
 using ProtoBuf.Data.Internal;
@@ -113,3 +114,4 @@ namespace ProtoBuf.Data
         }
     }
 }
+#pragma warning restore CS0618
