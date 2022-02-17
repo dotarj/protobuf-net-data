@@ -36,7 +36,7 @@ namespace ProtoBuf.Data.Internal
                         break;
 
                     case ProtoDataType.Short:
-                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Varint, context.Writer);
                         ProtoWriter.WriteInt16(record.GetInt16(columnIndex), context.Writer);
                         break;
 
@@ -46,7 +46,7 @@ namespace ProtoBuf.Data.Internal
                         break;
 
                     case ProtoDataType.Int:
-                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Varint, context.Writer);
                         ProtoWriter.WriteInt32(record.GetInt32(columnIndex), context.Writer);
                         break;
 
@@ -61,17 +61,17 @@ namespace ProtoBuf.Data.Internal
                         break;
 
                     case ProtoDataType.Bool:
-                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Varint, context.Writer);
                         ProtoWriter.WriteBoolean(record.GetBoolean(columnIndex), context.Writer);
                         break;
 
                     case ProtoDataType.Byte:
-                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Varint, context.Writer);
                         ProtoWriter.WriteByte(record.GetByte(columnIndex), context.Writer);
                         break;
 
                     case ProtoDataType.Char:
-                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Varint, context.Writer);
                         ProtoWriter.WriteInt16((short)record.GetChar(columnIndex), context.Writer);
                         break;
 
@@ -86,7 +86,7 @@ namespace ProtoBuf.Data.Internal
                         break;
 
                     case ProtoDataType.Long:
-                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Variant, context.Writer);
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.Varint, context.Writer);
                         ProtoWriter.WriteInt64(record.GetInt64(columnIndex), context.Writer);
                         break;
 

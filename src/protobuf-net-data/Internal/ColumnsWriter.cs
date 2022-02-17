@@ -31,7 +31,7 @@ namespace ProtoBuf.Data.Internal
 
         private static void WriteColumnType(ProtoWriterContext context, ProtoDataColumn column)
         {
-            ProtoWriter.WriteFieldHeader(ColumnTypeFieldHeader, WireType.Variant, context.Writer);
+            ProtoWriter.WriteFieldHeader(ColumnTypeFieldHeader, WireType.Varint, context.Writer);
             ProtoWriter.WriteInt32((int)column.ProtoDataType, context.Writer);
         }
     }
