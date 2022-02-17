@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <DebugSymbols>true</DebugSymbols>
@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>false</IncludeSymbols>
     <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Version>0.0.0</Version>
   </PropertyGroup>
 
@@ -30,7 +30,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="protobuf-net" Version="3.0.52" />
+    <PackageReference Include="protobuf-net" Version="3.0.101" />
   </ItemGroup>
 
   <ItemGroup>

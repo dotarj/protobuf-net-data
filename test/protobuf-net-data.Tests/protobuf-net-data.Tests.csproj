@@ -4,7 +4,7 @@
     <DebugType Condition="$(codecov) == 'true'">full</DebugType>
     <IsPackable>false</IsPackable>
     <TargetFrameworks>net461;net471;netcoreapp2.0</TargetFrameworks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
