@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
+#pragma warning disable CS0618
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,33 +14,12 @@ namespace ProtoBuf.Data.Tests
         public class TheReadColumnsMethod : ColumnsReaderTests
         {
             [Fact]
-            public void ShouldThrowExceptionOnColumnsInvalidFieldHeader()
-            {
-                // Arrange
-                var stream = new MemoryStream();
-
-                using (var writer = new ProtoWriter(stream, null, null))
-                {
-                    ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);
-
-                    ProtoWriter.StartSubItem(0, writer);
-
-                    ProtoWriter.WriteFieldHeader(42, WireType.StartGroup, writer);
-                }
-
-                stream.Position = 0;
-
-                // Assert
-                Assert.Throws<InvalidDataException>(() => new ProtoDataReader(stream));
-            }
-
-            [Fact]
             public void ShouldThrowExceptionOnColumnNameInvalidFieldHeader()
             {
                 // Arrange
                 var stream = new MemoryStream();
 
-                using (var writer = new ProtoWriter(stream, null, null))
+                using (var writer = ProtoWriter.Create(stream, null, null))
                 {
                     ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);
 
@@ -55,6 +35,8 @@ namespace ProtoBuf.Data.Tests
                     ProtoWriter.EndSubItem(columnToken, writer);
 
                     ProtoWriter.EndSubItem(resultToken, writer);
+
+                    writer.Close();
                 }
 
                 stream.Position = 0;
@@ -69,7 +51,7 @@ namespace ProtoBuf.Data.Tests
                 // Arrange
                 var stream = new MemoryStream();
 
-                using (var writer = new ProtoWriter(stream, null, null))
+                using (var writer = ProtoWriter.Create(stream, null, null))
                 {
                     ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);
 
@@ -81,12 +63,14 @@ namespace ProtoBuf.Data.Tests
 
                     ProtoWriter.WriteFieldHeader(1, WireType.String, writer);
                     ProtoWriter.WriteString("foo", writer);
-                    ProtoWriter.WriteFieldHeader(42, WireType.Variant, writer);
+                    ProtoWriter.WriteFieldHeader(42, WireType.Varint, writer);
                     ProtoWriter.WriteInt32((int)1, writer);
 
                     ProtoWriter.EndSubItem(columnToken, writer);
 
                     ProtoWriter.EndSubItem(resultToken, writer);
+
+                    writer.Close();
                 }
 
                 stream.Position = 0;
@@ -101,7 +85,7 @@ namespace ProtoBuf.Data.Tests
                 // Arrange
                 var stream = new MemoryStream();
 
-                using (var writer = new ProtoWriter(stream, null, null))
+                using (var writer = ProtoWriter.Create(stream, null, null))
                 {
                     ProtoWriter.WriteFieldHeader(1, WireType.StartGroup, writer);
 
@@ -113,7 +97,7 @@ namespace ProtoBuf.Data.Tests
 
                     ProtoWriter.WriteFieldHeader(1, WireType.String, writer);
                     ProtoWriter.WriteString("foo", writer);
-                    ProtoWriter.WriteFieldHeader(2, WireType.Variant, writer);
+                    ProtoWriter.WriteFieldHeader(2, WireType.Varint, writer);
                     ProtoWriter.WriteInt32((int)1, writer);
                     ProtoWriter.WriteFieldHeader(42, WireType.String, writer);
                     ProtoWriter.WriteString("bar", writer);
@@ -121,6 +105,8 @@ namespace ProtoBuf.Data.Tests
                     ProtoWriter.EndSubItem(columnToken, writer);
 
                     ProtoWriter.EndSubItem(resultToken, writer);
+
+                    writer.Close();
                 }
 
                 stream.Position = 0;
@@ -131,3 +117,4 @@ namespace ProtoBuf.Data.Tests
         }
     }
 }
+#pragma warning restore CS0618

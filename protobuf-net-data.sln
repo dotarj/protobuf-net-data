@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2005
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "protobuf-net-data", "src\protobuf-net-data\protobuf-net-data.csproj", "{4F6074E7-D9B1-491D-841B-53A752EC1625}"
 EndProject
@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "protobuf-net-data.Benchmark
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{255B1CD0-4B1F-4601-9176-F36EE56CEF4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "protobuf-net-data.TestDataGenerator", "tools\protobuf-net-data.TestDataGenerator\protobuf-net-data.TestDataGenerator.csproj", "{4310BE9C-AACD-4071-8675-709E9929138B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "protobuf-net-data.TestDataGenerator", "tools\protobuf-net-data.TestDataGenerator\protobuf-net-data.TestDataGenerator.csproj", "{4310BE9C-AACD-4071-8675-709E9929138B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

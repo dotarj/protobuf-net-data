@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
+#pragma warning disable CS0618
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -134,7 +135,7 @@ namespace ProtoBuf.Data
 
             this.resultIndex = 0;
             this.bufferStream = new CircularStream(bufferSize);
-            this.writer = new ProtoWriter(this.bufferStream, null, null);
+            this.writer = ProtoWriter.Create(this.bufferStream, null, null);
             this.context = new ProtoWriterContext(this.writer, this.options);
         }
 
@@ -369,3 +370,4 @@ namespace ProtoBuf.Data
         }
     }
 }
+#pragma warning restore CS0618

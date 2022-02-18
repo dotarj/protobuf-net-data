@@ -172,7 +172,7 @@ namespace ProtoBuf.Data.Benchmarks
 
         public bool Read()
         {
-            return ++this.rowIndex < rowCount;
+            return ++this.rowIndex < this.rowCount;
         }
 
         private object GetDefault(Type type)

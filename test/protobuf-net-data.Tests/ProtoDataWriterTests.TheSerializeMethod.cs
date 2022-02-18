@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
+#pragma warning disable CS0618
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -54,7 +55,7 @@ namespace ProtoBuf.Data.Tests
             var dataReader = dataSet.CreateDataReader();
 
             // Act
-            var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+            var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
             // Assert
             var readerContext = new ProtoReaderContext(reader);
@@ -88,3 +89,4 @@ namespace ProtoBuf.Data.Tests
         }
     }
 }
+#pragma warning restore CS0618

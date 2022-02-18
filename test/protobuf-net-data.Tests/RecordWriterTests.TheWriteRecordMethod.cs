@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
+#pragma warning disable CS0618
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,7 +21,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -37,7 +38,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader("foo");
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -55,7 +56,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -72,7 +73,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(new DateTime(1969, 10, 29, 22, 30, 0));
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -90,7 +91,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -107,7 +108,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(42);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -125,7 +126,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -142,7 +143,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(42L);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -160,7 +161,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -177,7 +178,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader((short)42);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -195,7 +196,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -212,7 +213,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(true);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -230,7 +231,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -247,7 +248,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader((byte)42);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -265,7 +266,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -282,7 +283,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(42f);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -300,7 +301,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -317,7 +318,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(42d);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -335,7 +336,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -352,7 +353,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(Guid.NewGuid());
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -370,7 +371,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -387,7 +388,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(';');
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -405,7 +406,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -422,7 +423,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(42m);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -440,7 +441,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -458,7 +459,7 @@ namespace ProtoBuf.Data.Tests
                 var options = new ProtoDataWriterOptions() { SerializeEmptyArraysAsNull = true };
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader, options), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader, options), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -478,7 +479,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(new[] { (byte)42, (byte)42 });
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -496,7 +497,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -514,7 +515,7 @@ namespace ProtoBuf.Data.Tests
                 var options = new ProtoDataWriterOptions() { SerializeEmptyArraysAsNull = true };
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader, options), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader, options), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -534,7 +535,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(new[] { 'f', 'o', 'o' });
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -552,7 +553,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -569,7 +570,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(TimeSpan.FromTicks(1));
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -587,7 +588,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = this.CreateDataReader(value);
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -612,7 +613,7 @@ namespace ProtoBuf.Data.Tests
                 var dataReader = dataTable.CreateDataReader();
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -633,7 +634,7 @@ namespace ProtoBuf.Data.Tests
                 var options = new ProtoDataWriterOptions() { SerializeEmptyArraysAsNull = true };
 
                 // Act
-                var reader = new ProtoReader(this.Serialize(dataReader, options), null, null);
+                var reader = ProtoReader.Create(this.Serialize(dataReader, options), null, null);
 
                 // Assert
                 var readerContext = new ProtoReaderContext(reader);
@@ -669,3 +670,4 @@ namespace ProtoBuf.Data.Tests
         }
     }
 }
+#pragma warning restore CS0618

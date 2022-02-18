@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
+#pragma warning disable CS0618
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,9 +19,11 @@ namespace ProtoBuf.Data.Tests
                 // Arrange
                 var stream = new MemoryStream();
 
-                using (var writer = new ProtoWriter(stream, null, null))
+                using (var writer = ProtoWriter.Create(stream, null, null))
                 {
                     ProtoWriter.WriteFieldHeader(42, WireType.StartGroup, writer);
+
+                    writer.Close();
                 }
 
                 stream.Position = 0;
@@ -31,3 +34,4 @@ namespace ProtoBuf.Data.Tests
         }
     }
 }
+#pragma warning restore CS0618
