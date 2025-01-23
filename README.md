@@ -78,6 +78,8 @@ DataSerializer supports all the types exposed by [IDataReader](http://msdn.micro
 * Int32
 * Int64
 * String
+* TimeSpan
+* DateTimeOffset
 
 Note that no distinction is made between null and zero-length arrays; both will be deserialized as null.
 

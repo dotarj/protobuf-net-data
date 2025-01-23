@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Richard Dingwall, Arjen Post. See LICENSE in the project root for license information.
 
+using System;
+
 namespace ProtoBuf.Data.Internal
 {
     internal static class RecordReader
@@ -118,6 +120,10 @@ namespace ProtoBuf.Data.Internal
                         break;
                     case ProtoDataType.TimeSpan:
                         context.Buffers[columnIndex].TimeSpan = BclHelpers.ReadTimeSpan(context.Reader);
+                        context.Buffers[columnIndex].IsNull = false;
+                        break;
+                    case ProtoDataType.DateTimeOffset:
+                        context.Buffers[columnIndex].DateTimeOffset = DateTimeOffset.Parse(context.Reader.ReadString());
                         context.Buffers[columnIndex].IsNull = false;
                         break;
                 }

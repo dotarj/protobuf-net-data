@@ -24,7 +24,8 @@ namespace ProtoBuf.Data.Internal
             typeof(long),
             typeof(short),
             typeof(string),
-            typeof(TimeSpan)
+            typeof(TimeSpan),
+            typeof(DateTimeOffset)
         };
 
         private static readonly IDictionary<Type, ProtoDataType> ProtoDataTypeByType = new Dictionary<Type, ProtoDataType>
@@ -44,6 +45,7 @@ namespace ProtoBuf.Data.Internal
             { typeof(byte[]), ProtoDataType.ByteArray },
             { typeof(char[]), ProtoDataType.CharArray },
             { typeof(TimeSpan), ProtoDataType.TimeSpan },
+            { typeof(DateTimeOffset), ProtoDataType.DateTimeOffset },
         };
 
         private static readonly IDictionary<ProtoDataType, Type> TypeByProtoDataType = new Dictionary<ProtoDataType, Type>
@@ -63,6 +65,7 @@ namespace ProtoBuf.Data.Internal
             { ProtoDataType.ByteArray, typeof(byte[]) },
             { ProtoDataType.CharArray, typeof(char[]) },
             { ProtoDataType.TimeSpan, typeof(TimeSpan) },
+            { ProtoDataType.DateTimeOffset, typeof(DateTimeOffset) },
         };
 
         private static string supportedDataTypes;

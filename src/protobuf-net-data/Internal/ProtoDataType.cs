@@ -18,6 +18,7 @@ namespace ProtoBuf.Data.Internal
         Decimal = 12,
         ByteArray = 13,
         CharArray = 14,
-        TimeSpan = 15
+        TimeSpan = 15,
+        DateTimeOffset = 16
     }
 }
