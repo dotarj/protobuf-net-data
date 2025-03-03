@@ -3,7 +3,7 @@
   <PropertyGroup>
     <DebugType Condition="$(codecov) == 'true'">full</DebugType>
     <IsPackable>false</IsPackable>
-    <TargetFrameworks>net462;net471;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net461;net80</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
@@ -18,8 +18,8 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net80'">
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>

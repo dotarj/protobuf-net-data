@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\protobuf-net-data\protobuf-net-data.csproj" />
+    <PackageReference Include="protobuf-net-data" Version="3.0.0-beta1" />
   </ItemGroup>
 
   <ItemGroup>

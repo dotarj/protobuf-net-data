@@ -6,7 +6,7 @@
     <DebugType Condition="$(codecov) != 'true'">embedded</DebugType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>false</IncludeSymbols>
-    <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Version>0.0.0</Version>
   </PropertyGroup>
