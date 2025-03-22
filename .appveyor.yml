@@ -4,7 +4,7 @@ environment:
   MYGET_API_KEY:
     secure: nytRGOBtWS0dWOqFC+An404HzC6atrfxE6svU7krxgdSFtZsk1PCl9SHrXfwIo5P
   NUGET_API_KEY:
-    secure: BUBZyq3OI1NQfIkROEWc/9gKWwOt2uC/0RGj0/ikIbUzdIkzyD9oaYM2il1tu9RV
+    secure: 4SBBHC1wkKfmYFikQyrR87CdrOMcsSUxirW/wNeM/BcJym3eQQnlgzEFiqRCvxup
   SONARQUBE_ORGANIZATION: dotarj-github
   SONARQUBE_TOKEN:
     secure: HQS7qJC86vzZyNvzPucVQGBtwGXeZDcXtFm41i/Whb4NG9WqFLXtVN1DGYW1AlsP
