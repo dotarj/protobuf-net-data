@@ -581,6 +581,41 @@ namespace ProtoBuf.Data.Tests
             }
 
             [Fact]
+            public void ShouldSerializeDateTimeOffsetValue()
+            {
+                // Arrange
+                var value = DateTimeOffset.FromUnixTimeSeconds(1);
+                var dataReader = this.CreateDataReader(value);
+
+                // Act
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
+
+                // Assert
+                var readerContext = new ProtoReaderContext(reader);
+
+                readerContext.ReadUntilFieldValue();
+
+                Assert.Equal(value, DateTimeOffset.Parse(reader.ReadString()));
+            }
+
+            [Fact]
+            public void ShouldSerializeDateTimeOffsetColumnType()
+            {
+                // Arrange
+                var dataReader = this.CreateDataReader(DateTimeOffset.FromUnixTimeSeconds(1));
+
+                // Act
+                var reader = ProtoReader.Create(this.Serialize(dataReader), null, null);
+
+                // Assert
+                var readerContext = new ProtoReaderContext(reader);
+
+                readerContext.ReadUntilColumnType();
+
+                Assert.Equal(16, reader.ReadInt32());
+            }
+
+            [Fact]
             public void ShouldNotSerializeIfValueIsNull()
             {
                 // Arrange

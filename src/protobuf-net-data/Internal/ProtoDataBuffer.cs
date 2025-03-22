@@ -33,7 +33,8 @@ namespace ProtoBuf.Data.Internal
             Decimal = 12,
             ByteArray = 13,
             CharArray = 14,
-            TimeSpan = 15
+            TimeSpan = 15,
+            DateTimeOffset = 16
         }
 
         public bool IsNull { get; set; }
@@ -308,6 +309,24 @@ namespace ProtoBuf.Data.Internal
             }
         }
 
+        public DateTimeOffset DateTimeOffset
+        {
+            get
+            {
+                this.ThrowIfNull();
+                this.ThrowIfInvalidBufferType(BufferType.DateTimeOffset);
+
+                return this.valueTypeBuffer.DateTimeOffset;
+            }
+
+            set
+            {
+                this.bufferType = BufferType.DateTimeOffset;
+
+                this.valueTypeBuffer.DateTimeOffset = value;
+            }
+        }
+
         public object Value
         {
             get
@@ -335,6 +354,7 @@ namespace ProtoBuf.Data.Internal
                     case BufferType.Int16: return this.Int16;
                     case BufferType.String: return this.String;
                     case BufferType.TimeSpan: return this.TimeSpan;
+                    case BufferType.DateTimeOffset: return this.DateTimeOffset;
                 }
 
                 return null;
@@ -407,6 +427,8 @@ namespace ProtoBuf.Data.Internal
             public short Int16;
             [FieldOffset(0)]
             public TimeSpan TimeSpan;
+            [FieldOffset(0)]
+            public DateTimeOffset DateTimeOffset;
         }
     }
 }

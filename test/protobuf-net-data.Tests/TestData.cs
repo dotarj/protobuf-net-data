@@ -2,8 +2,13 @@
 
 using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
+
+#if NET461
+using System.Data.SqlClient;
+#else
+using Microsoft.Data.SqlClient;
+#endif
 
 namespace ProtoBuf.Data.Tests
 {
@@ -25,10 +30,11 @@ namespace ProtoBuf.Data.Tests
             table.Columns.Add("SomeDouble", typeof(double));
             table.Columns.Add("SomeChar", typeof(char));
             table.Columns.Add("SomeTimeSpan", typeof(TimeSpan));
-            table.Rows.Add(new DateTime(2011, 04, 05, 12, 16, 41, 300), 42, "Foo", Guid.Parse("6891816b-a4b9-4749-a9f5-9f6deb377a65"), "sdfsdf", new byte[] { 1, 2, 3, 4 }, new[] { 'a' }, 0.1, 0.2, null, TimeSpan.Zero);
-            table.Rows.Add(new DateTime(1920, 04, 03, 12, 48, 31, 210), null, "Bar", Guid.Parse("28545f31-ca0c-40c1-bae0-9b79ca84091b"), "o2389uf", new byte[0], new[] { 'a', 'b', 'c' }, 0.3, 0.4, 'c', TimeSpan.Zero);
-            table.Rows.Add(null, null, null, null, null, null, null, null, null, 'h', TimeSpan.FromMinutes(2));
-            table.Rows.Add(new DateTime(2008, 01, 11, 11, 4, 1, 491), null, "Foo", Guid.Empty, string.Empty, null, new char[0], -0.3, -0.4, 'a', TimeSpan.FromDays(1));
+            table.Columns.Add("SomeDateTimeOffset", typeof(DateTimeOffset));
+            table.Rows.Add(new DateTime(2011, 04, 05, 12, 16, 41, 300), 42, "Foo", Guid.Parse("6891816b-a4b9-4749-a9f5-9f6deb377a65"), "sdfsdf", new byte[] { 1, 2, 3, 4 }, new[] { 'a' }, 0.1, 0.2, null, TimeSpan.Zero, new DateTimeOffset(2011, 04, 05, 12, 16, 41, TimeSpan.Zero));
+            table.Rows.Add(new DateTime(1920, 04, 03, 12, 48, 31, 210), null, "Bar", Guid.Parse("28545f31-ca0c-40c1-bae0-9b79ca84091b"), "o2389uf", new byte[0], new[] { 'a', 'b', 'c' }, 0.3, 0.4, 'c', TimeSpan.Zero, new DateTimeOffset(1920, 04, 03, 12, 48, 31, TimeSpan.Zero));
+            table.Rows.Add(null, null, null, null, null, null, null, null, null, 'h', TimeSpan.FromMinutes(2), null);
+            table.Rows.Add(new DateTime(2008, 01, 11, 11, 4, 1, 491), null, "Foo", Guid.Empty, string.Empty, null, new char[0], -0.3, -0.4, 'a', TimeSpan.FromDays(1), new DateTimeOffset(2008, 01, 11, 11, 4, 1, TimeSpan.Zero));
 
             return table;
         }

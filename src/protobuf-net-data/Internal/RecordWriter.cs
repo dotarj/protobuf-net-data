@@ -117,6 +117,11 @@ namespace ProtoBuf.Data.Internal
                         BclHelpers.WriteTimeSpan((TimeSpan)record[columnIndex], context.Writer);
                         break;
 
+                    case ProtoDataType.DateTimeOffset:
+                        ProtoWriter.WriteFieldHeader(fieldNumber, WireType.String, context.Writer);
+                        ProtoWriter.WriteString(((DateTimeOffset)record[columnIndex]).ToString("o"), context.Writer);
+                        break;
+
                     default:
                         throw new NotSupportedException($"The data type '{context.Columns[columnIndex].DataType.Name}' is not supported. The supported data types are: {TypeHelper.GetSupportedDataTypes()}.");
                 }
